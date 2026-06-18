@@ -1,17 +1,26 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  Activity,
+  Boxes,
   Check,
   ChevronRight,
   Code2,
+  Database,
   Eye,
+  Layers3,
   Loader2,
+  Network,
   Plus,
   RefreshCw,
   Save,
   Search,
+  ShieldCheck,
+  SlidersHorizontal,
+  Sparkles,
   Trash2,
   TriangleAlert,
   Wrench,
+  type LucideIcon,
 } from "lucide-react";
 import {
   ApiError,
@@ -50,18 +59,41 @@ const GROUP_ORDER = [
   "Other",
 ] as const;
 
-type PanelMode = "sections" | "advanced";
+type PanelMode = "overview" | "sections" | "advanced";
+type StatusFilter = "all" | "needs" | "ready";
 type FormTarget = { prefix: string; title: string; subtitle?: string };
 type LoadState =
   | { kind: "loading" }
   | { kind: "ready"; sections: ConfigSectionInfo[] }
   | { kind: "error"; message: string };
 
+const PRIMARY_SECTION_KEYS = [
+  "providers.models",
+  "risk_profiles",
+  "runtime_profiles",
+  "channels",
+  "agents",
+  "memory",
+] as const;
+
+const GROUP_ICONS: Record<string, LucideIcon> = {
+  Foundation: Sparkles,
+  Agent: Activity,
+  "Multi-agent": Network,
+  Tools: Wrench,
+  Integrations: Boxes,
+  Network,
+  Storage: Database,
+  Operations: SlidersHorizontal,
+  Other: Layers3,
+};
+
 export function ConfigPanel({ focusSection }: { focusSection?: string | null }) {
   const [state, setState] = useState<LoadState>({ kind: "loading" });
-  const [mode, setMode] = useState<PanelMode>("sections");
+  const [mode, setMode] = useState<PanelMode>(focusSection ? "sections" : "overview");
   const [activeKey, setActiveKey] = useState<string | null>(focusSection ?? null);
   const [filter, setFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [target, setTarget] = useState<FormTarget | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
 
@@ -100,9 +132,10 @@ export function ConfigPanel({ focusSection }: { focusSection?: string | null }) 
   const sections = state.kind === "ready" ? state.sections : [];
   const activeSection = sections.find((s) => s.key === activeKey) ?? null;
   const filteredGroups = useMemo(
-    () => groupSections(filterSections(sections, filter)),
-    [sections, filter],
+    () => groupSections(filterSections(filterSectionsByStatus(sections, statusFilter), filter)),
+    [filter, sections, statusFilter],
   );
+  const sectionStats = useMemo(() => getSectionStats(sections), [sections]);
 
   function chooseSection(section: ConfigSectionInfo) {
     setMode("sections");
@@ -111,9 +144,31 @@ export function ConfigPanel({ focusSection }: { focusSection?: string | null }) 
   }
 
   return (
-    <div className="grid h-full min-h-0 grid-cols-[320px_minmax(0,1fr)] overflow-hidden">
-      <aside className="flex min-w-0 flex-col border-r border-white/10 bg-[#020818]/90">
+    <div className="grid h-full min-h-0 grid-cols-[300px_minmax(0,1fr)] overflow-hidden">
+      <aside className="flex min-w-0 flex-col border-r border-white/10 bg-[#020818]/95">
         <div className="border-b border-white/10 p-3">
+          <button
+            type="button"
+            onClick={() => {
+              setMode("overview");
+              setTarget(null);
+            }}
+            className={`mb-3 flex w-full items-center gap-3 rounded-md border px-3 py-3 text-left transition ${
+              mode === "overview"
+                ? "border-cyan-400/30 bg-cyan-400/10 text-cyan-100"
+                : "border-white/10 bg-white/[0.025] text-neutral-300 hover:border-white/15 hover:text-neutral-100"
+            }`}
+          >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-cyan-400/25 bg-cyan-400/10 text-cyan-300">
+              <ShieldCheck size={15} />
+            </div>
+            <span className="min-w-0 flex-1">
+              <span className="block text-xs font-medium">Gateway overview</span>
+              <span className="mt-0.5 block text-[10px] text-neutral-500">
+                {sectionStats.ready} ready / {sections.length} sections
+              </span>
+            </span>
+          </button>
           <div className="relative">
             <Search
               size={13}
@@ -127,8 +182,30 @@ export function ConfigPanel({ focusSection }: { focusSection?: string | null }) 
               className="w-full rounded-md border border-white/10 bg-[#020818]/90 py-1.5 pl-7 pr-2 text-xs text-neutral-100 outline-none placeholder:text-neutral-600 focus:border-cyan-400"
             />
           </div>
+          <div className="mt-2 grid grid-cols-3 gap-1 rounded-md border border-white/10 bg-white/[0.025] p-1">
+            {[
+              { key: "all", label: "All" },
+              { key: "needs", label: "Needs" },
+              { key: "ready", label: "Ready" },
+            ].map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => setStatusFilter(item.key as StatusFilter)}
+                className={`rounded px-2 py-1 text-[10px] font-medium transition ${
+                  statusFilter === item.key
+                    ? "bg-cyan-400/15 text-cyan-100"
+                    : "text-neutral-500 hover:text-neutral-200"
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
           <div className="mt-2 flex items-center justify-between text-[11px] text-neutral-500">
-            <span>{sections.length} sections</span>
+            <span>
+              {filteredGroups.reduce((sum, group) => sum + group.items.length, 0)} sections
+            </span>
             <button
               type="button"
               onClick={() => void loadSections()}
@@ -168,6 +245,7 @@ export function ConfigPanel({ focusSection }: { focusSection?: string | null }) 
                           {section.key}
                         </span>
                       </span>
+                      <SectionStatusBadge section={section} />
                       <ChevronRight size={12} className="shrink-0" />
                     </button>
                   ))}
@@ -196,7 +274,19 @@ export function ConfigPanel({ focusSection }: { focusSection?: string | null }) 
       </aside>
 
       <main className="min-w-0 overflow-hidden">
-        {mode === "advanced" ? (
+        {mode === "overview" ? (
+          <ConfigOverview
+            sections={sections}
+            state={state}
+            stats={sectionStats}
+            onRefresh={loadSections}
+            onChoose={chooseSection}
+            onAdvanced={() => {
+              setMode("advanced");
+              setTarget(null);
+            }}
+          />
+        ) : mode === "advanced" ? (
           <AdvancedConfigEditor />
         ) : (
           <SectionExplorer
@@ -212,6 +302,264 @@ export function ConfigPanel({ focusSection }: { focusSection?: string | null }) 
         )}
       </main>
     </div>
+  );
+}
+
+function ConfigOverview({
+  sections,
+  state,
+  stats,
+  onRefresh,
+  onChoose,
+  onAdvanced,
+}: {
+  sections: ConfigSectionInfo[];
+  state: LoadState;
+  stats: SectionStats;
+  onRefresh: () => void;
+  onChoose: (section: ConfigSectionInfo) => void;
+  onAdvanced: () => void;
+}) {
+  const primarySections = PRIMARY_SECTION_KEYS.map((key) =>
+    sections.find((section) => section.key === key),
+  ).filter(Boolean) as ConfigSectionInfo[];
+  const needsAttention = sections
+    .filter((section) => !section.ready)
+    .sort(
+      (a, b) =>
+        Number(b.completed) - Number(a.completed) || groupRank(a.group) - groupRank(b.group),
+    )
+    .slice(0, 6);
+  const groups = groupSections(sections);
+
+  return (
+    <div className="h-full overflow-auto">
+      <div className="mx-auto max-w-6xl space-y-5 px-6 py-5">
+        <header className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-lg font-semibold text-neutral-100">Gateway control center</h2>
+              <Badge label={`${sections.length} sections`} />
+            </div>
+            <p className="mt-1 max-w-2xl text-xs leading-relaxed text-neutral-500">
+              Configure providers, runtime behavior, agents, tools, storage, and network settings
+              from focused entry points.
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={onRefresh}
+              className="inline-flex items-center gap-1.5 rounded-md border border-white/10 px-3 py-1.5 text-xs text-neutral-300 hover:border-cyan-400/50 hover:text-cyan-300"
+            >
+              <RefreshCw size={12} />
+              Refresh
+            </button>
+            <button
+              type="button"
+              onClick={onAdvanced}
+              className="inline-flex items-center gap-1.5 rounded-md border border-white/10 px-3 py-1.5 text-xs text-neutral-300 hover:border-cyan-400/50 hover:text-cyan-300"
+            >
+              <Code2 size={12} />
+              Raw paths
+            </button>
+          </div>
+        </header>
+
+        {state.kind === "loading" && <LoadingInline label="Loading config sections..." />}
+        {state.kind === "error" && <ErrorBox message={state.message} />}
+
+        <div className="grid gap-3 md:grid-cols-3">
+          <StatCard
+            icon={ShieldCheck}
+            label="Ready"
+            value={String(stats.ready)}
+            detail={`${stats.completed} configured`}
+            tone="emerald"
+          />
+          <StatCard
+            icon={TriangleAlert}
+            label="Needs setup"
+            value={String(stats.needs)}
+            detail={`${stats.empty} untouched`}
+            tone="amber"
+          />
+          <StatCard
+            icon={Layers3}
+            label="Areas"
+            value={String(groups.length)}
+            detail={`${stats.quickstart} quickstart`}
+            tone="cyan"
+          />
+        </div>
+
+        {primarySections.length > 0 && (
+          <section>
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <h3 className="text-sm font-semibold text-neutral-100">Common gateway setup</h3>
+              <span className="text-[10px] uppercase tracking-wide text-neutral-600">
+                Recommended
+              </span>
+            </div>
+            <div className="grid gap-3 lg:grid-cols-3">
+              {primarySections.map((section) => (
+                <QuickSetupCard
+                  key={section.key}
+                  section={section}
+                  onClick={() => onChoose(section)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {needsAttention.length > 0 && (
+          <section>
+            <h3 className="mb-2 text-sm font-semibold text-neutral-100">Needs attention</h3>
+            <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+              {needsAttention.map((section) => (
+                <button
+                  key={section.key}
+                  type="button"
+                  onClick={() => onChoose(section)}
+                  className="flex min-h-[78px] items-start gap-3 rounded-md border border-amber-400/15 bg-amber-400/[0.035] px-3 py-3 text-left transition hover:border-amber-300/35 hover:bg-amber-400/[0.06]"
+                >
+                  <SectionStateDot section={section} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-xs font-medium text-neutral-100">
+                      {section.label}
+                    </span>
+                    <span className="mt-1 block truncate font-mono text-[10px] text-neutral-500">
+                      {section.key}
+                    </span>
+                    <span className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-neutral-500">
+                      {section.help || section.group}
+                    </span>
+                  </span>
+                  <ChevronRight size={13} className="mt-0.5 shrink-0 text-neutral-500" />
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section>
+          <h3 className="mb-2 text-sm font-semibold text-neutral-100">Configuration areas</h3>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {groups.map(({ group, items }) => (
+              <GroupCard key={group} group={group} sections={items} onChoose={onChoose} />
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  detail,
+  tone,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  detail: string;
+  tone: "cyan" | "emerald" | "amber";
+}) {
+  const toneClass =
+    tone === "emerald"
+      ? "border-emerald-400/20 bg-emerald-400/[0.045] text-emerald-300"
+      : tone === "amber"
+        ? "border-amber-400/20 bg-amber-400/[0.045] text-amber-300"
+        : "border-cyan-400/20 bg-cyan-400/[0.045] text-cyan-300";
+  return (
+    <section className="rounded-md border border-white/10 bg-white/[0.03] p-4">
+      <div className="flex items-center justify-between gap-3">
+        <span className={`flex h-9 w-9 items-center justify-center rounded-md border ${toneClass}`}>
+          <Icon size={16} />
+        </span>
+        <span className="text-2xl font-semibold text-neutral-100">{value}</span>
+      </div>
+      <div className="mt-3 text-xs font-medium text-neutral-200">{label}</div>
+      <div className="mt-1 text-[11px] text-neutral-500">{detail}</div>
+    </section>
+  );
+}
+
+function QuickSetupCard({ section, onClick }: { section: ConfigSectionInfo; onClick: () => void }) {
+  const Icon = iconForGroup(section.group);
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group flex min-h-[128px] flex-col rounded-md border border-white/10 bg-white/[0.03] p-4 text-left transition hover:border-cyan-400/35 hover:bg-cyan-400/[0.04]"
+    >
+      <span className="flex items-start justify-between gap-3">
+        <span className="flex h-9 w-9 items-center justify-center rounded-md border border-cyan-400/20 bg-cyan-400/10 text-cyan-300">
+          <Icon size={16} />
+        </span>
+        <SectionStatusBadge section={section} />
+      </span>
+      <span className="mt-3 block text-sm font-semibold text-neutral-100">{section.label}</span>
+      <span className="mt-1 line-clamp-2 text-xs leading-relaxed text-neutral-500">
+        {section.help || section.key}
+      </span>
+      <span className="mt-auto flex items-center gap-1 pt-3 font-mono text-[10px] text-neutral-500 group-hover:text-cyan-300">
+        {section.key}
+        <ChevronRight size={12} />
+      </span>
+    </button>
+  );
+}
+
+function GroupCard({
+  group,
+  sections,
+  onChoose,
+}: {
+  group: string;
+  sections: ConfigSectionInfo[];
+  onChoose: (section: ConfigSectionInfo) => void;
+}) {
+  const Icon = iconForGroup(group);
+  const ready = sections.filter((section) => section.ready).length;
+  const preview = [...sections].sort((a, b) => Number(b.ready) - Number(a.ready)).slice(0, 4);
+  return (
+    <section className="rounded-md border border-white/10 bg-white/[0.03]">
+      <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 bg-[#020818]/80 text-cyan-300">
+          <Icon size={15} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <h4 className="truncate text-sm font-semibold text-neutral-100">{group}</h4>
+          <p className="mt-0.5 text-[10px] text-neutral-500">
+            {ready} ready / {sections.length} sections
+          </p>
+        </div>
+      </div>
+      <div className="divide-y divide-white/10">
+        {preview.map((section) => (
+          <button
+            key={section.key}
+            type="button"
+            onClick={() => onChoose(section)}
+            className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-xs text-neutral-300 transition hover:bg-white/[0.04] hover:text-neutral-100"
+          >
+            <SectionStateDot section={section} />
+            <span className="min-w-0 flex-1">
+              <span className="block truncate font-medium">{section.label}</span>
+              <span className="mt-0.5 block truncate font-mono text-[10px] text-neutral-500">
+                {section.key}
+              </span>
+            </span>
+            <ChevronRight size={12} className="shrink-0 text-neutral-500" />
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -1393,6 +1741,16 @@ function Badge({ label }: { label: string }) {
   );
 }
 
+function SectionStatusBadge({ section }: { section: ConfigSectionInfo }) {
+  const label = sectionStatusLabel(section);
+  const tone = section.ready
+    ? "bg-emerald-500/10 text-emerald-300"
+    : section.completed
+      ? "bg-amber-500/10 text-amber-300"
+      : "bg-white/[0.05] text-neutral-500";
+  return <span className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] ${tone}`}>{label}</span>;
+}
+
 function SectionStateDot({ section }: { section: ConfigSectionInfo }) {
   const color = section.ready
     ? "bg-emerald-400"
@@ -1400,6 +1758,27 @@ function SectionStateDot({ section }: { section: ConfigSectionInfo }) {
       ? "bg-amber-400"
       : "bg-white/[0.12]";
   return <span className={`h-2 w-2 shrink-0 rounded-full ${color}`} />;
+}
+
+interface SectionStats {
+  ready: number;
+  completed: number;
+  needs: number;
+  empty: number;
+  quickstart: number;
+}
+
+function getSectionStats(sections: ConfigSectionInfo[]): SectionStats {
+  const ready = sections.filter((section) => section.ready).length;
+  const completed = sections.filter((section) => section.completed).length;
+  const quickstart = sections.filter((section) => section.is_quickstart).length;
+  return {
+    ready,
+    completed,
+    needs: sections.length - ready,
+    empty: sections.filter((section) => !section.ready && !section.completed).length,
+    quickstart,
+  };
 }
 
 function groupSections(sections: ConfigSectionInfo[]) {
@@ -1423,9 +1802,25 @@ function filterSections(sections: ConfigSectionInfo[], filter: string) {
   );
 }
 
+function filterSectionsByStatus(sections: ConfigSectionInfo[], statusFilter: StatusFilter) {
+  if (statusFilter === "ready") return sections.filter((section) => section.ready);
+  if (statusFilter === "needs") return sections.filter((section) => !section.ready);
+  return sections;
+}
+
 function groupRank(group: string) {
   const idx = GROUP_ORDER.indexOf(group as (typeof GROUP_ORDER)[number]);
   return idx >= 0 ? idx : GROUP_ORDER.length;
+}
+
+function iconForGroup(group: string) {
+  return GROUP_ICONS[group] ?? Layers3;
+}
+
+function sectionStatusLabel(section: ConfigSectionInfo) {
+  if (section.ready) return "ready";
+  if (section.completed) return "partial";
+  return "empty";
 }
 
 function groupFields(entries: ConfigListEntry[]) {

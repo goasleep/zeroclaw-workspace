@@ -53,8 +53,8 @@ export function SettingsPage({
           {section === "gateway-config" && <ConfigPanel focusSection={configFocusSection} />}
           {section === "memory" && (
             <MemoryPanel
-              onOpenConfig={() => {
-                onConfigFocusSection("memory");
+              onOpenConfig={(sectionKey = "memory") => {
+                onConfigFocusSection(sectionKey);
                 onSection("gateway-config");
               }}
             />

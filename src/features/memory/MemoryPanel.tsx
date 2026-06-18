@@ -29,7 +29,7 @@ type LoadState =
 type TypeFilter = MemoryKind | "all";
 
 interface MemoryPanelProps {
-  onOpenConfig?: () => void;
+  onOpenConfig?: (sectionKey?: string) => void;
 }
 
 export function MemoryPanel({ onOpenConfig }: MemoryPanelProps) {
@@ -203,7 +203,7 @@ function MemoryDetail({
   selected: { entry: MemoryEntry; index: number } | null;
   state: LoadState;
   stats: ReturnType<typeof summarize>;
-  onOpenConfig?: () => void;
+  onOpenConfig?: (sectionKey?: string) => void;
 }) {
   const entry = selected?.entry ?? null;
   const meta = entry ? describeEntry(entry) : null;
@@ -230,7 +230,7 @@ function MemoryDetail({
           {onOpenConfig && (
             <button
               type="button"
-              onClick={onOpenConfig}
+              onClick={() => onOpenConfig(config?.key ?? "memory")}
               className="flex shrink-0 items-center gap-1.5 rounded-md border border-white/10 px-2.5 py-1.5 text-xs text-neutral-300 hover:border-cyan-400/60 hover:text-cyan-200"
             >
               <Settings2 size={13} />
@@ -301,7 +301,7 @@ function MemoryDetail({
   );
 }
 
-function EmptyList({ onOpenConfig }: { onOpenConfig?: () => void }) {
+function EmptyList({ onOpenConfig }: { onOpenConfig?: (sectionKey?: string) => void }) {
   return (
     <div className="rounded-lg border border-dashed border-white/10 bg-white/[0.035] p-4 text-xs text-neutral-500">
       <Database size={18} className="mb-2 text-neutral-600" />
@@ -309,7 +309,7 @@ function EmptyList({ onOpenConfig }: { onOpenConfig?: () => void }) {
       {onOpenConfig && (
         <button
           type="button"
-          onClick={onOpenConfig}
+          onClick={() => onOpenConfig("memory")}
           className="mt-3 flex items-center gap-1.5 rounded-md border border-white/10 px-2 py-1 text-[11px] text-neutral-300 hover:border-cyan-400/60 hover:text-cyan-200"
         >
           <Settings2 size={12} />
@@ -320,7 +320,7 @@ function EmptyList({ onOpenConfig }: { onOpenConfig?: () => void }) {
   );
 }
 
-function EmptyDetail({ onOpenConfig }: { onOpenConfig?: () => void }) {
+function EmptyDetail({ onOpenConfig }: { onOpenConfig?: (sectionKey?: string) => void }) {
   return (
     <div className="flex min-h-80 items-center justify-center rounded-lg border border-dashed border-white/10 bg-white/[0.025] p-8 text-center">
       <div>
@@ -329,7 +329,7 @@ function EmptyDetail({ onOpenConfig }: { onOpenConfig?: () => void }) {
         {onOpenConfig && (
           <button
             type="button"
-            onClick={onOpenConfig}
+            onClick={() => onOpenConfig("memory")}
             className="mx-auto mt-4 flex items-center gap-1.5 rounded-md border border-white/10 px-2.5 py-1.5 text-xs text-neutral-300 hover:border-cyan-400/60 hover:text-cyan-200"
           >
             <Settings2 size={13} />
