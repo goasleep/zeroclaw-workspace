@@ -29,18 +29,28 @@ import {
 interface SetupDoctorTabProps {
   prefix: string;
   title: string;
+  preferredCapabilityId?: SetupCapabilityId;
   onConfigSaved: () => void;
 }
 
-export function SetupDoctorTab({ prefix, title, onConfigSaved }: SetupDoctorTabProps) {
+export function SetupDoctorTab({
+  prefix,
+  title,
+  preferredCapabilityId,
+  onConfigSaved,
+}: SetupDoctorTabProps) {
   const baseTargets = useMemo(() => setupTargetsForPrefix(prefix), [prefix]);
   const [targets, setTargets] = useState(baseTargets);
-  const [activeKey, setActiveKey] = useState(baseTargets[0]?.key ?? "");
+  const [activeKey, setActiveKey] = useState(
+    preferredTarget(baseTargets, preferredCapabilityId)?.key ?? baseTargets[0]?.key ?? "",
+  );
 
   useEffect(() => {
     let cancelled = false;
     setTargets(baseTargets);
-    setActiveKey(baseTargets[0]?.key ?? "");
+    setActiveKey(
+      preferredTarget(baseTargets, preferredCapabilityId)?.key ?? baseTargets[0]?.key ?? "",
+    );
 
     const mcpTarget = baseTargets.find((t) => t.context.capability_id === "mcp_stdio");
     if (!mcpTarget) return;
@@ -70,7 +80,7 @@ export function SetupDoctorTab({ prefix, title, onConfigSaved }: SetupDoctorTabP
     return () => {
       cancelled = true;
     };
-  }, [baseTargets]);
+  }, [baseTargets, preferredCapabilityId]);
 
   const active = targets.find((target) => target.key === activeKey) ?? targets[0];
 
@@ -427,6 +437,15 @@ async function readConfigString(path: string) {
   } catch {
     return "";
   }
+}
+
+function preferredTarget(
+  targets: SetupTarget[],
+  capabilityId: SetupCapabilityId | undefined,
+) {
+  return capabilityId
+    ? targets.find((target) => target.context.capability_id === capabilityId)
+    : undefined;
 }
 
 function isTauriRuntime() {

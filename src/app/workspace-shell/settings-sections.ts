@@ -3,6 +3,7 @@ import {
   Cog,
   Database,
   HardDrive,
+  PackageCheck,
   PlugZap,
   Settings,
   Stethoscope,
@@ -19,6 +20,7 @@ export const SETTINGS_SECTIONS: Array<{
   icon: LucideIcon;
 }> = [
   { id: "app", label: "App", group: "App", icon: Settings },
+  { id: "setup-center", label: "Setup Center", group: "App", icon: PackageCheck },
   { id: "gateway-config", label: "Gateway Config", group: "Gateway", icon: Cog },
   { id: "memory", label: "Memory", group: "Operations", icon: Database },
   { id: "cron", label: "Cron", group: "Operations", icon: Clock },

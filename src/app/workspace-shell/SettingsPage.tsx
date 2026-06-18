@@ -9,6 +9,7 @@ import { DoctorPanel } from "@/features/doctor/DoctorPanel";
 import { IntegrationsPanel } from "@/features/integrations/IntegrationsPanel";
 import { LogsPanel } from "@/features/logs/LogsPanel";
 import { MemoryPanel } from "@/features/memory/MemoryPanel";
+import { SetupCenterPanel } from "@/features/setup/SetupCenterPanel";
 import { ToolsPanel } from "@/features/tools/ToolsPanel";
 import {
   DEFAULT_PREFERENCES,
@@ -54,6 +55,7 @@ export function SettingsPage({
         </header>
         <div className="min-h-0 flex-1 overflow-hidden">
           {section === "app" && <AppSettings />}
+          {section === "setup-center" && <SetupCenterPanel />}
           {section === "gateway-config" && (
             <ConfigPanel focusSection={configFocusSection} />
           )}
