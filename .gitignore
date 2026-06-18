@@ -39,4 +39,5 @@ Thumbs.db
 # CodeGraph / per-tool
 .codegraph/
 .agents/
+.playwright-mcp/
 skills-lock.json
