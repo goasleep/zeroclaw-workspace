@@ -100,11 +100,11 @@ export class ChatClient {
     return this.connectPromise;
   }
 
-  send(frame: ChatOutbound) {
+  async send(frame: ChatOutbound) {
     if (!this.sessionId) {
       throw new Error("chat socket not open");
     }
-    void chatSend({
+    await chatSend({
       session_id: this.sessionId,
       frame: JSON.stringify(frame),
     });

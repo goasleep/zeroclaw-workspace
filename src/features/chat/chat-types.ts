@@ -2,6 +2,7 @@ import type { ChatMode } from "@/api/ws-chat";
 import type { DiffPreview } from "./diff-preview";
 
 export type MessageRole = "user" | "assistant";
+export type ApprovalDecision = "approve" | "deny" | "always";
 
 export interface NormalizedSession {
   session_id: string;
@@ -17,6 +18,7 @@ export interface ChatMessage {
   id: string;
   role: MessageRole;
   content: string;
+  timestamp?: string | null;
   thinking?: string;
   toolCalls: Array<{ name: string; args: unknown; result?: unknown }>;
   attachments?: Array<{ filename: string; mime_type: string; size?: number }>;
@@ -26,6 +28,11 @@ export interface ChatMessage {
     arguments_summary: string;
     timeout_secs?: number;
     preview?: DiffPreview | null;
+    response?: {
+      decision: ApprovalDecision;
+      status: "pending" | "sent" | "error";
+      error?: string;
+    };
   } | null;
   status: "pending" | "streaming" | "done" | "aborted" | "error";
   error?: string;

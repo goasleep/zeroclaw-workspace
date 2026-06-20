@@ -9,6 +9,7 @@ import { loadSessionWorkspaceMap } from "./chat-local-state";
 import type { NormalizedSession } from "./chat-types";
 import {
   fromSessionMessage,
+  isVisibleSession,
   mergeTranscripts,
   normalizeSession,
   sessionSort,
@@ -37,6 +38,7 @@ export function useSessionService(
         .filter((s): s is NormalizedSession => s !== null)
         .filter((s) => !s.agent_alias || s.agent_alias === agentAlias)
         .filter((s) => sessionBelongsToWorkspace(s, workspaceRoot, workspaceMap))
+        .filter(isVisibleSession)
         .sort(sessionSort);
       setSessions(normalized);
     } catch (e) {

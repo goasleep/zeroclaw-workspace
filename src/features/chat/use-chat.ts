@@ -11,13 +11,14 @@ import { useTranscriptCache } from "./use-transcript-cache";
 import type { ChatModelOverride, UseChatOptions } from "./chat-types";
 
 export type {
+  ApprovalDecision,
   ChatMessage,
   ChatModelOverride,
   MessageRole,
   NormalizedSession,
   UseChatOptions,
 } from "./chat-types";
-export { normalizeSession, sessionSort, shortSessionName } from "./chat-reducer";
+export { isVisibleSession, normalizeSession, sessionSort, shortSessionName } from "./chat-reducer";
 
 export function useChat({
   connectionId,
@@ -156,31 +157,60 @@ export function useChat({
   const send = useCallback(
     (content: string, attachments?: FileEntry[]) => {
       if (!clientRef.current) return;
+      const client = clientRef.current;
       const attachmentSummary = attachments?.map((a) => ({
         filename: a.filename,
         mime_type: a.mime_type,
         size: a.size,
       }));
       dispatch({ type: "push-user", content, attachments: attachmentSummary });
-      clientRef.current.send({
-        type: "message",
-        content,
-        attachments: attachments?.length ? attachments : undefined,
-      });
+      void client
+        .send({
+          type: "message",
+          content,
+          attachments: attachments?.length ? attachments : undefined,
+        })
+        .catch((e) => {
+          setSessionError(e instanceof Error ? e.message : String(e));
+        });
     },
-    [clientRef],
+    [clientRef, setSessionError],
   );
 
   const respondToApproval = useCallback(
-    (request_id: string, decision: "approve" | "deny" | "always") => {
-      if (!clientRef.current) return;
-      clientRef.current.send({
-        type: "approval_response",
-        request_id,
-        decision,
-      });
+    async (request_id: string, decision: "approve" | "deny" | "always") => {
+      const client = clientRef.current;
+      if (!client) {
+        dispatch({
+          type: "approval-response",
+          requestId: request_id,
+          decision,
+          status: "error",
+          error: "chat socket not open",
+        });
+        return;
+      }
+      dispatch({ type: "approval-response", requestId: request_id, decision, status: "pending" });
+      try {
+        await client.send({
+          type: "approval_response",
+          request_id,
+          decision,
+        });
+        dispatch({ type: "approval-response", requestId: request_id, decision, status: "sent" });
+      } catch (e) {
+        const message = e instanceof Error ? e.message : String(e);
+        dispatch({
+          type: "approval-response",
+          requestId: request_id,
+          decision,
+          status: "error",
+          error: message,
+        });
+        setSessionError(message);
+      }
     },
-    [clientRef],
+    [clientRef, setSessionError],
   );
 
   const abort = useCallback(async () => {
