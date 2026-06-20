@@ -5,12 +5,10 @@ import {
   MessageSquarePlus,
   Pencil,
   RefreshCw,
-  Server,
   Settings,
   Trash2,
 } from "lucide-react";
 import { useLingui } from "@lingui/react/macro";
-import { useConnections } from "@/app/connection-context";
 import { useWorkspace } from "@/app/workspace-context";
 import type { NormalizedSession } from "@/features/chat/use-chat";
 import type { WorkspacePage } from "./types";
@@ -51,13 +49,11 @@ export function WorkspaceSidebar({
   onPickRoot,
 }: WorkspaceSidebarProps) {
   const { t } = useLingui();
-  const { active, health } = useConnections();
   const { root, recentRoots, selectedFiles } = useWorkspace();
-  const online = active && health?.connection_id === active.id && health.healthy;
 
   return (
-    <aside className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden border-r border-white/10 bg-[#020818]/90">
-      <WorkspaceHeader connectionName={active?.name ?? null} online={Boolean(online)} />
+    <aside className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden border-r border-white/[0.08] bg-[#020818]/90">
+      <WorkspaceHeader />
       <ProjectList
         root={root}
         recentRoots={recentRoots}
@@ -106,21 +102,13 @@ export function WorkspaceSidebar({
   );
 }
 
-function WorkspaceHeader({
-  connectionName,
-  online,
-}: {
-  connectionName: string | null;
-  online: boolean;
-}) {
+function WorkspaceHeader() {
+  const { t } = useLingui();
   return (
-    <header className="shrink-0 border-b border-white/10 p-3">
-      <div className="flex items-center gap-2 text-xs text-neutral-500">
-        <Server size={11} className="text-neutral-600" />
-        <span className="min-w-0 flex-1 truncate">{connectionName ?? "ZeroClaw"}</span>
-        <span
-          className={`h-1.5 w-1.5 rounded-full ${online ? "bg-emerald-400" : "bg-white/[0.12]"}`}
-        />
+    <header className="shrink-0 border-b border-white/[0.08] px-3 py-2.5">
+      <div className="flex items-center gap-2 text-xs font-medium text-neutral-300">
+        <FolderOpen size={12} className="text-cyan-300" />
+        <span className="min-w-0 flex-1 truncate">{t`Workspace`}</span>
       </div>
     </header>
   );
@@ -157,7 +145,7 @@ function ProjectList({
   const visibleRoots = recentRoots.slice(0, 5);
 
   return (
-    <section className="shrink-0 border-b border-white/10 px-3 py-3">
+    <section className="shrink-0 border-b border-white/[0.08] px-3 py-3">
       <div className="mb-2 flex items-center gap-1">
         <h2 className="min-w-0 flex-1 text-[10px] uppercase tracking-wide text-neutral-500">
           {t`Project`}
@@ -191,10 +179,10 @@ function ProjectList({
                   <button
                     type="button"
                     onClick={() => onRoot(path)}
-                    className={`flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs transition ${
+                    className={`flex min-w-0 flex-1 items-center gap-2 rounded-md border px-2 py-1.5 text-left text-xs transition ${
                       activeWorkspaceRoot === path
-                        ? "bg-white/[0.05] text-neutral-100"
-                        : "text-neutral-300 hover:bg-white/[0.05] hover:text-neutral-100"
+                        ? "border-cyan-400/25 bg-cyan-400/10 text-cyan-50"
+                        : "border-transparent text-neutral-300 hover:bg-white/[0.05] hover:text-neutral-100"
                     }`}
                     title={path}
                   >
@@ -212,7 +200,7 @@ function ProjectList({
                   </button>
                 </div>
                 {projectThreads.length > 0 && (
-                  <div className="mt-1 space-y-0.5 pl-6">
+                  <div className="mt-1 space-y-0.5 border-l border-white/[0.06] pl-4 ml-3">
                     {projectThreads.slice(0, 5).map((thread) => (
                       <ThreadButton
                         key={thread.session_id}
@@ -301,7 +289,7 @@ function ThreadNav({
           ))}
         </div>
       )}
-      <div className="mt-3 shrink-0 rounded-md border border-white/10 bg-[#020818]/90 px-2 py-1.5 text-[10px] text-neutral-500">
+      <div className="mt-3 shrink-0 rounded-md border border-white/[0.08] bg-white/[0.025] px-2 py-1.5 text-[10px] text-neutral-500">
         {t`Attachments`}
         <span className="ml-1 text-neutral-300">{selectedCount}</span>
       </div>
@@ -341,7 +329,7 @@ function ThreadButton({
       <div
         className={`group flex min-w-0 items-center rounded-md text-xs transition ${
           active
-            ? "bg-cyan-400/10 text-cyan-100"
+            ? "bg-cyan-400/10 text-cyan-100 ring-1 ring-cyan-400/20"
             : "text-neutral-500 hover:bg-white/[0.04] hover:text-neutral-200"
         }`}
       >
@@ -382,7 +370,7 @@ function ThreadButton({
     <div
       className={`group rounded-md border ${
         active
-          ? "border-cyan-400/25 bg-white/[0.08] text-neutral-100"
+          ? "border-cyan-400/25 bg-cyan-400/10 text-cyan-50"
           : "border-transparent text-neutral-400 hover:bg-white/[0.05] hover:text-neutral-200"
       }`}
     >

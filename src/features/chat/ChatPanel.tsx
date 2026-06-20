@@ -468,11 +468,6 @@ export function ChatPanel({
     }
   }
 
-  function applySuggestedPrompt(prompt: string) {
-    setDraft(prompt);
-    window.requestAnimationFrame(() => textareaRef.current?.focus());
-  }
-
   function changeModelProvider(value: string) {
     setSelectedModelProvider(value);
     if (!hasMessages) {
@@ -512,13 +507,7 @@ export function ChatPanel({
       ? t`${gitStatus.branch} · ${gitStatus.changed_count} changed`
       : gitStatus?.is_repo
         ? t`${gitStatus.changed_count} changed`
-        : t`No git status`;
-  const suggestedPrompts = [
-    t`Review current changes`,
-    t`Explain this project`,
-    t`Find likely bugs`,
-    t`Run diagnostics`,
-  ];
+        : null;
   const renderComposer = (variant: "center" | "footer") => (
     <div
       className={
@@ -673,96 +662,84 @@ export function ChatPanel({
       onDrop={onDrop}
     >
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="shrink-0 border-b border-white/10 px-3 py-2 text-xs">
-          <div className="flex min-w-0 items-center gap-2">
-            <FolderOpen
-              size={12}
-              className={workspaceRoot ? "text-cyan-300" : "text-neutral-600"}
-            />
-            <span className="min-w-0 truncate font-medium text-neutral-100">
-              {t`Project:`} {workspaceRoot ? workspaceName : t`No project`}
-            </span>
-            <span className="shrink-0 rounded bg-white/[0.05] px-1.5 py-0.5 text-[10px] text-neutral-500">
-              {gitLabel}
-            </span>
-            <span className="shrink-0 rounded bg-white/[0.05] px-1.5 py-0.5 text-[10px] text-neutral-400">
-              {t`Agent:`} {agentAlias}
-            </span>
-            <button
-              type="button"
-              onClick={openAgentConfig}
-              disabled={!agentAlias}
-              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border border-white/10 text-neutral-500 hover:border-cyan-400/50 hover:bg-cyan-400/10 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40"
-              title={t`Open agent config`}
-              aria-label={t`Open agent config`}
-            >
-              <Wrench size={11} />
-            </button>
-            <button
-              type="button"
-              onClick={openAgentWorkspace}
-              disabled={!agentAlias}
-              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border border-white/10 text-neutral-500 hover:border-cyan-400/50 hover:bg-cyan-400/10 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40"
-              title={t`Open agent workspace`}
-              aria-label={t`Open agent workspace`}
-            >
-              <FolderOpen size={11} />
-            </button>
-            <Select
-              value={selectedModelProvider}
-              options={modelOptions}
-              onValueChange={changeModelProvider}
-              placeholder={t`Model`}
-              className="h-6 max-w-64 border-white/10 bg-white/[0.04] py-0 text-[10px]"
-            />
-            <span
-              className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] ${
-                chat.connected
-                  ? "bg-emerald-500/15 text-emerald-300"
-                  : "bg-white/[0.08] text-neutral-500"
-              }`}
-            >
-              {chat.connected ? t`Online` : t`Connecting`}
-            </span>
-            <div className="flex-1" />
-            <button
-              type="button"
-              onClick={() => newSession(modelOverrideFor(selectedModelProvider))}
-              className="flex items-center gap-1 text-neutral-400 hover:text-cyan-300"
-              title={
-                selectedModelChoice
-                  ? t`New session with ${selectedModelChoice.value}`
-                  : t`New session`
-              }
-            >
-              <Plus size={12} />
-            </button>
-            <button
-              type="button"
-              onClick={() => void chat.abort()}
-              className="flex items-center gap-1 text-neutral-400 hover:text-red-300"
-              title={t`Abort current turn`}
-            >
-              <CircleStop size={12} />
-            </button>
-            <button
-              type="button"
-              onClick={chat.clear}
-              className="flex items-center gap-1 text-neutral-400 hover:text-cyan-300"
-              title={t`Clear local view`}
-            >
-              <RotateCcw size={12} />
-            </button>
-          </div>
-          <div className="mt-1 flex min-w-0 items-center gap-2 text-[11px] text-neutral-500">
-            {isCode ? (
-              <TerminalSquare size={11} className="text-cyan-300" />
-            ) : (
-              <Sparkles size={11} className="text-cyan-300" />
-            )}
-            <span className="min-w-0 truncate">
-              {t`Session:`} {sessionName}
-            </span>
+        <header className="shrink-0 border-b border-white/[0.08] px-4 py-2.5 text-xs">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
+              {isCode ? (
+                <TerminalSquare size={13} className="shrink-0 text-cyan-300" />
+              ) : (
+                <Sparkles size={13} className="shrink-0 text-cyan-300" />
+              )}
+              <div className="min-w-0">
+                <div className="flex min-w-0 items-center gap-1.5 text-sm font-medium text-neutral-100">
+                  <span className="truncate">{workspaceRoot ? workspaceName : t`General`}</span>
+                  <span className="shrink-0 text-neutral-600">/</span>
+                  <span className="truncate text-neutral-300">{sessionName}</span>
+                </div>
+                {gitLabel && (
+                  <div className="mt-0.5 truncate font-mono text-[10px] text-neutral-500">
+                    {gitLabel}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+              <Select
+                value={selectedModelProvider}
+                options={modelOptions}
+                onValueChange={changeModelProvider}
+                placeholder={t`Model`}
+                className="h-7 max-w-64 border-white/10 bg-white/[0.04] py-0 text-[10px]"
+              />
+              <button
+                type="button"
+                onClick={openAgentConfig}
+                disabled={!agentAlias}
+                className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 text-neutral-500 hover:border-cyan-400/50 hover:bg-cyan-400/10 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40"
+                title={t`Open agent config`}
+                aria-label={t`Open agent config`}
+              >
+                <Wrench size={12} />
+              </button>
+              <button
+                type="button"
+                onClick={openAgentWorkspace}
+                disabled={!agentAlias}
+                className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 text-neutral-500 hover:border-cyan-400/50 hover:bg-cyan-400/10 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40"
+                title={t`Open agent workspace`}
+                aria-label={t`Open agent workspace`}
+              >
+                <FolderOpen size={12} />
+              </button>
+              <button
+                type="button"
+                onClick={() => newSession(modelOverrideFor(selectedModelProvider))}
+                className="inline-flex h-7 w-7 items-center justify-center rounded-md text-neutral-500 hover:bg-white/[0.05] hover:text-cyan-300"
+                title={
+                  selectedModelChoice
+                    ? t`New session with ${selectedModelChoice.value}`
+                    : t`New session`
+                }
+              >
+                <Plus size={13} />
+              </button>
+              <button
+                type="button"
+                onClick={() => void chat.abort()}
+                className="inline-flex h-7 w-7 items-center justify-center rounded-md text-neutral-500 hover:bg-white/[0.05] hover:text-red-300"
+                title={t`Abort current turn`}
+              >
+                <CircleStop size={13} />
+              </button>
+              <button
+                type="button"
+                onClick={chat.clear}
+                className="inline-flex h-7 w-7 items-center justify-center rounded-md text-neutral-500 hover:bg-white/[0.05] hover:text-cyan-300"
+                title={t`Clear local view`}
+              >
+                <RotateCcw size={13} />
+              </button>
+            </div>
           </div>
           {remoteCode && (
             <div className="mt-2 flex min-w-0 items-center gap-1">
@@ -823,7 +800,7 @@ export function ChatPanel({
         >
           {!hasMessages && (
             <div className="w-full max-w-4xl">
-              <h1 className="mb-6 text-center text-3xl font-medium tracking-normal text-neutral-100">
+              <h1 className="mb-4 text-center text-2xl font-medium tracking-normal text-neutral-100">
                 {t`What do you want to work on in this session?`}
               </h1>
               {!workspaceRoot && (
@@ -839,18 +816,6 @@ export function ChatPanel({
                 </div>
               )}
               {renderComposer("center")}
-              <div className="mt-4 flex flex-wrap justify-center gap-2">
-                {suggestedPrompts.map((prompt) => (
-                  <button
-                    key={prompt}
-                    type="button"
-                    onClick={() => applySuggestedPrompt(prompt)}
-                    className="rounded border border-white/10 bg-white/[0.035] px-3 py-1.5 text-xs text-neutral-300 transition hover:border-cyan-400 hover:text-cyan-300"
-                  >
-                    {prompt}
-                  </button>
-                ))}
-              </div>
             </div>
           )}
           {chat.messages.map((m) => (

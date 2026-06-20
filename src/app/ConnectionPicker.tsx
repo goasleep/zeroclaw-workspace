@@ -191,7 +191,7 @@ export function ConnectionPicker({ onAdd }: Props) {
   return (
     <div
       data-tauri-drag-region="deep"
-      className="relative z-10 flex h-12 select-none items-center gap-3 border-b border-cyan-400/10 bg-[#020818]/90 px-4 pl-[84px] text-sm shadow-sm backdrop-blur-xl"
+      className="relative z-10 flex h-12 select-none items-center gap-3 border-b border-white/[0.08] bg-[#020818]/90 px-4 pl-[84px] text-sm shadow-sm backdrop-blur-xl"
     >
       <div className="flex min-w-0 items-center gap-2">
         <div className="rounded-lg border border-cyan-400/25 bg-cyan-400/10 p-1.5 text-cyan-300">
@@ -201,7 +201,7 @@ export function ConnectionPicker({ onAdd }: Props) {
           <div className="text-[11px] uppercase tracking-wide text-neutral-500">
             ZeroClaw Workspace
           </div>
-          <div className="text-xs text-neutral-300">{t`Workspace runtime`}</div>
+          <div className="text-xs text-neutral-300">{t`Runtime`}</div>
         </div>
       </div>
 
