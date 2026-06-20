@@ -50,6 +50,19 @@ If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is 
 - Rust checks individually: `pnpm rust:fmt`, `pnpm rust:clippy`,
   `pnpm rust:test`
 
+## Commit Messages
+
+All agent-created commits must use Conventional Commits style:
+
+```text
+type(optional-scope): concise imperative summary
+```
+
+Use common types such as `feat`, `fix`, `docs`, `style`, `refactor`, `test`,
+`chore`, `build`, `ci`, and `perf`. Keep the summary lowercase unless a proper
+name requires capitalization. Before committing, inspect recent history and
+match the repository's established scope names when one applies.
+
 ## Generated Bindings
 
 Rust commands exposed to the frontend are collected through `tauri-specta`.
