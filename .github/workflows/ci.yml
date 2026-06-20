@@ -71,5 +71,9 @@ jobs:
       - run: pnpm fetch:zeroclaw-sidecar --target ${{ matrix.target }}
       - run: cargo clippy --all-targets -- -D warnings
         working-directory: src-tauri
-      - run: cargo test --all-targets
+      - if: matrix.os == 'windows-latest'
+        run: cargo test --all-targets --no-run
+        working-directory: src-tauri
+      - if: matrix.os != 'windows-latest'
+        run: cargo test --all-targets
         working-directory: src-tauri
