@@ -140,6 +140,22 @@ This synchronizes `package.json`, `src-tauri/Cargo.toml`, and
 `src-tauri/tauri.conf.json`. Do not include the `v` prefix here; keep that for
 the Git tag, such as `v0.1.1`.
 
+After changing `scripts/zeroclaw-sidecars.json`, run the local inner-runtime
+smoke check:
+
+```bash
+pnpm smoke:inner-zeroclaw:local
+pnpm smoke:inner-zeroclaw:features
+```
+
+This starts the bundled sidecar with an app-private `inner-zeroclaw` config
+directory on a temporary localhost port, then verifies health, pairing,
+`/api/status`, and the SSE events endpoint. It is intended to catch obvious
+bundled `zeroclaw` upgrade incompatibilities before running the full app. The
+features variant also checks common UI-facing gateway endpoints for config,
+sessions, logs, tools, memory, channels, cron, integrations, doctor, devices,
+skills, quickstart, and personality templates.
+
 ## Tauri command bindings
 
 Rust commands exposed to the frontend are collected through `tauri-specta`.
