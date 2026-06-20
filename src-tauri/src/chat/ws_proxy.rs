@@ -122,6 +122,7 @@ pub async fn open<R: Runtime>(
     Ok(session_id)
 }
 
+#[allow(clippy::too_many_arguments)]
 fn build_ws_url(
     base: &str,
     alias: &str,

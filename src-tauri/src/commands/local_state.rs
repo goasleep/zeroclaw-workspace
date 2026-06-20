@@ -102,6 +102,7 @@ pub async fn chat_local_get_transcript(
 
 #[tauri::command]
 #[specta::specta]
+#[allow(clippy::too_many_arguments)]
 pub async fn chat_local_set_transcript<R: Runtime>(
     app: AppHandle<R>,
     store: State<'_, SharedLocalStateStore>,

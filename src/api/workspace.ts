@@ -121,18 +121,18 @@ export async function workspaceAdapterGitStatus(conn: Connection, root: string) 
   return apiFetch<WorkspaceGitStatus>(`/api/workspace/git?${params}`);
 }
 
-function joinRemoteRelPath(parent: string, name: string) {
+export function joinRemoteRelPath(parent: string, name: string) {
   const cleanParent = parent.replace(/^\/+|\/+$/g, "");
   return cleanParent ? `${cleanParent}/${name}` : name;
 }
 
-function joinWorkspacePath(root: string, relPath: string) {
+export function joinWorkspacePath(root: string, relPath: string) {
   if (!relPath) return root;
   const separator = root.includes("\\") && !root.includes("/") ? "\\" : "/";
   return `${root.replace(/[\\/]+$/g, "")}${separator}${relPath.replace(/^[/\\]+/g, "")}`;
 }
 
-function relativeWorkspacePath(root: string, path: string) {
+export function relativeWorkspacePath(root: string, path: string) {
   const cleanRoot = root.replace(/[\\/]+$/g, "");
   if (path === cleanRoot || path === root) return "";
   if (path.startsWith(`${cleanRoot}/`) || path.startsWith(`${cleanRoot}\\`)) {

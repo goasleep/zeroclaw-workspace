@@ -5,8 +5,10 @@
 //! "TypeError: Load failed". Using Tauri IPC → reqwest sidesteps the
 //! issue and keeps the network layer fully under our control.
 
+use crate::connection::store::SharedConnectionBook;
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Runtime};
+use url::Url;
 
 #[derive(Debug, Clone, Deserialize, specta::Type)]
 pub struct GatewayHttpRequest {
@@ -37,6 +39,7 @@ pub struct GatewayHttpError {
 #[specta::specta]
 pub async fn gateway_request<R: Runtime>(
     _app: AppHandle<R>,
+    book: tauri::State<'_, SharedConnectionBook>,
     client: tauri::State<'_, reqwest::Client>,
     req: GatewayHttpRequest,
 ) -> Result<GatewayHttpResponse, GatewayHttpError> {
@@ -46,8 +49,14 @@ pub async fn gateway_request<R: Runtime>(
         "PUT" => reqwest::Method::PUT,
         "PATCH" => reqwest::Method::PATCH,
         "DELETE" => reqwest::Method::DELETE,
-        other => other.parse().unwrap_or(reqwest::Method::GET),
+        other => {
+            return Err(GatewayHttpError {
+                message: format!("unsupported gateway method: {other}"),
+            });
+        }
     };
+
+    validate_gateway_url(&book, &req.url).await?;
 
     let mut builder = client.request(method, &req.url);
     for (k, v) in &req.headers {
@@ -77,4 +86,51 @@ pub async fn gateway_request<R: Runtime>(
         headers,
         body,
     })
+}
+
+async fn validate_gateway_url(
+    book: &tauri::State<'_, SharedConnectionBook>,
+    target: &str,
+) -> Result<(), GatewayHttpError> {
+    let conn = book.active().await.ok_or_else(|| GatewayHttpError {
+        message: "no active connection".to_string(),
+    })?;
+    if conn.url.trim().is_empty() {
+        return Err(GatewayHttpError {
+            message: "active connection has no resolved URL".to_string(),
+        });
+    }
+
+    let base = Url::parse(&conn.url).map_err(|e| GatewayHttpError {
+        message: format!("active connection URL is invalid: {e}"),
+    })?;
+    let target = Url::parse(target).map_err(|e| GatewayHttpError {
+        message: format!("gateway request URL is invalid: {e}"),
+    })?;
+
+    if !matches!(target.scheme(), "http" | "https") {
+        return Err(GatewayHttpError {
+            message: "gateway request URL must be http(s)".to_string(),
+        });
+    }
+    if !same_origin(&base, &target) || !path_under_base(&base, &target) {
+        return Err(GatewayHttpError {
+            message: "gateway request URL must target the active connection".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn same_origin(base: &Url, target: &Url) -> bool {
+    base.scheme() == target.scheme()
+        && base.host_str() == target.host_str()
+        && base.port_or_known_default() == target.port_or_known_default()
+}
+
+fn path_under_base(base: &Url, target: &Url) -> bool {
+    let base_path = base.path().trim_end_matches('/');
+    if base_path.is_empty() {
+        return true;
+    }
+    target.path() == base_path || target.path().starts_with(&format!("{base_path}/"))
 }

@@ -4,7 +4,7 @@ use crate::workspace::fs::{self, DirEntry, WorkspaceState};
 use crate::workspace::local_state::{SharedLocalStateStore, WorkspaceLocalState};
 use notify::{RecommendedWatcher, Watcher};
 use serde::Serialize;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use tauri::{AppHandle, Runtime, State};
 use tokio::process::Command;
@@ -87,25 +87,34 @@ pub async fn workspace_get_root(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn workspace_list_dir(path: String) -> Result<Vec<DirEntry>, String> {
-    fs::list_dir(std::path::Path::new(&path))
-        .await
-        .map_err(|e| e.to_string())
+pub async fn workspace_list_dir(
+    state: State<'_, Arc<WorkspaceState>>,
+    path: String,
+) -> Result<Vec<DirEntry>, String> {
+    let path = existing_path_inside_root(&state, &path).await?;
+    fs::list_dir(&path).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn workspace_read_file(path: String) -> Result<String, String> {
-    let bytes = fs::read_file(std::path::Path::new(&path))
-        .await
-        .map_err(|e| e.to_string())?;
+pub async fn workspace_read_file(
+    state: State<'_, Arc<WorkspaceState>>,
+    path: String,
+) -> Result<String, String> {
+    let path = existing_path_inside_root(&state, &path).await?;
+    let bytes = fs::read_file(&path).await.map_err(|e| e.to_string())?;
     String::from_utf8(bytes).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn workspace_write_file(path: String, content: String) -> Result<(), String> {
-    fs::write_file(std::path::Path::new(&path), content.as_bytes())
+pub async fn workspace_write_file(
+    state: State<'_, Arc<WorkspaceState>>,
+    path: String,
+    content: String,
+) -> Result<(), String> {
+    let path = writable_path_inside_root(&state, &path).await?;
+    fs::write_file(&path, content.as_bytes())
         .await
         .map_err(|e| e.to_string())
 }
@@ -147,8 +156,79 @@ pub async fn workspace_watch_stop(watcher: State<'_, SharedWatcher>) -> Result<(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn workspace_git_status(root: String) -> Result<WorkspaceGitStatus, String> {
-    Ok(git_status_for_root(root).await)
+pub async fn workspace_git_status(
+    state: State<'_, Arc<WorkspaceState>>,
+    root: String,
+) -> Result<WorkspaceGitStatus, String> {
+    let root = existing_path_inside_root(&state, &root).await?;
+    Ok(git_status_for_root(root.to_string_lossy().to_string()).await)
+}
+
+async fn current_root(state: &State<'_, Arc<WorkspaceState>>) -> Result<PathBuf, String> {
+    let root = state
+        .root()
+        .await
+        .ok_or_else(|| "no workspace root selected".to_string())?;
+    canonicalize_existing(&root).await
+}
+
+async fn existing_path_inside_root(
+    state: &State<'_, Arc<WorkspaceState>>,
+    path: &str,
+) -> Result<PathBuf, String> {
+    let root = current_root(state).await?;
+    let target = canonicalize_existing(Path::new(path)).await?;
+    ensure_inside(&root, &target)?;
+    Ok(target)
+}
+
+async fn writable_path_inside_root(
+    state: &State<'_, Arc<WorkspaceState>>,
+    path: &str,
+) -> Result<PathBuf, String> {
+    let root = current_root(state).await?;
+    let target = absolute_path(Path::new(path))?;
+    ensure_inside(&root, &target)?;
+    if let Ok(existing) = canonicalize_existing(&target).await {
+        ensure_inside(&root, &existing)?;
+        return Ok(existing);
+    }
+    let parent = target
+        .parent()
+        .ok_or_else(|| "workspace target has no parent".to_string())?;
+    let existing_parent = nearest_existing_parent(parent).await?;
+    ensure_inside(&root, &existing_parent)?;
+    Ok(target)
+}
+
+async fn nearest_existing_parent(path: &Path) -> Result<PathBuf, String> {
+    let mut current = path;
+    loop {
+        if tokio::fs::metadata(current).await.is_ok() {
+            return canonicalize_existing(current).await;
+        }
+        current = current
+            .parent()
+            .ok_or_else(|| "workspace target parent does not exist".to_string())?;
+    }
+}
+
+async fn canonicalize_existing(path: &Path) -> Result<PathBuf, String> {
+    tokio::fs::canonicalize(path)
+        .await
+        .map_err(|e| format!("invalid workspace path {}: {e}", path.display()))
+}
+
+fn absolute_path(path: &Path) -> Result<PathBuf, String> {
+    std::path::absolute(path).map_err(|e| format!("invalid workspace path {}: {e}", path.display()))
+}
+
+fn ensure_inside(root: &Path, target: &Path) -> Result<(), String> {
+    if target.starts_with(root) {
+        Ok(())
+    } else {
+        Err("workspace path must stay inside the selected root".to_string())
+    }
 }
 
 async fn git_status_for_root(root: String) -> WorkspaceGitStatus {
