@@ -19,7 +19,7 @@ msgstr "(unnamed)"
 
 #. placeholder {0}: gitStatus.branch
 #. placeholder {1}: gitStatus.changed_count
-#: src/features/chat/ChatPanel.tsx:498
+#: src/features/chat/ChatPanel.tsx:505
 msgid "{0} · {1} changed"
 msgstr "{0} · {1} changed"
 
@@ -34,7 +34,7 @@ msgid "{0} attachments"
 msgstr "{0} attachments"
 
 #. placeholder {0}: gitStatus.changed_count
-#: src/features/chat/ChatPanel.tsx:500
+#: src/features/chat/ChatPanel.tsx:507
 msgid "{0} changed"
 msgstr "{0} changed"
 
@@ -44,7 +44,7 @@ msgid "{0} configured"
 msgstr "{0} configured"
 
 #. placeholder {0}: peerGroups.length
-#: src/features/chat/AgentSetupWizard.tsx:247
+#: src/features/chat/AgentSetupWizard.tsx:256
 msgid "{0} groups"
 msgstr "{0} groups"
 
@@ -107,7 +107,7 @@ msgstr "{0} ready / {1} sections"
 
 #. placeholder {0}: approval.tool
 #. placeholder {0}: detail.agent
-#: src/features/chat/MessageList.tsx:196
+#: src/features/chat/MessageList.tsx:200
 #: src/workspace/notifications/useNotifications.ts:51
 msgid "{0} responded."
 msgstr "{0} responded."
@@ -131,7 +131,7 @@ msgid "{0} sections"
 msgstr "{0} sections"
 
 #. placeholder {0}: channels.length
-#: src/features/chat/AgentSetupWizard.tsx:240
+#: src/features/chat/AgentSetupWizard.tsx:249
 msgid "{0} selected"
 msgstr "{0} selected"
 
@@ -155,10 +155,6 @@ msgstr "{0} untouched"
 msgid "{0} will not save persistent memory."
 msgstr "{0} will not save persistent memory."
 
-#: src/features/chat/AgentSetupWizard.tsx:752
-#~ msgid "{label} mode"
-#~ msgstr "{label} mode"
-
 #. placeholder {0}: sections.length
 #: src/features/config/overview/ConfigOverview.tsx:321
 msgid "{ready} ready / {0} sections"
@@ -177,6 +173,7 @@ msgid "Abort current turn"
 msgstr "Abort current turn"
 
 #: src/features/config/SetupDoctorTab.tsx:286
+#: src/features/cron/CronPanel.tsx:113
 msgid "Actions"
 msgstr "Actions"
 
@@ -189,12 +186,13 @@ msgstr "Activation"
 msgid "active"
 msgstr "active"
 
+#: src/features/cron/CronPanel.tsx:210
 #: src/features/integrations/IntegrationsPanel.tsx:407
 msgid "Active"
 msgstr "Active"
 
-#: src/features/chat/AgentSetupWizard.tsx:692
-#: src/features/chat/AgentSetupWizard.tsx:876
+#: src/features/chat/AgentSetupWizard.tsx:701
+#: src/features/chat/AgentSetupWizard.tsx:885
 msgid "Add"
 msgstr "Add"
 
@@ -211,11 +209,7 @@ msgstr "Add capabilities, connect tools, and check setup."
 msgid "Add file attachment"
 msgstr "Add file attachment"
 
-#: src/features/chat/AgentSetupWizard.tsx:580
-#~ msgid "Add inline personality files when the gateway supports them."
-#~ msgstr "Add inline personality files when the gateway supports them."
-
-#: src/features/chat/AgentSetupWizard.tsx:882
+#: src/features/chat/AgentSetupWizard.tsx:891
 msgid "Add or attach a channel before creating peer groups."
 msgstr "Add or attach a channel before creating peer groups."
 
@@ -265,11 +259,11 @@ msgstr "Agent"
 msgid "agent {0}"
 msgstr "agent {0}"
 
-#: src/features/chat/AgentSetupWizard.tsx:813
+#: src/features/chat/AgentSetupWizard.tsx:822
 msgid "Agent alias"
 msgstr "Agent alias"
 
-#: src/features/chat/AgentSetupWizard.tsx:478
+#: src/features/chat/AgentSetupWizard.tsx:487
 msgid "Agent created"
 msgstr "Agent created"
 
@@ -277,17 +271,13 @@ msgstr "Agent created"
 msgid "Agent default"
 msgstr "Agent default"
 
-#: src/features/chat/AgentSetupWizard.tsx:812
+#: src/features/chat/AgentSetupWizard.tsx:821
 msgid "Agent identity"
 msgstr "Agent identity"
 
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:242
 msgid "Agent Workspace"
 msgstr "Agent Workspace"
-
-#: src/features/chat/ChatPanel.tsx:662
-#~ msgid "Agent:"
-#~ msgstr "Agent:"
 
 #: src/app/workspace-shell/settings-sections.ts:33
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:298
@@ -299,7 +289,7 @@ msgstr "Agents"
 msgid "AI models"
 msgstr "AI models"
 
-#: src/features/chat/AgentSetupWizard.tsx:768
+#: src/features/chat/AgentSetupWizard.tsx:777
 #: src/features/memory/MemoryPanel.tsx:1292
 msgid "Alias"
 msgstr "Alias"
@@ -324,11 +314,11 @@ msgstr "All checks passed."
 msgid "All statuses"
 msgstr "All statuses"
 
-#: src/features/chat/MessageList.tsx:272
+#: src/features/chat/MessageList.tsx:276
 msgid "Allow this tool for the current gateway session policy"
 msgstr "Allow this tool for the current gateway session policy"
 
-#: src/features/chat/MessageList.tsx:274
+#: src/features/chat/MessageList.tsx:278
 msgid "Always allow"
 msgstr "Always allow"
 
@@ -343,30 +333,26 @@ msgstr "App"
 msgid "Applied {0}"
 msgstr "Applied {0}"
 
-#: src/features/chat/ChatPanel.tsx:587
+#: src/features/chat/ChatPanel.tsx:594
 #: src/features/config/SetupDoctorTab.tsx:348
 msgid "Apply"
 msgstr "Apply"
 
 #. placeholder {0}: errorMessage(e)
-#: src/features/chat/AgentSetupWizard.tsx:456
+#: src/features/chat/AgentSetupWizard.tsx:465
 msgid "Apply failed: {0}"
 msgstr "Apply failed: {0}"
 
-#: src/features/chat/AgentSetupWizard.tsx:636
-#~ msgid "Apply Quickstart"
-#~ msgstr "Apply Quickstart"
-
-#: src/features/chat/AgentSetupWizard.tsx:988
-#: src/features/chat/MessageList.tsx:194
+#: src/features/chat/AgentSetupWizard.tsx:997
+#: src/features/chat/MessageList.tsx:198
 msgid "Applying..."
 msgstr "Applying..."
 
-#: src/features/chat/MessageList.tsx:204
+#: src/features/chat/MessageList.tsx:208
 msgid "Approval required"
 msgstr "Approval required"
 
-#: src/features/chat/MessageList.tsx:257
+#: src/features/chat/MessageList.tsx:261
 msgid "Approve once"
 msgstr "Approve once"
 
@@ -381,12 +367,12 @@ msgstr "Attachments"
 
 #. placeholder {0}: formatBytes(totalSize)
 #. placeholder {1}: formatBytes(totalLimit)
-#: src/features/chat/ChatPanel.tsx:381
+#: src/features/chat/ChatPanel.tsx:388
 msgid "Attachments total {0} exceeds upload limit {1}."
 msgstr "Attachments total {0} exceeds upload limit {1}."
 
 #. placeholder {0}: approval.timeout_secs
-#: src/features/chat/MessageList.tsx:212
+#: src/features/chat/MessageList.tsx:216
 msgid "Auto-denies after {0}s without a response."
 msgstr "Auto-denies after {0}s without a response."
 
@@ -416,8 +402,8 @@ msgstr "Back to agents"
 msgid "Back to app"
 msgstr "Back to app"
 
-#: src/features/chat/AgentSetupWizard.tsx:530
-#: src/features/chat/AgentSetupWizard.tsx:535
+#: src/features/chat/AgentSetupWizard.tsx:539
+#: src/features/chat/AgentSetupWizard.tsx:544
 msgid "Back to sessions"
 msgstr "Back to sessions"
 
@@ -427,7 +413,7 @@ msgstr "Back to sessions"
 msgid "Before upload: each file up to {0}, total up to {1}."
 msgstr "Before upload: each file up to {0}, total up to {1}."
 
-#: src/features/chat/ChatPanel.tsx:595
+#: src/features/chat/ChatPanel.tsx:602
 msgid "Browse"
 msgstr "Browse"
 
@@ -447,6 +433,10 @@ msgstr "Browser agent-browser"
 msgid "bytes"
 msgstr "bytes"
 
+#: src/features/cron/CronPanel.tsx:300
+msgid "Cancel"
+msgstr "Cancel"
+
 #: src/app/workspace-shell/SettingsPage.tsx:143
 msgid "Capabilities"
 msgstr "Capabilities"
@@ -463,37 +453,29 @@ msgstr "Change"
 msgid "Change the app interface language."
 msgstr "Change the app interface language."
 
-#: src/features/chat/AgentSetupWizard.tsx:730
-#: src/features/chat/AgentSetupWizard.tsx:909
+#: src/features/chat/AgentSetupWizard.tsx:739
+#: src/features/chat/AgentSetupWizard.tsx:918
 msgid "Channel"
 msgstr "Channel"
 
-#: src/features/chat/AgentSetupWizard.tsx:527
-#~ msgid "Channel alias"
-#~ msgstr "Channel alias"
-
 #: src/app/workspace-shell/settings-sections.ts:35
-#: src/features/chat/AgentSetupWizard.tsx:681
+#: src/features/chat/AgentSetupWizard.tsx:690
 #: src/features/config/config-categories.ts:88
 #: src/features/integrations/IntegrationsPanel.tsx:267
 msgid "Channels"
 msgstr "Channels"
 
-#: src/features/chat/AgentSetupWizard.tsx:805
+#: src/features/chat/AgentSetupWizard.tsx:814
 msgid "Channels reviewed: none."
 msgstr "Channels reviewed: none."
 
-#: src/features/chat/AgentSetupWizard.tsx:805
+#: src/features/chat/AgentSetupWizard.tsx:814
 msgid "Channels reviewed."
 msgstr "Channels reviewed."
 
 #: src/features/integrations/IntegrationsPanel.tsx:391
 msgid "Chat"
 msgstr "Chat"
-
-#: src/app/workspace-shell/SettingsPage.tsx:265
-#~ msgid "Chat attachments"
-#~ msgstr "Chat attachments"
 
 #: src/features/setup/SetupCenterPanel.tsx:187
 msgid "Check Docker CLI, daemon reachability, and image pulls."
@@ -581,12 +563,13 @@ msgstr "Click \"Run doctor\" to start."
 msgid "clipboard"
 msgstr "clipboard"
 
-#: src/features/chat/AgentSetupWizard.tsx:530
+#: src/features/chat/AgentSetupWizard.tsx:539
+#: src/features/cron/CronPanel.tsx:369
 msgid "Close"
 msgstr "Close"
 
-#: src/features/chat/AgentSetupWizard.tsx:927
-#: src/features/chat/AgentSetupWizard.tsx:939
+#: src/features/chat/AgentSetupWizard.tsx:936
+#: src/features/chat/AgentSetupWizard.tsx:948
 msgid "Comma or newline separated"
 msgstr "Comma or newline separated"
 
@@ -604,7 +587,7 @@ msgstr "Command exited {0}: {1}"
 msgid "Common workflows"
 msgstr "Common workflows"
 
-#: src/features/chat/AgentSetupWizard.tsx:517
+#: src/features/chat/AgentSetupWizard.tsx:526
 msgid "Complete the same quickstart steps used by the CLI, then apply everything at once."
 msgstr "Complete the same quickstart steps used by the CLI, then apply everything at once."
 
@@ -670,10 +653,6 @@ msgstr "Connect to local zeroclaw"
 msgid "Connected"
 msgstr "Connected"
 
-#: src/features/chat/ChatPanel.tsx:678
-#~ msgid "Connecting"
-#~ msgstr "Connecting"
-
 #: src/app/workspace-shell/SettingsPage.tsx:242
 msgid "Connection"
 msgstr "Connection"
@@ -684,20 +663,12 @@ msgstr "Connection"
 msgid "Connection name"
 msgstr "Connection name"
 
-#: src/features/chat/AgentSetupWizard.tsx:606
-#~ msgid "Content"
-#~ msgstr "Content"
-
-#: src/features/chat/ChatPanel.tsx:496
-#~ msgid "Context: {contextScope} · {contextAttachments} · {contextGit}"
-#~ msgstr "Context: {contextScope} · {contextAttachments} · {contextGit}"
-
 #: src/features/chat/ChatComposer.tsx:104
 msgid "Continue this session..."
 msgstr "Continue this session..."
 
-#: src/features/chat/ChatPanel.tsx:684
-#: src/features/chat/MessageList.tsx:299
+#: src/features/chat/ChatPanel.tsx:692
+#: src/features/chat/MessageList.tsx:303
 msgid "Copy path"
 msgstr "Copy path"
 
@@ -710,14 +681,10 @@ msgid "Create a server entry when you want agents to use an external tool."
 msgstr "Create a server entry when you want agents to use an external tool."
 
 #: src/app/workspace-shell/ChatWorkspace.tsx:91
-#: src/features/chat/AgentSetupWizard.tsx:515
-#: src/features/chat/AgentSetupWizard.tsx:991
+#: src/features/chat/AgentSetupWizard.tsx:524
+#: src/features/chat/AgentSetupWizard.tsx:1000
 msgid "Create agent"
 msgstr "Create agent"
-
-#: src/features/chat/AgentSetupWizard.tsx:292
-#~ msgid "Create an agent, provider, runtime, memory, channels, and peer groups in one apply step."
-#~ msgstr "Create an agent, provider, runtime, memory, channels, and peer groups in one apply step."
 
 #: src/features/memory/MemoryPanel.tsx:990
 msgid "Create another entry"
@@ -736,7 +703,7 @@ msgstr "Create file"
 msgid "Create managed connection"
 msgstr "Create managed connection"
 
-#: src/features/chat/agent-setup-wizard/components.tsx:223
+#: src/features/chat/agent-setup-wizard/components.tsx:225
 msgid "Create new"
 msgstr "Create new"
 
@@ -780,9 +747,26 @@ msgstr "Created new {0}"
 msgid "Cron"
 msgstr "Cron"
 
-#: src/features/cron/CronPanel.tsx:12
+#: src/features/cron/CronPanel.tsx:61
+msgid "Cron job deleted."
+msgstr "Cron job deleted."
+
+#: src/features/cron/CronPanel.tsx:48
+msgid "Cron job paused."
+msgstr "Cron job paused."
+
+#: src/features/cron/CronPanel.tsx:48
+msgid "Cron job resumed."
+msgstr "Cron job resumed."
+
+#: src/features/cron/CronPanel.tsx:90
 msgid "cron jobs"
 msgstr "cron jobs"
+
+#: src/features/cron/CronPanel.tsx:338
+#: src/features/cron/CronPanel.tsx:348
+msgid "Cron run history"
+msgstr "Cron run history"
 
 #: src/app/workspace-shell/SettingsPage.tsx:245
 msgid "Current runtime selected in the title bar."
@@ -797,6 +781,8 @@ msgid "Deep link scheme"
 msgstr "Deep link scheme"
 
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:428
+#: src/features/cron/CronPanel.tsx:174
+#: src/features/cron/CronPanel.tsx:309
 msgid "Delete"
 msgstr "Delete"
 
@@ -808,6 +794,14 @@ msgstr "Delete {0}?"
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:215
 msgid "Delete {selectedFile}?"
 msgstr "Delete {selectedFile}?"
+
+#: src/features/cron/CronPanel.tsx:273
+msgid "Delete cron job"
+msgstr "Delete cron job"
+
+#: src/features/cron/CronPanel.tsx:282
+msgid "Delete cron job?"
+msgstr "Delete cron job?"
 
 #: src/app/workspace-shell/WorkspaceSidebar.tsx:371
 #: src/app/workspace-shell/WorkspaceSidebar.tsx:425
@@ -880,6 +874,10 @@ msgstr "Doctor a stdio MCP server command and transport."
 msgid "drop files here or use the file button"
 msgstr "drop files here or use the file button"
 
+#: src/features/cron/CronPanel.tsx:390
+msgid "Duration"
+msgstr "Duration"
+
 #: src/features/memory/MemoryPanel.tsx:702
 #: src/features/memory/MemoryPanel.tsx:765
 msgid "Edit settings"
@@ -908,33 +906,21 @@ msgid "env"
 msgstr "env"
 
 #: src/features/chat/MessageList.tsx:112
-#: src/features/chat/MessageList.tsx:238
+#: src/features/chat/MessageList.tsx:242
 msgid "error"
 msgstr "error"
 
-#: src/features/chat/MessageList.tsx:135
+#: src/features/chat/MessageList.tsx:139
 msgid "Execution"
 msgstr "Execution"
 
-#: src/features/chat/AgentSetupWizard.tsx:765
-#~ msgid "existing"
-#~ msgstr "existing"
-
-#: src/features/chat/agent-setup-wizard/components.tsx:260
+#: src/features/chat/agent-setup-wizard/components.tsx:262
 msgid "Existing"
 msgstr "Existing"
 
-#: src/features/chat/ChatPanel.tsx:499
-#~ msgid "Explain this project"
-#~ msgstr "Explain this project"
-
-#: src/features/chat/AgentSetupWizard.tsx:927
+#: src/features/chat/AgentSetupWizard.tsx:936
 msgid "External peers"
 msgstr "External peers"
-
-#: src/features/chat/AgentSetupWizard.tsx:596
-#~ msgid "Filename"
-#~ msgstr "Filename"
 
 #: src/app/workspace-shell/SettingsPage.tsx:276
 msgid "Files and runtime activity visible to the app."
@@ -944,11 +930,6 @@ msgstr "Files and runtime activity visible to the app."
 msgid "Files are checked during send."
 msgstr "Files are checked during send."
 
-#. placeholder {0}: formatBytes(maxAttachmentBytes)
-#: src/features/chat/ChatPanel.tsx:882
-#~ msgid "Files over {0} are rejected during send."
-#~ msgstr "Files over {0} are rejected during send."
-
 #: src/features/config/picker/PickerSection.tsx:321
 msgid "Filter"
 msgstr "Filter"
@@ -957,10 +938,6 @@ msgstr "Filter"
 #: src/features/config/picker/PickerSection.tsx:332
 msgid "Filter {0}s..."
 msgstr "Filter {0}s..."
-
-#: src/features/chat/ChatPanel.tsx:500
-#~ msgid "Find likely bugs"
-#~ msgstr "Find likely bugs"
 
 #: src/app/workspace-shell/SettingsPage.tsx:285
 msgid "Folder"
@@ -973,10 +950,6 @@ msgstr "Found"
 #: src/features/config/config-categories.ts:146
 msgid "Foundation"
 msgstr "Foundation"
-
-#: src/features/chat/AgentSetupWizard.tsx:763
-#~ msgid "fresh"
-#~ msgstr "fresh"
 
 #: src/app/workspace-shell/SettingsPage.tsx:141
 msgid "Gateway"
@@ -1020,11 +993,7 @@ msgstr "Gateway URL"
 msgid "Gateway version"
 msgstr "Gateway version"
 
-#: src/features/chat/ChatPanel.tsx:487
-#~ msgid "general"
-#~ msgstr "general"
-
-#: src/features/chat/ChatPanel.tsx:550
+#: src/features/chat/ChatPanel.tsx:557
 msgid "General"
 msgstr "General"
 
@@ -1049,7 +1018,7 @@ msgstr "health {0}"
 msgid "idle"
 msgstr "idle"
 
-#: src/features/chat/AgentSetupWizard.tsx:939
+#: src/features/chat/AgentSetupWizard.tsx:948
 msgid "Ignore"
 msgstr "Ignore"
 
@@ -1148,11 +1117,15 @@ msgid "Loading memory config..."
 msgstr "Loading memory config..."
 
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:438
-#: src/features/chat/ChatPanel.tsx:700
+#: src/features/chat/ChatPanel.tsx:708
 msgid "Loading preview..."
 msgstr "Loading preview..."
 
-#: src/features/chat/AgentSetupWizard.tsx:466
+#: src/features/cron/CronPanel.tsx:380
+msgid "Loading run history..."
+msgstr "Loading run history..."
+
+#: src/features/chat/AgentSetupWizard.tsx:475
 msgid "Loading setup..."
 msgstr "Loading setup..."
 
@@ -1181,16 +1154,12 @@ msgid "Local attach"
 msgstr "Local attach"
 
 #: src/features/config/SetupDoctorTab.tsx:390
-msgid "Local checks, one-click actions, and remediation commands are provided by the desktop backend. Open this tab in ZeroClaw Workspace to view the current backend-provided setup status for this capability."
-msgstr "Local checks, one-click actions, and remediation commands are provided by the desktop backend. Open this tab in ZeroClaw Workspace to view the current backend-provided setup status for this capability."
+msgid "Local checks, one-click actions, and remediation commands are provided by the desktop backend. Open this tab in ZeroClaw Studio to view the current backend-provided setup status for this capability."
+msgstr "Local checks, one-click actions, and remediation commands are provided by the desktop backend. Open this tab in ZeroClaw Studio to view the current backend-provided setup status for this capability."
 
 #: src/features/memory/MemoryPanel.tsx:1591
 msgid "Local memory"
 msgstr "Local memory"
-
-#: src/app/workspace-shell/SettingsPage.tsx:273
-#~ msgid "Local Preferences"
-#~ msgstr "Local Preferences"
 
 #: src/features/memory/MemoryPanel.tsx:1557
 msgid "Local single-file memory for a workstation runtime."
@@ -1232,6 +1201,11 @@ msgstr "Managed runtime"
 msgid "Manual remediation"
 msgstr "Manual remediation"
 
+#. placeholder {0}: result.status
+#: src/features/cron/CronPanel.tsx:76
+msgid "Manual run finished: {0}"
+msgstr "Manual run finished: {0}"
+
 #: src/features/memory/MemoryPanel.tsx:1574
 msgid "Markdown"
 msgstr "Markdown"
@@ -1257,7 +1231,7 @@ msgid "MCP stdio Doctor"
 msgstr "MCP stdio Doctor"
 
 #: src/app/workspace-shell/settings-sections.ts:36
-#: src/features/chat/AgentSetupWizard.tsx:665
+#: src/features/chat/AgentSetupWizard.tsx:674
 #: src/features/config/overview/ConfigOverview.tsx:286
 #: src/features/memory/MemoryPanel.tsx:411
 msgid "Memory"
@@ -1293,11 +1267,11 @@ msgstr "Memory options"
 msgid "Metadata"
 msgstr "Metadata"
 
-#: src/features/chat/agent-setup-wizard/components.tsx:199
+#: src/features/chat/agent-setup-wizard/components.tsx:201
 msgid "Mode"
 msgstr "Mode"
 
-#: src/features/chat/AgentSetupWizard.tsx:604
+#: src/features/chat/AgentSetupWizard.tsx:613
 #: src/features/chat/ModelOverrideSelect.tsx:33
 msgid "Model"
 msgstr "Model"
@@ -1306,7 +1280,7 @@ msgstr "Model"
 msgid "Model Connections"
 msgstr "Model Connections"
 
-#: src/features/chat/AgentSetupWizard.tsx:581
+#: src/features/chat/AgentSetupWizard.tsx:590
 msgid "Model provider"
 msgstr "Model provider"
 
@@ -1318,8 +1292,8 @@ msgstr "Models & Providers"
 msgid "Multi-agent"
 msgstr "Multi-agent"
 
-#: src/features/chat/AgentSetupWizard.tsx:897
-#: src/features/cron/CronPanel.tsx:19
+#: src/features/chat/AgentSetupWizard.tsx:906
+#: src/features/cron/CronPanel.tsx:108
 msgid "Name"
 msgstr "Name"
 
@@ -1349,7 +1323,7 @@ msgstr "Needs setup"
 msgid "Network"
 msgstr "Network"
 
-#: src/features/chat/ChatPanel.tsx:495
+#: src/features/chat/ChatPanel.tsx:502
 msgid "New code"
 msgstr "New code"
 
@@ -1371,7 +1345,7 @@ msgstr "New general session"
 msgid "New project session"
 msgstr "New project session"
 
-#: src/features/chat/ChatPanel.tsx:495
+#: src/features/chat/ChatPanel.tsx:502
 #: src/features/chat/SessionControls.tsx:61
 msgid "New session"
 msgstr "New session"
@@ -1385,9 +1359,13 @@ msgstr "New session with {0}"
 msgid "next"
 msgstr "next"
 
-#: src/features/chat/AgentSetupWizard.tsx:976
+#: src/features/chat/AgentSetupWizard.tsx:985
 msgid "Next"
 msgstr "Next"
+
+#: src/features/cron/CronPanel.tsx:111
+msgid "Next run"
+msgstr "Next run"
 
 #. placeholder {0}: pickerSelectionOption(section)
 #: src/features/config/picker/PickerSection.tsx:374
@@ -1395,11 +1373,11 @@ msgid "No {0}s match this filter."
 msgstr "No {0}s match this filter."
 
 #: src/app/workspace-shell/SettingsPage.tsx:265
-#: src/features/chat/ChatPanel.tsx:425
+#: src/features/chat/ChatPanel.tsx:432
 msgid "No active connection."
 msgstr "No active connection."
 
-#: src/features/chat/ChatPanel.tsx:351
+#: src/features/chat/ChatPanel.tsx:358
 msgid "No active workspace."
 msgstr "No active workspace."
 
@@ -1439,13 +1417,9 @@ msgstr "No aliases configured."
 msgid "No channel sections"
 msgstr "No channel sections"
 
-#: src/features/chat/AgentSetupWizard.tsx:698
+#: src/features/chat/AgentSetupWizard.tsx:707
 msgid "No channels will be created or attached."
 msgstr "No channels will be created or attached."
-
-#: src/features/chat/AgentSetupWizard.tsx:426
-#~ msgid "No channels will be created."
-#~ msgstr "No channels will be created."
 
 #: src/features/integrations/IntegrationsPanel.tsx:271
 msgid "No configured aliases reported for this channel type."
@@ -1471,14 +1445,6 @@ msgstr "No gateway running on port {DEFAULT_PORT} right now. That's fine — if 
 msgid "No general sessions yet."
 msgstr "No general sessions yet."
 
-#: src/features/chat/ChatPanel.tsx:493
-#~ msgid "no git status"
-#~ msgstr "no git status"
-
-#: src/features/chat/ChatPanel.tsx:486
-#~ msgid "No git status"
-#~ msgstr "No git status"
-
 #: src/features/integrations/IntegrationsPanel.tsx:138
 msgid "No integrations match your filters."
 msgstr "No integrations match your filters."
@@ -1503,18 +1469,18 @@ msgstr "No memory"
 msgid "No model provider sections"
 msgstr "No model provider sections"
 
-#: src/features/chat/agent-setup-wizard/components.tsx:262
+#: src/features/chat/agent-setup-wizard/components.tsx:264
 msgid "No options"
 msgstr "No options"
 
-#: src/features/chat/AgentSetupWizard.tsx:504
-#~ msgid "No peer groups will be created."
-#~ msgstr "No peer groups will be created."
-
 #: src/features/chat/ChatComposer.tsx:198
-#: src/features/chat/ChatPanel.tsx:494
+#: src/features/chat/ChatPanel.tsx:501
 msgid "No project"
 msgstr "No project"
+
+#: src/features/cron/CronPanel.tsx:383
+msgid "No runs recorded yet."
+msgstr "No runs recorded yet."
 
 #: src/features/config/config-categories.ts:120
 msgid "No runtime or safety sections"
@@ -1546,7 +1512,7 @@ msgid "No zeroclaw binary found. Run this in your terminal:"
 msgstr "No zeroclaw binary found. Run this in your terminal:"
 
 #: src/app/ConnectionPicker.tsx:172
-#: src/features/chat/AgentSetupWizard.tsx:241
+#: src/features/chat/AgentSetupWizard.tsx:250
 msgid "none"
 msgstr "none"
 
@@ -1554,20 +1520,20 @@ msgstr "none"
 msgid "Not configured yet"
 msgstr "Not configured yet"
 
-#: src/features/chat/AgentSetupWizard.tsx:244
+#: src/features/chat/AgentSetupWizard.tsx:253
 msgid "Not named"
 msgstr "Not named"
 
-#: src/features/chat/AgentSetupWizard.tsx:242
+#: src/features/chat/AgentSetupWizard.tsx:251
 msgid "Not reviewed"
 msgstr "Not reviewed"
 
-#: src/features/chat/AgentSetupWizard.tsx:228
-#: src/features/chat/AgentSetupWizard.tsx:231
-#: src/features/chat/AgentSetupWizard.tsx:233
-#: src/features/chat/AgentSetupWizard.tsx:234
-#: src/features/chat/AgentSetupWizard.tsx:235
-#: src/features/chat/AgentSetupWizard.tsx:799
+#: src/features/chat/AgentSetupWizard.tsx:237
+#: src/features/chat/AgentSetupWizard.tsx:240
+#: src/features/chat/AgentSetupWizard.tsx:242
+#: src/features/chat/AgentSetupWizard.tsx:243
+#: src/features/chat/AgentSetupWizard.tsx:244
+#: src/features/chat/AgentSetupWizard.tsx:808
 msgid "Not selected"
 msgstr "Not selected"
 
@@ -1630,7 +1596,7 @@ msgstr "Open fields"
 msgid "Open project"
 msgstr "Open project"
 
-#: src/features/chat/ChatPanel.tsx:645
+#: src/features/chat/ChatPanel.tsx:652
 msgid "Open Project"
 msgstr "Open Project"
 
@@ -1652,8 +1618,8 @@ msgstr "Opening fields..."
 msgid "Operations"
 msgstr "Operations"
 
-#: src/features/chat/AgentSetupWizard.tsx:247
-#: src/features/chat/AgentSetupWizard.tsx:791
+#: src/features/chat/AgentSetupWizard.tsx:256
+#: src/features/chat/AgentSetupWizard.tsx:800
 msgid "optional"
 msgstr "optional"
 
@@ -1661,6 +1627,10 @@ msgstr "optional"
 #: src/features/integrations/IntegrationsPanel.tsx:399
 msgid "Other"
 msgstr "Other"
+
+#: src/features/cron/CronPanel.tsx:391
+msgid "Output"
+msgstr "Output"
 
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:140
 msgid "Overview"
@@ -1690,15 +1660,21 @@ msgstr "Paste clipboard into message"
 msgid "path"
 msgstr "path"
 
+#: src/features/cron/CronPanel.tsx:144
 #: src/features/logs/LogsPanel.tsx:31
 msgid "Pause"
 msgstr "Pause"
 
-#: src/features/chat/AgentSetupWizard.tsx:867
+#: src/features/cron/CronPanel.tsx:135
+#: src/features/cron/CronPanel.tsx:210
+msgid "Paused"
+msgstr "Paused"
+
+#: src/features/chat/AgentSetupWizard.tsx:876
 msgid "Peer groups"
 msgstr "Peer groups"
 
-#: src/features/chat/AgentSetupWizard.tsx:887
+#: src/features/chat/AgentSetupWizard.tsx:896
 msgid "Peer groups are optional and will not block agent creation."
 msgstr "Peer groups are optional and will not block agent creation."
 
@@ -1708,11 +1684,7 @@ msgstr "Peer groups are optional and will not block agent creation."
 msgid "pending tunnel"
 msgstr "pending tunnel"
 
-#: src/features/chat/AgentSetupWizard.tsx:358
-#~ msgid "Personality file"
-#~ msgstr "Personality file"
-
-#: src/features/chat/AgentSetupWizard.tsx:826
+#: src/features/chat/AgentSetupWizard.tsx:835
 msgid "Personality files"
 msgstr "Personality files"
 
@@ -1744,11 +1716,11 @@ msgstr "Postgres"
 msgid "Preferences"
 msgstr "Preferences"
 
-#: src/features/chat/agent-setup-wizard/components.tsx:260
+#: src/features/chat/agent-setup-wizard/components.tsx:262
 msgid "Preset"
 msgstr "Preset"
 
-#: src/features/chat/MessageList.tsx:225
+#: src/features/chat/MessageList.tsx:229
 msgid "Preview"
 msgstr "Preview"
 
@@ -1756,7 +1728,7 @@ msgstr "Preview"
 msgid "Preview file"
 msgstr "Preview file"
 
-#: src/features/chat/MessageList.tsx:324
+#: src/features/chat/MessageList.tsx:328
 msgid "Preview truncated to 400 lines."
 msgstr "Preview truncated to 400 lines."
 
@@ -1772,27 +1744,23 @@ msgstr "Probing localhost:{DEFAULT_PORT}…"
 msgid "Project"
 msgstr "Project"
 
-#: src/features/chat/ChatPanel.tsx:656
-#~ msgid "Project:"
-#~ msgstr "Project:"
-
 #: src/features/chat/ChatComposer.tsx:202
 msgid "Project: {workspaceName}"
 msgstr "Project: {workspaceName}"
 
-#: src/features/cron/CronPanel.tsx:21
+#: src/features/cron/CronPanel.tsx:112
 msgid "Prompt"
 msgstr "Prompt"
 
-#: src/features/chat/AgentSetupWizard.tsx:570
+#: src/features/chat/AgentSetupWizard.tsx:579
 msgid "Provider"
 msgstr "Provider"
 
-#: src/features/chat/AgentSetupWizard.tsx:601
+#: src/features/chat/AgentSetupWizard.tsx:610
 msgid "Provider alias"
 msgstr "Provider alias"
 
-#: src/features/chat/AgentSetupWizard.tsx:592
+#: src/features/chat/AgentSetupWizard.tsx:601
 msgid "Provider type"
 msgstr "Provider type"
 
@@ -1805,18 +1773,14 @@ msgid "Qdrant"
 msgstr "Qdrant"
 
 #: src/app/workspace-shell/SettingsPage.tsx:349
-msgid "Quickly bring ZeroClaw Workspace to the front."
-msgstr "Quickly bring ZeroClaw Workspace to the front."
-
-#: src/features/chat/AgentSetupWizard.tsx:290
-#~ msgid "Quickstart Builder"
-#~ msgstr "Quickstart Builder"
+msgid "Quickly bring ZeroClaw Studio to the front."
+msgstr "Quickly bring ZeroClaw Studio to the front."
 
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:345
 msgid "raw config"
 msgstr "raw config"
 
-#: src/features/chat/MessageList.tsx:157
+#: src/features/chat/MessageList.tsx:161
 msgid "raw details"
 msgstr "raw details"
 
@@ -1891,6 +1855,7 @@ msgstr "Recommended. Saves memory on this device and works out of the box."
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:103
 #: src/features/config/overview/ConfigOverview.tsx:82
 #: src/features/config/SetupDoctorTab.tsx:249
+#: src/features/cron/CronPanel.tsx:357
 #: src/features/integrations/IntegrationsPanel.tsx:118
 #: src/features/logs/LogsPanel.tsx:43
 #: src/features/memory/MemoryPanel.tsx:289
@@ -1906,7 +1871,7 @@ msgstr "Refresh {what}"
 msgid "Refresh sessions"
 msgstr "Refresh sessions"
 
-#: src/features/chat/AgentSetupWizard.tsx:484
+#: src/features/chat/AgentSetupWizard.tsx:493
 msgid "Refreshing..."
 msgstr "Refreshing..."
 
@@ -1914,7 +1879,7 @@ msgstr "Refreshing..."
 msgid "Registered"
 msgstr "Registered"
 
-#: src/features/chat/MessageList.tsx:265
+#: src/features/chat/MessageList.tsx:269
 msgid "Reject"
 msgstr "Reject"
 
@@ -1931,8 +1896,8 @@ msgstr "Remote database"
 msgid "Remote gateway port"
 msgstr "Remote gateway port"
 
-#: src/features/chat/ChatPanel.tsx:323
-#: src/features/chat/ChatPanel.tsx:579
+#: src/features/chat/ChatPanel.tsx:330
+#: src/features/chat/ChatPanel.tsx:586
 msgid "Remote working directory"
 msgstr "Remote working directory"
 
@@ -1944,18 +1909,19 @@ msgid "Rename session"
 msgstr "Rename session"
 
 #. placeholder {0}: field.label
-#: src/features/chat/AgentSetupWizard.tsx:338
+#: src/features/chat/AgentSetupWizard.tsx:347
 msgid "Required field missing: {0}"
 msgstr "Required field missing: {0}"
 
-#: src/features/chat/AgentSetupWizard.tsx:963
+#: src/features/chat/AgentSetupWizard.tsx:972
 msgid "required steps ready"
 msgstr "required steps ready"
 
-#: src/features/chat/MessageList.tsx:208
+#: src/features/chat/MessageList.tsx:212
 msgid "requires approval before the agent can continue."
 msgstr "requires approval before the agent can continue."
 
+#: src/features/cron/CronPanel.tsx:144
 #: src/features/logs/LogsPanel.tsx:31
 msgid "Resume"
 msgstr "Resume"
@@ -1968,10 +1934,6 @@ msgstr "Retry"
 msgid "Revert"
 msgstr "Revert"
 
-#: src/features/chat/ChatPanel.tsx:498
-#~ msgid "Review current changes"
-#~ msgstr "Review current changes"
-
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:248
 msgid "Review setup"
 msgstr "Review setup"
@@ -1980,7 +1942,7 @@ msgstr "Review setup"
 msgid "Review skills"
 msgstr "Review skills"
 
-#: src/features/chat/AgentSetupWizard.tsx:641
+#: src/features/chat/AgentSetupWizard.tsx:650
 msgid "Risk profile"
 msgstr "Risk profile"
 
@@ -1992,14 +1954,18 @@ msgstr "Risk profile alias"
 msgid "Run"
 msgstr "Run"
 
-#: src/features/chat/ChatPanel.tsx:501
-#~ msgid "Run diagnostics"
-#~ msgstr "Run diagnostics"
-
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:289
 #: src/features/doctor/DoctorPanel.tsx:34
 msgid "Run doctor"
 msgstr "Run doctor"
+
+#: src/features/cron/CronPanel.tsx:167
+msgid "Run history"
+msgstr "Run history"
+
+#: src/features/cron/CronPanel.tsx:156
+msgid "Run now"
+msgstr "Run now"
 
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:324
 msgid "Run the local setup check used by Python-backed skills."
@@ -2026,7 +1992,7 @@ msgstr "Runtime"
 msgid "Runtime & Safety"
 msgstr "Runtime & Safety"
 
-#: src/features/chat/AgentSetupWizard.tsx:653
+#: src/features/chat/AgentSetupWizard.tsx:662
 msgid "Runtime profile"
 msgstr "Runtime profile"
 
@@ -2049,15 +2015,11 @@ msgstr "Save"
 msgid "Saved"
 msgstr "Saved"
 
-#: src/app/workspace-shell/SettingsPage.tsx:266
-#~ msgid "Saved runtimes"
-#~ msgstr "Saved runtimes"
-
 #: src/features/memory/MemoryPanel.tsx:419
 msgid "Saving"
 msgstr "Saving"
 
-#: src/features/cron/CronPanel.tsx:20
+#: src/features/cron/CronPanel.tsx:110
 msgid "Schedule"
 msgstr "Schedule"
 
@@ -2120,10 +2082,6 @@ msgstr "Select an integration"
 msgid "Send"
 msgstr "Send"
 
-#: src/features/chat/ChatPanel.tsx:717
-#~ msgid "Session:"
-#~ msgstr "Session:"
-
 #: src/features/memory/MemoryPanel.tsx:709
 msgid "Set up"
 msgstr "Set up"
@@ -2151,7 +2109,7 @@ msgstr "Settings"
 msgid "Setup Center"
 msgstr "Setup Center"
 
-#: src/features/chat/AgentSetupWizard.tsx:498
+#: src/features/chat/AgentSetupWizard.tsx:507
 msgid "Setup unavailable"
 msgstr "Setup unavailable"
 
@@ -2172,7 +2130,7 @@ msgstr "Skill Bundles"
 msgid "Skills"
 msgstr "Skills"
 
-#: src/features/chat/AgentSetupWizard.tsx:841
+#: src/features/chat/AgentSetupWizard.tsx:850
 msgid "Skip"
 msgstr "Skip"
 
@@ -2200,7 +2158,7 @@ msgstr "SSH tunnel"
 msgid "SSH user"
 msgstr "SSH user"
 
-#: src/features/chat/AgentSetupWizard.tsx:840
+#: src/features/chat/AgentSetupWizard.tsx:849
 msgid "Start from scratch"
 msgstr "Start from scratch"
 
@@ -2212,14 +2170,20 @@ msgstr "Start here if you are setting up tools and skills for the first time."
 msgid "Start this session..."
 msgstr "Start this session..."
 
-#: src/features/chat/AgentSetupWizard.tsx:839
+#: src/features/chat/AgentSetupWizard.tsx:848
 msgid "Start with template"
 msgstr "Start with template"
+
+#: src/features/cron/CronPanel.tsx:388
+msgid "Started"
+msgstr "Started"
 
 #: src/app/ConnectionPicker.tsx:66
 msgid "Starting gateway…"
 msgstr "Starting gateway…"
 
+#: src/features/cron/CronPanel.tsx:109
+#: src/features/cron/CronPanel.tsx:389
 #: src/features/integrations/IntegrationsPanel.tsx:257
 msgid "Status"
 msgstr "Status"
@@ -2245,7 +2209,7 @@ msgstr "Stores memory in readable files that are easy to inspect."
 msgid "Structured graph-oriented memory."
 msgstr "Structured graph-oriented memory."
 
-#: src/features/chat/MessageList.tsx:218
+#: src/features/chat/MessageList.tsx:222
 msgid "Summary"
 msgstr "Summary"
 
@@ -2257,7 +2221,7 @@ msgstr "Switch between the dark workspace and a lighter workspace surface."
 msgid "Syncs with the local lucid-memory CLI for structured, graph-oriented memory."
 msgstr "Syncs with the local lucid-memory CLI for structured, graph-oriented memory."
 
-#: src/features/chat/AgentSetupWizard.tsx:816
+#: src/features/chat/AgentSetupWizard.tsx:825
 msgid "System prompt"
 msgstr "System prompt"
 
@@ -2309,15 +2273,19 @@ msgstr "This gateway did not report risk profile or runtime profile sections."
 msgid "This gateway did not report tools, skills, bundles, or MCP sections."
 msgstr "This gateway did not report tools, skills, bundles, or MCP sections."
 
-#: src/features/chat/AgentSetupWizard.tsx:780
+#: src/features/cron/CronPanel.tsx:284
+msgid "This removes the scheduled job from the gateway. Recent run history may no longer be reachable from this page."
+msgstr "This removes the scheduled job from the gateway. Recent run history may no longer be reachable from this page."
+
+#: src/features/chat/AgentSetupWizard.tsx:789
 msgid "Token"
 msgstr "Token"
 
-#: src/features/chat/MessageList.tsx:207
+#: src/features/chat/MessageList.tsx:211
 msgid "Tool"
 msgstr "Tool"
 
-#: src/features/chat/MessageList.tsx:231
+#: src/features/chat/MessageList.tsx:235
 msgid "tool input"
 msgstr "tool input"
 
@@ -2342,10 +2310,6 @@ msgstr "Transport"
 msgid "Tray / menu bar"
 msgstr "Tray / menu bar"
 
-#: src/app/workspace-shell/SettingsPage.tsx:329
-#~ msgid "Tray is available in this build; preference is stored locally."
-#~ msgstr "Tray is available in this build; preference is stored locally."
-
 #: src/app/ConnectionPicker.tsx:85
 msgid "Tunnel inactive / activate to probe"
 msgstr "Tunnel inactive / activate to probe"
@@ -2358,7 +2322,7 @@ msgstr "Turn off memory"
 msgid "Turn on the skills system before managing or installing skills."
 msgstr "Turn on the skills system before managing or installing skills."
 
-#: src/features/chat/AgentSetupWizard.tsx:750
+#: src/features/chat/AgentSetupWizard.tsx:759
 msgid "Type"
 msgstr "Type"
 
@@ -2379,15 +2343,11 @@ msgstr "Unknown"
 msgid "unset"
 msgstr "unset"
 
-#: src/app/workspace-shell/SettingsPage.tsx:250
-#~ msgid "URL"
-#~ msgstr "URL"
-
 #: src/app/WelcomeScreen.tsx:40
 msgid "Use a zeroclaw binary that's already installed and (optionally) running on this machine. Auto-detected from PATH."
 msgstr "Use a zeroclaw binary that's already installed and (optionally) running on this machine. Auto-detected from PATH."
 
-#: src/features/chat/agent-setup-wizard/components.tsx:211
+#: src/features/chat/agent-setup-wizard/components.tsx:213
 msgid "Use existing"
 msgstr "Use existing"
 
@@ -2423,12 +2383,12 @@ msgstr "Uses vector search for semantic memory retrieval."
 msgid "Uses your local ssh, ssh-agent, and ~/.ssh/config. The workspace opens an ssh -L port forward."
 msgstr "Uses your local ssh, ssh-agent, and ~/.ssh/config. The workspace opens an ssh -L port forward."
 
-#: src/features/chat/AgentSetupWizard.tsx:988
+#: src/features/chat/AgentSetupWizard.tsx:997
 msgid "Validating..."
 msgstr "Validating..."
 
 #. placeholder {0}: errorMessage(e)
-#: src/features/chat/AgentSetupWizard.tsx:440
+#: src/features/chat/AgentSetupWizard.tsx:449
 msgid "Validation failed: {0}"
 msgstr "Validation failed: {0}"
 
@@ -2444,15 +2404,15 @@ msgstr "Vector memory for semantic retrieval."
 msgid "Waiting for health…"
 msgstr "Waiting for health…"
 
-#: src/features/chat/AgentSetupWizard.tsx:480
+#: src/features/chat/AgentSetupWizard.tsx:489
 msgid "Waiting for the gateway to restart and load the new agent."
 msgstr "Waiting for the gateway to restart and load the new agent."
 
 #: src/app/WelcomeScreen.tsx:57
-msgid "Welcome to ZeroClaw Workspace"
-msgstr "Welcome to ZeroClaw Workspace"
+msgid "Welcome to ZeroClaw Studio"
+msgstr "Welcome to ZeroClaw Studio"
 
-#: src/features/chat/ChatPanel.tsx:635
+#: src/features/chat/ChatPanel.tsx:642
 msgid "What do you want to work on in this session?"
 msgstr "What do you want to work on in this session?"
 
@@ -2461,10 +2421,6 @@ msgstr "What do you want to work on in this session?"
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:310
 msgid "Workspace"
 msgstr "Workspace"
-
-#: src/app/ConnectionPicker.tsx:204
-#~ msgid "Workspace runtime"
-#~ msgstr "Workspace runtime"
 
 #: src/app/AddConnectionDialog.tsx:421
 msgid "Workspace will spawn zeroclaw gateway --port {port} when this connection is active, and shut it down when the workspace exits."
@@ -2477,7 +2433,3 @@ msgstr "ZeroClaw approval needed"
 #: src/workspace/notifications/useNotifications.ts:51
 msgid "ZeroClaw turn finished"
 msgstr "ZeroClaw turn finished"
-
-#: src/app/workspace-shell/SettingsPage.tsx:338
-#~ msgid "zeroclaw:// registered"
-#~ msgstr "zeroclaw:// registered"

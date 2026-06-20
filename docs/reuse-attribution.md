@@ -1,6 +1,6 @@
 # Reuse attribution
 
-`zeroclaw-workspace` reuses assets and code from
+`zeroclaw-studio` reuses assets and code from
 [`zeroclaw-labs/zeroclaw`](https://github.com/zeroclaw-labs/zeroclaw),
 which is dual-licensed under MIT and Apache-2.0. This repo is published
 under the same dual license, so the reuse is license-compatible without

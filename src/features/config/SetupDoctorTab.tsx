@@ -387,7 +387,7 @@ function ManualSetupPanel({ capabilityId }: { capabilityId: SetupCapabilityId })
             {t`${CAPABILITY_LABELS[capabilityId]} setup`}
           </h3>
           <p className="mt-1 text-xs leading-relaxed text-neutral-500">
-            {t`Local checks, one-click actions, and remediation commands are provided by the desktop backend. Open this tab in ZeroClaw Workspace to view the current backend-provided setup status for this capability.`}
+            {t`Local checks, one-click actions, and remediation commands are provided by the desktop backend. Open this tab in ZeroClaw Studio to view the current backend-provided setup status for this capability.`}
           </p>
         </div>
       </div>

@@ -54,7 +54,7 @@ export function WelcomeScreen({ onChoose }: Props) {
           <Cable size={28} />
         </div>
         <h1 className="text-3xl font-semibold tracking-tight">
-          <Trans>Welcome to ZeroClaw Workspace</Trans>
+          <Trans>Welcome to ZeroClaw Studio</Trans>
         </h1>
         <p className="max-w-lg text-sm text-slate-400">
           <Trans>

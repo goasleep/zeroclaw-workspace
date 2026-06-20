@@ -1,12 +1,12 @@
-# Contributing to zeroclaw-workspace
+# Contributing to zeroclaw-studio
 
 Thanks for considering a contribution.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/<you>/zeroclaw-workspace
-cd zeroclaw-workspace
+git clone https://github.com/<you>/zeroclaw-studio
+cd zeroclaw-studio
 pnpm install
 pnpm desktop:dev
 ```

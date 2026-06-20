@@ -169,7 +169,7 @@ mod tests {
             .expect("system time before epoch")
             .as_nanos();
         let dir = std::env::temp_dir().join(format!(
-            "zeroclaw-workspace-attachments-{}-{suffix}",
+            "zeroclaw-studio-attachments-{}-{suffix}",
             std::process::id()
         ));
         fs::create_dir_all(&dir).expect("create temp attachment dir");

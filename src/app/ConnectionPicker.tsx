@@ -199,7 +199,7 @@ export function ConnectionPicker({ onAdd }: Props) {
         </div>
         <div className="hidden leading-tight sm:block">
           <div className="text-[11px] uppercase tracking-wide text-neutral-500">
-            ZeroClaw Workspace
+            ZeroClaw Studio
           </div>
           <div className="text-xs text-neutral-300">{t`Runtime`}</div>
         </div>

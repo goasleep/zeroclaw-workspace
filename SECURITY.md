@@ -1,6 +1,6 @@
 # Security Policy
 
-ZeroClaw Workspace is a desktop client that connects local files, native
+ZeroClaw Studio is a desktop client that connects local files, native
 desktop capabilities, and local or remote ZeroClaw gateways. Please report
 security issues privately so we can investigate before details are public.
 
@@ -27,7 +27,7 @@ URLs, logs, or screenshots that expose sensitive information.
 
 Please include:
 
-- affected ZeroClaw Workspace version or commit
+- affected ZeroClaw Studio version or commit
 - operating system and CPU architecture
 - whether the target gateway was local, remote, or reached through SSH/Tailscale/VPN
 - clear reproduction steps
@@ -41,7 +41,7 @@ reporter when a fix is needed.
 
 ## Security boundaries
 
-ZeroClaw Workspace is a Tauri desktop application. It bridges a web frontend
+ZeroClaw Studio is a Tauri desktop application. It bridges a web frontend
 with native Rust commands, so treat its native command surface as security
 sensitive.
 
@@ -87,7 +87,7 @@ gateway safe.
 
 When reporting a remote-gateway issue, clarify whether the weakness is in:
 
-- ZeroClaw Workspace itself
+- ZeroClaw Studio itself
 - the remote gateway
 - the network transport or tunnel setup
 - a configuration mistake
@@ -153,4 +153,3 @@ Before publishing a security-sensitive release, maintainers should verify:
 - tokens and private URLs are not logged
 - release artifacts include checksums
 - signed and notarized builds are used once signing infrastructure exists
-

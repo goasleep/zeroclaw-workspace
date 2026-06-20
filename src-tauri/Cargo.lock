@@ -6625,7 +6625,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "zeroclaw-workspace"
+name = "zeroclaw-studio"
 version = "0.1.0"
 dependencies = [
  "anyhow",

@@ -1,24 +1,34 @@
-# 🦀 zeroclaw-workspace
+# 🦀 ZeroClaw Studio
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-> A distributed AI productivity workspace powered by
-> [ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw).
-> Turn any local or remote `zeroclaw` node into part of one native workspace
-> for files, chat, tools, memory, scheduled tasks, clipboard, notifications,
-> and long-running agent work.
+> A native AI productivity workspace powered by
+> [ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw). Run agent work where
+> your files, machines, tools, memory, and automations already live.
+
+ZeroClaw Studio ships with a pinned, app-private `zeroclaw` runtime, so a
+fresh install can start a local gateway without installing the CLI first. When
+your work needs to run somewhere else, connect the same desktop app to a local,
+attached, or remote ZeroClaw gateway over HTTP, WebSocket, and SSE.
+
+[Download the latest release](https://github.com/goasleep/zeroclaw-studio/releases)
+· [Quick start](#quick-start)
+· [Runtime modes](#runtime-modes)
+· [Security notes](#security-notes)
+· [Development](#development)
 
 ## What this is
 
-`zeroclaw-workspace` is a Tauri 2 desktop app for getting real work done
-across local files, remote machines, tools, memory, and automations. The
-desktop app is the productivity layer; `zeroclaw` is the lightweight runtime
-underneath it.
+`zeroclaw-studio` is a Tauri 2 desktop app for getting real work done across
+local files, remote machines, tools, memory, scheduled jobs, and long-running
+agent sessions. It is the product surface for ZeroClaw-powered work: the desktop
+app gives you a focused workspace, while `zeroclaw` provides the lightweight
+runtime and gateway underneath.
 
-The app can start its own bundled `zeroclaw` gateway, attach to an existing
-local gateway, or connect to a remote gateway over trusted network paths. That
-means first-run local use does not require installing the `zeroclaw` CLI first,
-while remote and homelab workflows stay first-class.
+The default path is local and simple: launch the app, use the bundled
+app-private runtime, pair the workspace, open a folder, and start a chat. The
+same app can also attach to a user-managed local gateway or connect to a remote
+gateway over trusted network paths.
 
 Instead of treating AI as a single chat box, the workspace lets you choose
 where work should run:
@@ -28,24 +38,43 @@ where work should run:
 - use a cloud VM for always-on or heavier jobs,
 - reach private resources through SSH, Tailscale, VPN, or an internal host.
 
-The app is independent from the main `zeroclaw` repo. It speaks to a
-`zeroclaw` gateway over HTTP/WebSocket, and each gateway can be:
-
-- **Local & managed** — workspace spawns and supervises a `zeroclaw` process.
-- **Inner runtime** — fresh installs get an app-private bundled `zeroclaw`
-  runtime, isolated from your `~/.zeroclaw/` and the default gateway port.
-- **Local & attached** — workspace connects to a gateway you already started
-  (systemd, launchd, `zeroclaw service start`, …).
-- **Remote** — point at any reachable URL (SSH tunnel, Tailscale, VPN, public TLS).
-  You don't need `zeroclaw` installed locally at all — manage a homelab Pi
-  or a cloud VM from your laptop.
-
 ZeroClaw's low deployment cost is the point: AI capabilities can live wherever
 your work already lives, while the desktop app gives you one place to connect,
 operate, observe, and intervene.
 
-The workspace UI is cross-platform. The bundled inner runtime keeps its own
+The Studio UI is cross-platform. The bundled inner runtime keeps its own
 app-data config directory and never modifies your user-level `~/.zeroclaw/`.
+
+## Built-in ZeroClaw
+
+The bundled runtime is a core part of the product. Release builds include a
+pinned `zeroclaw` sidecar that the app can start and supervise as an isolated
+inner runtime. That gives first-run users a real local ZeroClaw gateway without
+requiring a separate CLI install.
+
+The isolation is intentional:
+
+- the bundled runtime uses an app-private data directory,
+- it sets `ZEROCLAW_CONFIG_DIR` and `ZEROCLAW_HOME` for the child process,
+- it avoids the default user-level `~/.zeroclaw/`,
+- it does not prevent you from connecting to your own gateway later.
+
+The bundled gateway brings ZeroClaw's runtime model into the app: sessions,
+tools, memory, cron, logs, doctor checks, pairing, and gateway events where
+supported by the pinned runtime.
+
+## Use cases
+
+- **Start local without setup** — download the desktop app, use the bundled
+  runtime, open a project folder, and start working.
+- **Work across machines** — keep the desktop UI on your laptop while the
+  gateway runs on a homelab Pi, NAS, workstation, or cloud VM.
+- **Keep long-running tasks close to the resources they need** — run scheduled
+  jobs and automations near private files, internal APIs, or always-on hosts.
+- **Observe and intervene** — use one native workspace for chat, tool progress,
+  memory, cron, logs, doctor checks, config, and approvals.
+- **Choose the trust boundary** — use the app-private runtime for local work, or
+  connect only to remote gateways you administer and trust.
 
 ## Features
 
@@ -71,8 +100,17 @@ app-data config directory and never modifies your user-level `~/.zeroclaw/`.
 
 | Area | What it shows | Preview |
 | --- | --- | --- |
-| Workspace chat | A project-scoped chat session connected to the local `zeroclaw` runtime, with runtime status, workspace context, session history, attachments, and agent selection in one desktop window. | ![ZeroClaw Workspace desktop chat workspace](images/workspace-chat.png) |
-| Runtime and app settings | Local runtime state, workspace folder context, preferences, native notifications, tray integration, deep-link registration, and the operations/capabilities navigation surface. | ![ZeroClaw Workspace desktop settings panel](images/runtime-settings.png) |
+| Workspace chat | A project-scoped chat session connected to the local `zeroclaw` runtime, with runtime status, workspace context, session history, attachments, and agent selection in one desktop window. | ![ZeroClaw Studio desktop chat workspace](images/workspace-chat.png) |
+| Runtime and app settings | Local runtime state, workspace folder context, preferences, native notifications, tray integration, deep-link registration, and the operations/capabilities navigation surface. | ![ZeroClaw Studio desktop settings panel](images/runtime-settings.png) |
+
+## Runtime modes
+
+| Mode | Needs local `zeroclaw` install? | Best for |
+| --- | --- | --- |
+| Bundled inner runtime | No | First run, local project work, and trying the app without CLI setup |
+| Local & managed | Yes | Using your own local `zeroclaw` binary while letting the workspace supervise it |
+| Local & attached | Already running locally | Connecting to a gateway managed by launchd, systemd, `zeroclaw service start`, or another supervisor |
+| Remote | No | Managing a homelab, server, workstation, or cloud VM from your desktop |
 
 ## What this is NOT
 
@@ -92,7 +130,7 @@ Prebuilt desktop artifacts are produced by tag-triggered GitHub releases:
 - Windows: `.msi` / NSIS `.exe`
 
 Download the latest published build from
-[GitHub Releases](https://github.com/goasleep/zeroclaw-workspace/releases).
+[GitHub Releases](https://github.com/goasleep/zeroclaw-studio/releases).
 
 Release builds include the pinned bundled `zeroclaw v0.8.0` sidecar used by the
 app-private inner runtime. You can still point the app at your own local or
@@ -107,7 +145,7 @@ Current release artifacts are unsigned. On macOS, Gatekeeper may require
 removing the quarantine attribute after installation:
 
 ```bash
-xattr -dr com.apple.quarantine /Applications/ZeroClaw\ Workspace.app
+xattr -dr com.apple.quarantine /Applications/ZeroClaw\ Studio.app
 ```
 
 Signed and notarized builds are planned for a later release.
@@ -119,7 +157,7 @@ you can try local workflows without installing `zeroclaw` separately. You can
 also connect to gateways on the same machine, on another host, or behind an
 SSH/Tailscale/VPN route.
 
-1. Launch ZeroClaw Workspace.
+1. Launch ZeroClaw Studio.
 2. Use the bundled inner runtime, or choose another connection mode:
    - **Local & managed** — let the workspace find and supervise a local
      user-installed `zeroclaw` binary.
@@ -136,7 +174,7 @@ managed external local connection.
 
 ## Gateway compatibility
 
-ZeroClaw Workspace talks to the gateway over HTTP, WebSocket, and SSE. Gateway
+ZeroClaw Studio talks to the gateway over HTTP, WebSocket, and SSE. Gateway
 compatibility is not stable yet; gateway contract changes should be tested
 against the matching `zeroclaw` build.
 

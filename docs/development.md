@@ -1,7 +1,7 @@
 # Development guide
 
 This page collects the local workflow and project quality checks for
-`zeroclaw-workspace`.
+`zeroclaw-studio`.
 
 ## Local setup
 

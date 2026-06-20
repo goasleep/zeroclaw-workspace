@@ -1,13 +1,13 @@
 [package]
-name = "zeroclaw-workspace"
+name = "zeroclaw-studio"
 version = "0.1.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
-description = "Desktop workspace client for ZeroClaw — connect local or remote"
+description = "ZeroClaw Studio desktop app — connect local or remote gateways"
 publish = false
 
 [lib]
-name = "zeroclaw_workspace_lib"
+name = "zeroclaw_studio_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

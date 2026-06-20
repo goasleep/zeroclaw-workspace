@@ -4,7 +4,7 @@ Project instructions for AI coding assistants working in this repository.
 
 ## Project Snapshot
 
-`zeroclaw-workspace` is an early-stage Tauri 2 desktop app with a React/Vite
+`zeroclaw-studio` is an early-stage Tauri 2 desktop app with a React/Vite
 frontend. It connects to local-managed, local-attached, and remote ZeroClaw
 gateways over HTTP, WebSocket, and SSE.
 

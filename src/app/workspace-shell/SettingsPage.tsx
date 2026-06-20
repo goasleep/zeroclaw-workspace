@@ -346,7 +346,7 @@ function AppSettings() {
 
             <PreferenceRow
               label={t`Global shortcut`}
-              description={t`Quickly bring ZeroClaw Workspace to the front.`}
+              description={t`Quickly bring ZeroClaw Studio to the front.`}
               control={
                 <input
                   value={preferences.shortcut}

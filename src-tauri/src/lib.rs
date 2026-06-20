@@ -1,4 +1,4 @@
-//! ZeroClaw Workspace — application library.
+//! ZeroClaw Studio — application library.
 
 pub mod chat;
 pub mod commands;
@@ -392,7 +392,7 @@ fn install_tray(app: &tauri::AppHandle<tauri::Wry>) -> tauri::Result<()> {
 
     let mut tray = TrayIconBuilder::with_id("main")
         .menu(&menu)
-        .tooltip("ZeroClaw Workspace")
+        .tooltip("ZeroClaw Studio")
         .show_menu_on_left_click(true)
         .on_menu_event(|app, event| match event.id().as_ref() {
             TRAY_SHOW_HIDE => {
