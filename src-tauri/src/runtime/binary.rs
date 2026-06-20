@@ -5,6 +5,7 @@
 //!   2. `~/.cargo/bin/zeroclaw`
 //!   3. `$XDG_BIN_HOME/zeroclaw`
 //!   4. Well-known install paths from upstream `install.sh` (`/usr/local/bin`)
+//!
 //! The bundled inner runtime is resolved through Tauri's sidecar machinery and
 //! deliberately does not appear here; this module is for external local
 //! binaries the user installed or selected.
