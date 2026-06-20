@@ -46,13 +46,15 @@ export default [
     },
   },
   {
-    files: ["vite.config.ts", "eslint.config.js"],
+    files: ["vite.config.ts", "eslint.config.js", "scripts/**/*.{js,mjs}"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
       globals: {
         ...globals.node,
         ...globals.es2022,
+        fetch: "readonly",
+        WritableStream: "readonly",
       },
     },
   },

@@ -132,7 +132,9 @@ export function AgentSetupWizard({
         void apiPersonalityTemplates({ agent_name: "default" })
           .then((result) => {
             if (cancelled) return;
-            setTemplates(Object.fromEntries(result.files.map((file) => [file.filename, file.content])));
+            setTemplates(
+              Object.fromEntries(result.files.map((file) => [file.filename, file.content])),
+            );
           })
           .catch(() => {
             if (!cancelled) setTemplates({});
@@ -227,7 +229,9 @@ export function AgentSetupWizard({
       providerMode === "existing"
         ? Boolean(providerExisting)
         : Boolean(providerType && providerAlias.trim() && model.trim()) &&
-          fieldDescs.every((field) => !field.required || Boolean((fieldValues[field.key] ?? "").trim()));
+          fieldDescs.every(
+            (field) => !field.required || Boolean((fieldValues[field.key] ?? "").trim()),
+          );
     const riskDone = riskMode === "existing" ? Boolean(riskValue) : Boolean(riskValue);
     const runtimeDone = runtimeMode === "existing" ? Boolean(runtimeValue) : Boolean(runtimeValue);
     const memoryDone = memoryMode === "existing" ? Boolean(memoryValue) : Boolean(memoryValue);
@@ -335,7 +339,11 @@ export function AgentSetupWizard({
       setPersonalityFiles((current) => {
         const previous = current[filename] ?? { mode: "skip", content: "" };
         const content =
-          mode === "template" ? templates[filename] ?? previous.content : mode === "scratch" ? "" : "";
+          mode === "template"
+            ? (templates[filename] ?? previous.content)
+            : mode === "scratch"
+              ? ""
+              : "";
         return { ...current, [filename]: { mode, content } };
       });
     },
@@ -707,7 +715,9 @@ export function AgentSetupWizard({
                 {channels.map((channel) => (
                   <DraftCard
                     key={channel.id}
-                    onRemove={() => setChannels((current) => current.filter((c) => c.id !== channel.id))}
+                    onRemove={() =>
+                      setChannels((current) => current.filter((c) => c.id !== channel.id))
+                    }
                   >
                     <ModeRow
                       mode={channel.mode}
@@ -722,7 +732,7 @@ export function AgentSetupWizard({
                                   mode,
                                   existingRef:
                                     mode === "existing"
-                                      ? qsState.unassigned_channels[0] ?? item.existingRef
+                                      ? (qsState.unassigned_channels[0] ?? item.existingRef)
                                       : item.existingRef,
                                 }
                               : item,
@@ -836,7 +846,9 @@ export function AgentSetupWizard({
                             <span className="font-mono text-xs text-neutral-200">{filename}</span>
                             <Select
                               value={draft.mode}
-                              onChange={(value) => setPersonalityMode(filename, value as PersonalityMode)}
+                              onChange={(value) =>
+                                setPersonalityMode(filename, value as PersonalityMode)
+                              }
                             >
                               <option value="template">{t`Start with template`}</option>
                               <option value="scratch">{t`Start from scratch`}</option>
@@ -1037,7 +1049,9 @@ function StepButton({
     >
       <span
         className={`flex h-5 w-5 items-center justify-center rounded-full border text-[10px] ${
-          done ? "border-green-400/50 bg-green-400/10 text-green-300" : "border-white/15 text-neutral-500"
+          done
+            ? "border-green-400/50 bg-green-400/10 text-green-300"
+            : "border-white/15 text-neutral-500"
         }`}
       >
         {done ? <CheckCircle2 size={12} /> : ""}
@@ -1111,15 +1125,7 @@ function DraftCard({ children, onRemove }: { children: ReactNode; onRemove: () =
   );
 }
 
-function Field({
-  label,
-  help,
-  children,
-}: {
-  label: string;
-  help?: string;
-  children: ReactNode;
-}) {
+function Field({ label, help, children }: { label: string; help?: string; children: ReactNode }) {
   return (
     <label className="block">
       <span className="mb-1 block text-[11px] font-medium text-neutral-400">{label}</span>
