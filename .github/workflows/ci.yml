@@ -66,6 +66,8 @@ jobs:
 
       - run: cargo fmt --all -- --check
         working-directory: src-tauri
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
       - run: pnpm fetch:zeroclaw-sidecar --target ${{ matrix.target }}
       - run: cargo clippy --all-targets -- -D warnings
         working-directory: src-tauri
