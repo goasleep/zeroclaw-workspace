@@ -52,6 +52,8 @@ export const queryKeys = {
     tools: (connectionId: string | null) => ["gateway", connectionId, "tools"] as const,
     channels: (connectionId: string | null) => ["gateway", connectionId, "channels"] as const,
     cron: (connectionId: string | null) => ["gateway", connectionId, "cron"] as const,
+    cronRuns: (connectionId: string | null, jobId: string | null) =>
+      ["gateway", connectionId, "cron", jobId, "runs"] as const,
     integrations: (connectionId: string | null) =>
       ["gateway", connectionId, "integrations"] as const,
     doctor: (connectionId: string | null) => ["gateway", connectionId, "doctor"] as const,

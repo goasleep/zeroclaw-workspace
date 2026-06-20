@@ -38,6 +38,55 @@ export interface AgentWorkspaceEntry {
   [k: string]: unknown;
 }
 
+export type CronSchedule =
+  | { kind: "cron"; expr: string; tz?: string | null }
+  | { kind: "at"; at: string }
+  | { kind: "every"; every_ms: number };
+
+export interface CronJob {
+  id: string;
+  name?: string | null;
+  prompt?: string | null;
+  schedule?: CronSchedule | string | null;
+  enabled?: boolean;
+  next_run?: string | null;
+  last_run?: string | null;
+  last_status?: string | null;
+  agent_alias?: string;
+  [k: string]: unknown;
+}
+
+export interface CronRun {
+  id: number;
+  job_id: string;
+  started_at: string;
+  finished_at: string;
+  status: string;
+  output?: string | null;
+  duration_ms?: number | null;
+}
+
+export interface CronTriggerResult {
+  status: string;
+  job_id: string;
+  success: boolean;
+  output: string;
+  duration_ms: number;
+  started_at: string;
+  finished_at: string;
+}
+
+export interface CronJobPatch {
+  agent: string;
+  name?: string;
+  schedule?: string;
+  tz?: string;
+  clear_tz?: boolean;
+  command?: string;
+  prompt?: string;
+  enabled?: boolean;
+}
+
 export const apiStatus = () => apiFetch<StatusResponse>("/api/status");
 
 export const apiHealth = () =>
@@ -51,8 +100,28 @@ export const apiTools = () =>
 
 export const apiChannels = () => apiFetch<{ channels: ChannelInfo[] }>("/api/channels");
 
-export const apiCron = () =>
-  apiFetch<{ jobs: Array<{ id: string; name?: string; [k: string]: unknown }> }>("/api/cron");
+export const apiCron = () => apiFetch<{ jobs: CronJob[] }>("/api/cron");
+
+export const apiCronPatch = (id: string, patch: CronJobPatch) =>
+  apiFetch<CronJob | { status: string; job: CronJob }>(`/api/cron/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify(patch),
+  }).then(unwrapCronJob);
+
+export const apiCronDelete = (id: string) =>
+  apiFetch<{ status?: string }>(`/api/cron/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
+
+export const apiCronRun = (id: string) =>
+  apiFetch<CronTriggerResult>(`/api/cron/${encodeURIComponent(id)}/run`, {
+    method: "POST",
+  });
+
+export const apiCronRuns = (jobId: string, limit = 20) =>
+  apiFetch<{ runs: CronRun[] }>(
+    `/api/cron/${encodeURIComponent(jobId)}/runs?limit=${encodeURIComponent(String(limit))}`,
+  );
 
 export const apiIntegrations = () =>
   apiFetch<{ integrations: IntegrationInfo[] }>("/api/integrations");
@@ -69,3 +138,9 @@ export const apiAgentWorkspaceList = (alias: string, path?: string) =>
       path ? `?path=${encodeURIComponent(path)}` : ""
     }`,
   );
+
+function unwrapCronJob(data: CronJob | { status: string; job: CronJob }): CronJob {
+  return typeof (data as { job?: CronJob }).job === "object"
+    ? (data as { job: CronJob }).job
+    : (data as CronJob);
+}
