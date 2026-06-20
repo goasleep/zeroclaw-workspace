@@ -14,7 +14,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import type { ChatMessage } from "./use-chat";
+import type { ApprovalDecision, ChatMessage } from "./use-chat";
 import { formatBytes } from "./use-attachments";
 
 type ToolCallView = ChatMessage["toolCalls"][number];
@@ -27,7 +27,7 @@ export function MessageList({
   onApprove,
 }: {
   messages: ChatMessage[];
-  onApprove: (request_id: string, decision: "approve" | "deny" | "always") => void;
+  onApprove: (request_id: string, decision: ApprovalDecision) => Promise<void>;
 }) {
   return (
     <>
@@ -43,17 +43,15 @@ function MessageRow({
   onApprove,
 }: {
   message: ChatMessage;
-  onApprove: (request_id: string, decision: "approve" | "deny" | "always") => void;
+  onApprove: (request_id: string, decision: ApprovalDecision) => Promise<void>;
 }) {
   const { t } = useLingui();
   const isUser = message.role === "user";
-  const { timestamp, content } = splitMessageTimestamp(message.content);
+  const parsed = splitMessageTimestamp(message.content);
+  const timestamp = message.timestamp ?? parsed.timestamp;
   return (
     <div className={`flex gap-3 ${isUser ? "justify-end" : ""}`}>
       <div className={`flex max-w-[90%] flex-col ${isUser ? "items-end" : "items-start"}`}>
-        {timestamp && (
-          <div className="mb-1 px-1 font-mono text-[10px] text-neutral-500">{timestamp}</div>
-        )}
         <div
           className={`rounded-lg px-3 py-2 text-sm ${
             isUser ? "bg-cyan-400/10 text-neutral-100" : "bg-white/[0.06] text-neutral-200"
@@ -97,10 +95,10 @@ function MessageRow({
             />
           )}
 
-          {content && (
+          {parsed.content && (
             <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-[#020818]/90 prose-pre:text-[12px]">
               <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
-                {content}
+                {parsed.content}
               </ReactMarkdown>
             </div>
           )}
@@ -117,6 +115,9 @@ function MessageRow({
             <span className="ml-1 inline-block h-2 w-2 animate-pulse rounded-full bg-cyan-300" />
           )}
         </div>
+        {timestamp && (
+          <div className="mt-1 px-1 font-mono text-[10px] text-neutral-500">{timestamp}</div>
+        )}
       </div>
     </div>
   );
@@ -180,12 +181,20 @@ function ApprovalCard({
 }: {
   approval: NonNullable<ChatMessage["approval"]>;
   toolCalls: ToolCallView[];
-  onApprove: (request_id: string, decision: "approve" | "deny" | "always") => void;
+  onApprove: (request_id: string, decision: ApprovalDecision) => Promise<void>;
 }) {
   const { t } = useLingui();
   const recentArgs = [...toolCalls]
     .reverse()
     .find((toolCall) => toolCall.name === approval.tool)?.args;
+  const response = approval.response;
+  const locked = response?.status === "pending" || response?.status === "sent";
+  const responseLabel =
+    response?.status === "pending"
+      ? t`Applying...`
+      : response?.status === "sent"
+        ? t`${approval.tool} responded.`
+        : null;
 
   return (
     <div className="mb-3 overflow-hidden rounded-lg border border-amber-500/40 bg-amber-500/10 text-xs">
@@ -225,25 +234,41 @@ function ApprovalCard({
             </pre>
           </details>
         )}
+        {response?.status === "error" && (
+          <p className="mb-2 text-[10px] text-red-300">{response.error || t`error`}</p>
+        )}
+        {responseLabel && (
+          <p className="mb-2 flex items-center gap-1 text-[10px] text-emerald-300">
+            {response?.status === "pending" ? (
+              <Loader2 size={10} className="animate-spin" />
+            ) : (
+              <Check size={10} />
+            )}
+            {responseLabel}
+          </p>
+        )}
         <div className="sticky bottom-0 flex flex-wrap gap-2 bg-amber-950/20 pt-2">
           <button
             type="button"
-            onClick={() => onApprove(approval.request_id, "approve")}
-            className="flex items-center gap-1 rounded bg-emerald-500/20 px-2 py-1 font-medium text-emerald-300 hover:bg-emerald-500/30"
+            onClick={() => void onApprove(approval.request_id, "approve")}
+            disabled={locked}
+            className="flex items-center gap-1 rounded bg-emerald-500/20 px-2 py-1 font-medium text-emerald-300 hover:bg-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Check size={10} /> {t`Approve once`}
           </button>
           <button
             type="button"
-            onClick={() => onApprove(approval.request_id, "deny")}
-            className="flex items-center gap-1 rounded bg-red-500/15 px-2 py-1 text-red-300 hover:bg-red-500/25"
+            onClick={() => void onApprove(approval.request_id, "deny")}
+            disabled={locked}
+            className="flex items-center gap-1 rounded bg-red-500/15 px-2 py-1 text-red-300 hover:bg-red-500/25 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Trash2 size={10} /> {t`Reject`}
           </button>
           <button
             type="button"
-            onClick={() => onApprove(approval.request_id, "always")}
-            className="rounded border border-emerald-500/20 px-2 py-1 text-emerald-300 hover:bg-emerald-500/10"
+            onClick={() => void onApprove(approval.request_id, "always")}
+            disabled={locked}
+            className="rounded border border-emerald-500/20 px-2 py-1 text-emerald-300 hover:bg-emerald-500/10 disabled:cursor-not-allowed disabled:opacity-50"
             title={t`Allow this tool for the current gateway session policy`}
           >
             {t`Always allow`}
@@ -361,6 +386,10 @@ function buildExecutionRows(toolCalls: ToolCallView[]) {
     toolCall,
     summary: formatToolCallSummary(toolCall),
     status:
-      toolCall.result === undefined ? "running" : isErrorLikeOutput(toolCall.result) ? "warning" : "done",
+      toolCall.result === undefined
+        ? "running"
+        : isErrorLikeOutput(toolCall.result)
+          ? "warning"
+          : "done",
   }));
 }

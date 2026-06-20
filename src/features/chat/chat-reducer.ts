@@ -1,9 +1,11 @@
 import type { ChatFrame } from "@/api/ws-chat";
 import type { SessionListItem, SessionMessage } from "@/api/sessions";
 import { buildApprovalPreview } from "./diff-preview";
-import type { ChatMessage, NormalizedSession } from "./chat-types";
+import type { ApprovalDecision, ChatMessage, NormalizedSession } from "./chat-types";
 
 const MAX_CACHED_MESSAGES = 200;
+const MESSAGE_TIMESTAMP_PREFIX =
+  /^\[((?:\d{4}-\d{2}-\d{2})[ T](?:\d{2}:\d{2}(?::\d{2})?)(?:\s*(?:Z|[+-]\d{2}:?\d{2}))?)\]\s*/;
 
 export type ChatAction =
   | { type: "reset" }
@@ -13,6 +15,13 @@ export type ChatAction =
       type: "push-user";
       content: string;
       attachments?: Array<{ filename: string; mime_type: string; size?: number }>;
+    }
+  | {
+      type: "approval-response";
+      requestId: string;
+      decision: ApprovalDecision;
+      status: "pending" | "sent" | "error";
+      error?: string;
     }
   | { type: "frame"; frame: ChatFrame };
 
@@ -27,10 +36,12 @@ function uid() {
 
 export function fromSessionMessage(message: SessionMessage): ChatMessage | null {
   if (message.role !== "user" && message.role !== "assistant") return null;
+  const { timestamp, content } = splitMessageTimestamp(message.content);
   return {
     id: uid(),
     role: message.role,
-    content: message.content,
+    content,
+    timestamp: message.created_at ?? timestamp,
     toolCalls: [],
     status: "done",
   };
@@ -47,7 +58,8 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         return state;
       }
       return { ...state, messages: action.messages };
-    case "push-user":
+    case "push-user": {
+      const timestamp = new Date().toISOString();
       return {
         ...state,
         messages: [
@@ -56,6 +68,7 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
             id: uid(),
             role: "user",
             content: action.content,
+            timestamp,
             attachments: action.attachments,
             toolCalls: [],
             status: "done",
@@ -69,6 +82,18 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
           },
         ],
       };
+    }
+    case "approval-response":
+      return {
+        ...state,
+        messages: state.messages.map((message) =>
+          updateApprovalResponse(message, action.requestId, {
+            decision: action.decision,
+            status: action.status,
+            error: action.error,
+          }),
+        ),
+      };
     case "frame": {
       const frame = action.frame;
       if (frame.type === "session_start") {
@@ -81,14 +106,17 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       const updated: ChatMessage = { ...last };
       switch (frame.type) {
         case "chunk":
+          updated.timestamp ??= new Date().toISOString();
           updated.content += frame.content;
           updated.status = "streaming";
           break;
         case "thinking":
+          updated.timestamp ??= new Date().toISOString();
           updated.thinking = (updated.thinking ?? "") + frame.content;
           break;
         case "tool_call":
         case "tool_call_start":
+          updated.timestamp ??= new Date().toISOString();
           updated.toolCalls = [
             ...updated.toolCalls,
             { name: frame.name, args: "args" in frame ? frame.args : undefined },
@@ -104,6 +132,7 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
           break;
         }
         case "approval_request": {
+          updated.timestamp ??= new Date().toISOString();
           const recentArgs = [...updated.toolCalls]
             .reverse()
             .find((t) => t.name === frame.tool && t.args !== undefined)?.args;
@@ -116,12 +145,15 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
           };
           break;
         }
-        case "done":
-          updated.content = frame.full_response || updated.content;
+        case "done": {
+          const parsed = splitMessageTimestamp(frame.full_response || updated.content);
+          updated.timestamp ??= parsed.timestamp ?? new Date().toISOString();
+          updated.content = parsed.content;
           updated.status = "done";
           updated.approval = null;
           updated.cost_usd = frame.cost_usd;
           break;
+        }
         case "aborted":
           updated.status = "aborted";
           break;
@@ -138,6 +170,30 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       };
     }
   }
+}
+
+function splitMessageTimestamp(content: string) {
+  const match = content.match(MESSAGE_TIMESTAMP_PREFIX);
+  if (!match) return { timestamp: null, content };
+  return {
+    timestamp: match[1],
+    content: content.slice(match[0].length),
+  };
+}
+
+function updateApprovalResponse(
+  message: ChatMessage,
+  requestId: string,
+  response: NonNullable<NonNullable<ChatMessage["approval"]>["response"]>,
+) {
+  if (message.approval?.request_id !== requestId) return message;
+  return {
+    ...message,
+    approval: {
+      ...message.approval,
+      response,
+    },
+  };
 }
 
 export function normalizeSession(item: SessionListItem): NormalizedSession | null {
@@ -158,6 +214,10 @@ export function sessionSort(a: NormalizedSession, b: NormalizedSession) {
   const at = a.last_message_at ?? a.updated_at ?? a.created_at ?? "";
   const bt = b.last_message_at ?? b.updated_at ?? b.created_at ?? "";
   return bt.localeCompare(at);
+}
+
+export function isVisibleSession(session: NormalizedSession) {
+  return session.message_count == null || session.message_count > 0;
 }
 
 export function shortSessionName(id: string) {

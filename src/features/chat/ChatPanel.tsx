@@ -117,6 +117,7 @@ export function ChatPanel({
   const [modelChoices, setModelChoices] = useState<ConfiguredModelChoice[]>([]);
   const [selectedModelProvider, setSelectedModelProvider] = useState(MODEL_FOLLOWS_AGENT);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const messageScrollRef = useRef<HTMLDivElement | null>(null);
   const { attachmentDrafts, clipboardAttachments, setClipboardAttachments, clearAttachments } =
     useAttachments({
       active,
@@ -179,6 +180,15 @@ export function ChatPanel({
     window.addEventListener("zeroclaw://quick-invoke", focus);
     return () => window.removeEventListener("zeroclaw://quick-invoke", focus);
   }, []);
+
+  useEffect(() => {
+    const scrollContainer = messageScrollRef.current;
+    if (!scrollContainer) return;
+    const frame = window.requestAnimationFrame(() => {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [chat.messages]);
 
   useEffect(() => {
     function handleSelectSession(e: Event) {
@@ -612,6 +622,7 @@ export function ChatPanel({
         )}
 
         <div
+          ref={messageScrollRef}
           className={
             hasMessages
               ? "flex-1 space-y-3 overflow-y-auto px-4 py-4 text-sm zc-scrollbar"

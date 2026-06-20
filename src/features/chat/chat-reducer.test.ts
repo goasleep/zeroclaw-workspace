@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { chatReducer, mergeTranscripts, normalizeSession } from "./chat-reducer";
+import {
+  chatReducer,
+  fromSessionMessage,
+  isVisibleSession,
+  mergeTranscripts,
+  normalizeSession,
+} from "./chat-reducer";
 import type { ChatState } from "./chat-reducer";
 import type { ChatMessage } from "./chat-types";
 
@@ -23,7 +29,10 @@ describe("chatReducer", () => {
   });
 
   it("streams chunks into the latest assistant message", () => {
-    const state = chatReducer({ messages: [], sessionId: null }, { type: "push-user", content: "hi" });
+    const state = chatReducer(
+      { messages: [], sessionId: null },
+      { type: "push-user", content: "hi" },
+    );
     const next = chatReducer(state, { type: "frame", frame: { type: "chunk", content: "there" } });
 
     expect(next.messages.at(-1)).toMatchObject({
@@ -32,9 +41,62 @@ describe("chatReducer", () => {
       status: "streaming",
     });
   });
+
+  it("tracks approval response status on the matching assistant message", () => {
+    const state = chatReducer(
+      {
+        sessionId: "session-1",
+        messages: [
+          {
+            id: "assistant-1",
+            role: "assistant",
+            content: "",
+            toolCalls: [{ name: "shell", args: { command: "pwd" } }],
+            status: "pending",
+          },
+        ],
+      },
+      {
+        type: "frame",
+        frame: {
+          type: "approval_request",
+          request_id: "approval-1",
+          tool: "shell",
+          arguments_summary: "pwd",
+        },
+      },
+    );
+
+    const next = chatReducer(state, {
+      type: "approval-response",
+      requestId: "approval-1",
+      decision: "approve",
+      status: "sent",
+    });
+
+    expect(next.messages[0].approval?.response).toEqual({
+      decision: "approve",
+      status: "sent",
+      error: undefined,
+    });
+  });
 });
 
 describe("session helpers", () => {
+  it("uses session message timestamps without keeping legacy prefixes in content", () => {
+    expect(
+      fromSessionMessage({
+        role: "assistant",
+        content: "[2026-06-20 15:42:00] hello",
+        created_at: "2026-06-20T07:42:00Z",
+      }),
+    ).toMatchObject({
+      role: "assistant",
+      content: "hello",
+      timestamp: "2026-06-20T07:42:00Z",
+    });
+  });
+
   it("normalizes sessions using fallback ids and names", () => {
     expect(
       normalizeSession({
@@ -47,6 +109,17 @@ describe("session helpers", () => {
       name: "session abcdef12",
       agent_alias: "agent",
     });
+  });
+
+  it("hides only sessions that explicitly report zero messages", () => {
+    const base = {
+      session_id: "session-1",
+      name: "session",
+    };
+
+    expect(isVisibleSession({ ...base, message_count: 0 })).toBe(false);
+    expect(isVisibleSession({ ...base, message_count: 1 })).toBe(true);
+    expect(isVisibleSession(base)).toBe(true);
   });
 
   it("merges cached transcript entries that are missing from gateway history", () => {
