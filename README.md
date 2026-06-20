@@ -114,6 +114,21 @@ The project is still before a stable compatibility promise. If a change touches
 the gateway contract, update the protocol notes and test against the matching
 `zeroclaw` gateway build.
 
+## Platform support
+
+The project targets current stable Tauri 2 desktop platforms:
+
+| Platform | Architecture | Status |
+| --- | --- | --- |
+| macOS | arm64 | Supported by release builds |
+| macOS | x86_64 | Paused until bundled `zeroclaw` artifacts are available |
+| Linux | x86_64 | Supported by release builds |
+| Windows | x86_64 | Supported by release builds |
+
+Source builds may work on additional targets when Tauri and a compatible
+`zeroclaw` gateway are available, but those targets are not part of the release
+matrix yet.
+
 ## Development
 
 Requirements:
@@ -186,6 +201,18 @@ diagnostic logs.
   checks before opening PRs.
 - Some gateway schemas are inferred from upstream source until broader OpenAPI
   coverage lands.
+
+## Roadmap and governance
+
+Current priorities are tracked through
+[GitHub Issues](https://github.com/goasleep/zeroclaw-workspace/issues) and
+[GitHub Milestones](https://github.com/goasleep/zeroclaw-workspace/milestones).
+Good first contributions include documentation fixes, focused UI polish,
+platform-specific build feedback, and small gateway-compatibility improvements.
+
+The repository is source-available and open for contributions, but the npm
+package and Rust crate are intentionally not published. Desktop releases are
+distributed through GitHub Releases.
 
 ## Reuse attribution
 

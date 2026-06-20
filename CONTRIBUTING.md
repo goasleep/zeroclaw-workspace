@@ -8,7 +8,7 @@ Thanks for considering a contribution.
 git clone https://github.com/<you>/zeroclaw-workspace
 cd zeroclaw-workspace
 pnpm install
-pnpm tauri dev
+pnpm desktop:dev
 ```
 
 You will need a running ZeroClaw gateway to connect to. See the
