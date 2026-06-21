@@ -87,6 +87,14 @@ export interface CronJobPatch {
   enabled?: boolean;
 }
 
+export interface CronJobCreate {
+  agent: string;
+  name: string;
+  prompt: string;
+  schedule: string;
+  enabled?: boolean;
+}
+
 export const apiStatus = () => apiFetch<StatusResponse>("/api/status");
 
 export const apiHealth = () =>
@@ -101,6 +109,12 @@ export const apiTools = () =>
 export const apiChannels = () => apiFetch<{ channels: ChannelInfo[] }>("/api/channels");
 
 export const apiCron = () => apiFetch<{ jobs: CronJob[] }>("/api/cron");
+
+export const apiCronCreate = (job: CronJobCreate) =>
+  apiFetch<CronJob | { status: string; job: CronJob }>("/api/cron", {
+    method: "POST",
+    body: JSON.stringify(job),
+  }).then(unwrapCronJob);
 
 export const apiCronPatch = (id: string, patch: CronJobPatch) =>
   apiFetch<CronJob | { status: string; job: CronJob }>(`/api/cron/${encodeURIComponent(id)}`, {

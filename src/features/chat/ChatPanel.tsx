@@ -72,6 +72,10 @@ export function ChatPanel({
   workspaceRoot = null,
   onWorkspaceRoot,
   workspaceDir,
+  taskId = null,
+  taskTitle = null,
+  onTaskSession,
+  onTaskStatus,
 }: {
   agentAlias: string;
   agents: string[];
@@ -80,6 +84,10 @@ export function ChatPanel({
   workspaceRoot?: string | null;
   onWorkspaceRoot?: (path: string | null) => void;
   workspaceDir?: string | null;
+  taskId?: string | null;
+  taskTitle?: string | null;
+  onTaskSession?: (sessionId: string) => void;
+  onTaskStatus?: (status: "running" | "needs_approval" | "done" | "failed") => void;
 }) {
   const { t } = useLingui();
   const { active } = useConnections();
@@ -119,6 +127,7 @@ export function ChatPanel({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const messageScrollRef = useRef<HTMLDivElement | null>(null);
   const messageBottomRef = useRef<HTMLDivElement | null>(null);
+  const emittedApprovals = useRef<Set<string>>(new Set());
   const { attachmentDrafts, clipboardAttachments, setClipboardAttachments, clearAttachments } =
     useAttachments({
       active,
@@ -196,6 +205,49 @@ export function ChatPanel({
       window.cancelAnimationFrame(secondFrame);
     };
   }, [chat.messages]);
+
+  useEffect(() => {
+    if (chat.sessionId) onTaskSession?.(chat.sessionId);
+  }, [chat.sessionId, onTaskSession]);
+
+  useEffect(() => {
+    if (!onTaskStatus || chat.messages.length === 0) return;
+    if (chat.messages.some((message) => message.approval && !message.approval.response)) {
+      onTaskStatus("needs_approval");
+      return;
+    }
+    const last = chat.messages[chat.messages.length - 1];
+    if (last.status === "pending" || last.status === "streaming") {
+      onTaskStatus("running");
+    } else if (last.status === "error" || last.status === "aborted") {
+      onTaskStatus("failed");
+    } else if (last.status === "done") {
+      onTaskStatus("done");
+    }
+  }, [chat.messages, onTaskStatus]);
+
+  useEffect(() => {
+    if (!taskId) return;
+    for (const message of chat.messages) {
+      const approval = message.approval;
+      if (!approval || emittedApprovals.current.has(approval.request_id)) continue;
+      emittedApprovals.current.add(approval.request_id);
+      window.dispatchEvent(
+        new CustomEvent("zeroclaw://task-approval-request", {
+          detail: {
+            requestId: approval.request_id,
+            taskId,
+            taskTitle,
+            tool: approval.tool,
+            argumentsSummary: approval.arguments_summary,
+            workspaceRoot,
+            agentAlias,
+            respond: chat.respondToApproval,
+          },
+        }),
+      );
+    }
+  }, [agentAlias, chat.messages, chat.respondToApproval, taskId, taskTitle, workspaceRoot]);
 
   useEffect(() => {
     function handleSelectSession(e: Event) {

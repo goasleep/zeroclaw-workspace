@@ -1,4 +1,11 @@
-export type WorkspacePage = "chat" | "code" | "settings";
+export type WorkspacePage =
+  | "dashboard"
+  | "task"
+  | "tasks"
+  | "approvals"
+  | "automations"
+  | "runtime"
+  | "settings";
 
 export type SettingsSection =
   | "app"

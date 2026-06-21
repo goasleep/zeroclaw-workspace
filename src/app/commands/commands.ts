@@ -3,15 +3,15 @@ import type { SettingsSection } from "@/app/workspace-shell/types";
 export const APP_COMMAND_EVENT = "zeroclaw://command";
 
 export const APP_COMMANDS = {
-  workspaceFocusChat: {
-    id: "workspace.focusChat",
-    label: "Focus Chat",
+  workspaceFocusDashboard: {
+    id: "workspace.focusDashboard",
+    label: "Focus Dashboard",
     menu: "Workspace",
     accelerator: "CmdOrCtrl+1",
   },
-  workspaceFocusCode: {
-    id: "workspace.focusCode",
-    label: "Focus Code",
+  workspaceNewCodeTask: {
+    id: "workspace.newCodeTask",
+    label: "New Code Task",
     menu: "Workspace",
     accelerator: "CmdOrCtrl+2",
   },
@@ -21,15 +21,15 @@ export const APP_COMMANDS = {
     menu: "Workspace",
     accelerator: "CmdOrCtrl+O",
   },
-  workspaceNewChat: {
-    id: "workspace.newChat",
-    label: "New Chat",
+  workspaceNewTask: {
+    id: "workspace.newTask",
+    label: "New Task",
     menu: "Workspace",
     accelerator: "CmdOrCtrl+N",
   },
-  workspaceRefreshChats: {
-    id: "workspace.refreshChats",
-    label: "Refresh Chats",
+  workspaceRefreshTasks: {
+    id: "workspace.refreshTasks",
+    label: "Refresh Tasks",
     menu: "Workspace",
     accelerator: "CmdOrCtrl+R",
   },
@@ -122,6 +122,12 @@ export const SETTINGS_COMMAND_SECTIONS: Partial<Record<AppCommandId, SettingsSec
   );
 
 const COMMAND_IDS = new Set<string>(Object.values(APP_COMMANDS).map((command) => command.id));
+const LEGACY_COMMAND_ALIASES: Record<string, AppCommandId> = {
+  "workspace.focusChat": APP_COMMANDS.workspaceFocusDashboard.id,
+  "workspace.focusCode": APP_COMMANDS.workspaceNewCodeTask.id,
+  "workspace.newChat": APP_COMMANDS.workspaceNewTask.id,
+  "workspace.refreshChats": APP_COMMANDS.workspaceRefreshTasks.id,
+};
 
 export function isAppCommandId(value: unknown): value is AppCommandId {
   return typeof value === "string" && COMMAND_IDS.has(value);
@@ -129,12 +135,21 @@ export function isAppCommandId(value: unknown): value is AppCommandId {
 
 export function appCommandFromPayload(payload: unknown): AppCommandId | null {
   if (isAppCommandId(payload)) return payload;
+  if (typeof payload === "string" && payload in LEGACY_COMMAND_ALIASES) {
+    return LEGACY_COMMAND_ALIASES[payload];
+  }
   if (
     payload &&
     typeof payload === "object" &&
     isAppCommandId((payload as AppCommandEventDetail).command)
   ) {
     return (payload as AppCommandEventDetail).command;
+  }
+  if (payload && typeof payload === "object") {
+    const legacy = (payload as AppCommandEventDetail).command;
+    if (typeof legacy === "string" && legacy in LEGACY_COMMAND_ALIASES) {
+      return LEGACY_COMMAND_ALIASES[legacy];
+    }
   }
   return null;
 }

@@ -9,17 +9,17 @@ import {
 import { loadSessionWorkspaceMap } from "@/features/chat/chat-local-state";
 import { useConnections } from "../connection-context";
 
-export function useThreads() {
+export function useTaskSessions() {
   const { active } = useConnections();
   const connectionId = active?.id ?? null;
-  const [threads, setThreads] = useState<NormalizedSession[]>([]);
+  const [sessions, setSessions] = useState<NormalizedSession[]>([]);
   const [workspaceMap, setWorkspaceMap] = useState<Map<string, string>>(() => new Map());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     if (!connectionId) {
-      setThreads([]);
+      setSessions([]);
       setWorkspaceMap(new Map());
       setLoading(false);
       setError(null);
@@ -33,10 +33,10 @@ export function useThreads() {
         loadSessionWorkspaceMap(connectionId),
       ]);
       setWorkspaceMap(workspaceMap);
-      setThreads(
+      setSessions(
         data.sessions
           .map(normalizeSession)
-          .filter((thread): thread is NormalizedSession => thread !== null)
+          .filter((session): session is NormalizedSession => session !== null)
           .filter(isVisibleSession)
           .sort(sessionSort),
       );
@@ -81,7 +81,7 @@ export function useThreads() {
   );
 
   return useMemo(
-    () => ({ threads, workspaceMap, loading, error, refresh, rename, remove }),
-    [threads, workspaceMap, loading, error, refresh, rename, remove],
+    () => ({ sessions, workspaceMap, loading, error, refresh, rename, remove }),
+    [sessions, workspaceMap, loading, error, refresh, rename, remove],
   );
 }

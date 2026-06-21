@@ -11,35 +11,33 @@ import {
 import type { WorkspacePage } from "./types";
 
 interface WorkspaceCommandHandlers {
-  activeChatWorkspaceRoot: string | null;
+  activeTaskWorkspaceRoot: string | null;
   addFiles: (paths: string[]) => void;
+  createTaskFromCommand: (workspaceRoot: string | null, mode?: "chat" | "acp") => Promise<void>;
   focusComposer: () => void;
-  newThread: (workspaceRoot: string | null) => Promise<void>;
   openAgentWorkspace: (alias: string) => void;
   openConfigTarget: (target: string) => void;
   openSettings: (section: string) => void;
   pickProject: () => Promise<void>;
   selectAgent: (agent: string) => void;
   setActiveAgent: Dispatch<SetStateAction<string | null>>;
-  setActiveThreadId: Dispatch<SetStateAction<string | null>>;
   setPage: Dispatch<SetStateAction<WorkspacePage>>;
-  setPendingSessionId: Dispatch<SetStateAction<string | null>>;
+  setPendingTaskSessionId: Dispatch<SetStateAction<string | null>>;
 }
 
 export function useWorkspaceCommands({
-  activeChatWorkspaceRoot,
+  activeTaskWorkspaceRoot,
   addFiles,
+  createTaskFromCommand,
   focusComposer,
-  newThread,
   openAgentWorkspace,
   openConfigTarget,
   openSettings,
   pickProject,
   selectAgent,
   setActiveAgent,
-  setActiveThreadId,
   setPage,
-  setPendingSessionId,
+  setPendingTaskSessionId,
 }: WorkspaceCommandHandlers) {
   useEffect(() => {
     let disposed = false;
@@ -53,21 +51,21 @@ export function useWorkspaceCommands({
       }
 
       switch (command) {
-        case APP_COMMANDS.workspaceFocusChat.id:
-          setPage("chat");
+        case APP_COMMANDS.workspaceFocusDashboard.id:
+          setPage("dashboard");
           focusComposer();
           break;
-        case APP_COMMANDS.workspaceFocusCode.id:
-          setPage("code");
+        case APP_COMMANDS.workspaceNewCodeTask.id:
+          void createTaskFromCommand(activeTaskWorkspaceRoot, "acp");
           focusComposer();
           break;
         case APP_COMMANDS.workspaceOpenProject.id:
           void pickProject();
           break;
-        case APP_COMMANDS.workspaceNewChat.id:
-          void newThread(activeChatWorkspaceRoot);
+        case APP_COMMANDS.workspaceNewTask.id:
+          void createTaskFromCommand(activeTaskWorkspaceRoot, "chat");
           break;
-        case APP_COMMANDS.workspaceRefreshChats.id:
+        case APP_COMMANDS.workspaceRefreshTasks.id:
           window.dispatchEvent(new CustomEvent("zeroclaw://refresh-sessions"));
           break;
         case APP_COMMANDS.workspaceRetryConnection.id:
@@ -109,14 +107,13 @@ export function useWorkspaceCommands({
       const arg = firstPathArg(url);
       if (url.host === "agent" && arg) {
         setActiveAgent(arg);
-        setPage("chat");
+        setPage("dashboard");
         focusComposer();
         return;
       }
       if (url.host === "session" && arg) {
-        setActiveThreadId(arg);
-        setPendingSessionId(arg);
-        setPage("chat");
+        setPendingTaskSessionId(arg);
+        setPage("task");
         focusComposer();
         return;
       }
@@ -124,7 +121,7 @@ export function useWorkspaceCommands({
         const path = decodeURIComponent(url.pathname || "");
         if (path) {
           addFiles([path]);
-          setPage("chat");
+          setPage("dashboard");
           focusComposer();
         }
       }
@@ -135,11 +132,11 @@ export function useWorkspaceCommands({
     }
 
     function onFocusChat() {
-      runCommand(APP_COMMANDS.workspaceFocusChat.id);
+      runCommand(APP_COMMANDS.workspaceFocusDashboard.id);
     }
 
     function onFocusCode() {
-      runCommand(APP_COMMANDS.workspaceFocusCode.id);
+      runCommand(APP_COMMANDS.workspaceNewCodeTask.id);
     }
 
     void listen(APP_COMMAND_EVENT, (event) => {
@@ -177,19 +174,18 @@ export function useWorkspaceCommands({
       window.removeEventListener("zeroclaw://focus-code", onFocusCode);
     };
   }, [
-    activeChatWorkspaceRoot,
+    activeTaskWorkspaceRoot,
     addFiles,
+    createTaskFromCommand,
     focusComposer,
-    newThread,
     openAgentWorkspace,
     openConfigTarget,
     openSettings,
     pickProject,
     selectAgent,
     setActiveAgent,
-    setActiveThreadId,
     setPage,
-    setPendingSessionId,
+    setPendingTaskSessionId,
   ]);
 }
 

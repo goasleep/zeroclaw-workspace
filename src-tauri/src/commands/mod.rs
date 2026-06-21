@@ -11,3 +11,4 @@ pub mod local_state;
 pub mod runtime;
 pub mod setup;
 pub mod ssh;
+pub mod task_state;

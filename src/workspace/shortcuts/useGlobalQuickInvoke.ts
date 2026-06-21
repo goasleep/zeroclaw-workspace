@@ -1,7 +1,7 @@
 // Global shortcut registration + window-focus integration.
 //
 // Default binding: Cmd/Ctrl+Shift+Space → bring window to front and ping
-// the chat composer (the composer subscribes to a window event).
+// the task composer (the composer subscribes to a window event).
 
 import { useEffect } from "react";
 import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
@@ -21,7 +21,7 @@ export function useGlobalQuickInvoke() {
       const win = getCurrentWindow();
       await win.show();
       await win.setFocus();
-      dispatchAppCommand(APP_COMMANDS.workspaceFocusChat.id, "shortcut");
+      dispatchAppCommand(APP_COMMANDS.workspaceFocusDashboard.id, "shortcut");
     }
 
     async function registerShortcut(shortcut: string) {

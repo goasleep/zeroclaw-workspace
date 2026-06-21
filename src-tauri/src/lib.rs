@@ -18,13 +18,14 @@ use tauri::tray::TrayIconBuilder;
 use tauri::{Emitter, Manager, RunEvent};
 use workspace::fs::WorkspaceState;
 use workspace::local_state::LocalStateStore;
+use workspace::task_state::TaskStateStore;
 
 const COMMAND_EVENT: &str = "zeroclaw://command";
-const CMD_WORKSPACE_FOCUS_CHAT: &str = "workspace.focusChat";
-const CMD_WORKSPACE_FOCUS_CODE: &str = "workspace.focusCode";
+const CMD_WORKSPACE_FOCUS_DASHBOARD: &str = "workspace.focusDashboard";
+const CMD_WORKSPACE_NEW_CODE_TASK: &str = "workspace.newCodeTask";
 const CMD_WORKSPACE_OPEN_PROJECT: &str = "workspace.openProject";
-const CMD_WORKSPACE_NEW_CHAT: &str = "workspace.newChat";
-const CMD_WORKSPACE_REFRESH_CHATS: &str = "workspace.refreshChats";
+const CMD_WORKSPACE_NEW_TASK: &str = "workspace.newTask";
+const CMD_WORKSPACE_REFRESH_TASKS: &str = "workspace.refreshTasks";
 const CMD_WORKSPACE_RETRY_CONNECTION: &str = "workspace.retryConnection";
 const CMD_SETTINGS_OPEN: &str = "settings.open";
 const CMD_SETTINGS_OPEN_SETUP_CENTER: &str = "settings.openSetupCenter";
@@ -37,7 +38,7 @@ const CMD_DIAGNOSTICS_OPEN_LOGS: &str = "diagnostics.openLogs";
 const CMD_DIAGNOSTICS_OPEN_DOCTOR: &str = "diagnostics.openDoctor";
 const CMD_DIAGNOSTICS_OPEN_DEVICES: &str = "diagnostics.openDevices";
 const TRAY_SHOW_HIDE: &str = "tray_show_hide";
-const TRAY_FOCUS_CHAT: &str = "tray_focus_chat";
+const TRAY_FOCUS_DASHBOARD: &str = "tray_focus_dashboard";
 const TRAY_RETRY_CONNECTION: &str = "tray_retry_connection";
 const TRAY_OPEN_SETTINGS: &str = "tray_open_settings";
 const TRAY_OPEN_LOGS: &str = "tray_open_logs";
@@ -49,6 +50,7 @@ pub fn run() {
     let supervisor = Supervisor::new();
     let workspace_state = Arc::new(WorkspaceState::default());
     let local_state = LocalStateStore::new();
+    let task_state = TaskStateStore::new();
     let watcher: Arc<WatcherHandle> = Arc::new(WatcherHandle::default());
     let chat_manager = chat::ChatSessionManager::new();
 
@@ -118,6 +120,7 @@ pub fn run() {
         .manage(supervisor.clone())
         .manage(workspace_state.clone())
         .manage(local_state.clone())
+        .manage(task_state.clone())
         .manage(watcher.clone())
         .manage(chat_manager.clone())
         .manage(http_client.clone())
@@ -128,12 +131,14 @@ pub fn run() {
             let supervisor = supervisor.clone();
             let workspace_state = workspace_state.clone();
             let local_state = local_state.clone();
+            let task_state = task_state.clone();
             move |app| {
                 let app_handle = app.handle().clone();
                 let book_for_setup = book.clone();
                 let supervisor_for_setup = supervisor.clone();
                 let workspace_state_for_setup = workspace_state.clone();
                 let local_state_for_setup = local_state.clone();
+                let task_state_for_setup = task_state.clone();
                 install_app_menu(app.handle())?;
                 install_tray(app.handle())?;
                 // Load saved connections, then auto-onboard (first-run only)
@@ -147,6 +152,9 @@ pub fn run() {
                 tauri::async_runtime::spawn(async move {
                     if let Err(e) = local_state_for_setup.load(&app_handle).await {
                         log::error!("failed to load workspace state: {e}");
+                    }
+                    if let Err(e) = task_state_for_setup.load(&app_handle).await {
+                        log::error!("failed to load task state: {e}");
                     }
                     if let Err(e) = book_for_setup.load(&app_handle).await {
                         log::error!("failed to load connections: {e}");
@@ -278,23 +286,31 @@ fn specta_builder() -> tauri_specta::Builder<tauri::Wry> {
         commands::local_state::chat_local_set_selected_session::<tauri::Wry>,
         commands::local_state::chat_local_list_session_workspaces,
         commands::local_state::chat_local_assign_session_workspace::<tauri::Wry>,
+        commands::task_state::task_list,
+        commands::task_state::task_upsert::<tauri::Wry>,
+        commands::task_state::task_patch::<tauri::Wry>,
+        commands::task_state::task_archive::<tauri::Wry>,
+        commands::task_state::task_delete_local::<tauri::Wry>,
+        commands::task_state::task_link_session::<tauri::Wry>,
+        commands::task_state::task_backfill_sessions::<tauri::Wry>,
     ])
 }
 
 fn install_app_menu(app: &tauri::AppHandle<tauri::Wry>) -> tauri::Result<()> {
-    let focus_chat = MenuItemBuilder::with_id(CMD_WORKSPACE_FOCUS_CHAT, "Focus Chat")
-        .accelerator("CmdOrCtrl+1")
-        .build(app)?;
-    let focus_code = MenuItemBuilder::with_id(CMD_WORKSPACE_FOCUS_CODE, "Focus Code")
+    let focus_dashboard =
+        MenuItemBuilder::with_id(CMD_WORKSPACE_FOCUS_DASHBOARD, "Focus Dashboard")
+            .accelerator("CmdOrCtrl+1")
+            .build(app)?;
+    let new_code_task = MenuItemBuilder::with_id(CMD_WORKSPACE_NEW_CODE_TASK, "New Code Task")
         .accelerator("CmdOrCtrl+2")
         .build(app)?;
     let open_project = MenuItemBuilder::with_id(CMD_WORKSPACE_OPEN_PROJECT, "Open Project...")
         .accelerator("CmdOrCtrl+O")
         .build(app)?;
-    let new_chat = MenuItemBuilder::with_id(CMD_WORKSPACE_NEW_CHAT, "New Chat")
+    let new_task = MenuItemBuilder::with_id(CMD_WORKSPACE_NEW_TASK, "New Task")
         .accelerator("CmdOrCtrl+N")
         .build(app)?;
-    let refresh_chats = MenuItemBuilder::with_id(CMD_WORKSPACE_REFRESH_CHATS, "Refresh Chats")
+    let refresh_tasks = MenuItemBuilder::with_id(CMD_WORKSPACE_REFRESH_TASKS, "Refresh Tasks")
         .accelerator("CmdOrCtrl+R")
         .build(app)?;
     let retry_connection =
@@ -323,13 +339,13 @@ fn install_app_menu(app: &tauri::AppHandle<tauri::Wry>) -> tauri::Result<()> {
     let devices = MenuItemBuilder::with_id(CMD_DIAGNOSTICS_OPEN_DEVICES, "Devices").build(app)?;
 
     let workspace = SubmenuBuilder::new(app, "Workspace")
-        .item(&focus_chat)
-        .item(&focus_code)
+        .item(&focus_dashboard)
+        .item(&new_code_task)
         .separator()
         .item(&open_project)
         .separator()
-        .item(&new_chat)
-        .item(&refresh_chats)
+        .item(&new_task)
+        .item(&refresh_tasks)
         .separator()
         .item(&retry_connection)
         .build()?;
@@ -381,7 +397,7 @@ fn install_app_menu(app: &tauri::AppHandle<tauri::Wry>) -> tauri::Result<()> {
 fn install_tray(app: &tauri::AppHandle<tauri::Wry>) -> tauri::Result<()> {
     let menu = MenuBuilder::new(app)
         .text(TRAY_SHOW_HIDE, "Show/Hide Window")
-        .text(TRAY_FOCUS_CHAT, "Focus Chat")
+        .text(TRAY_FOCUS_DASHBOARD, "Focus Dashboard")
         .separator()
         .text(TRAY_RETRY_CONNECTION, "Retry Active Connection")
         .text(TRAY_OPEN_SETTINGS, "Open Settings")
@@ -406,8 +422,8 @@ fn install_tray(app: &tauri::AppHandle<tauri::Wry>) -> tauri::Result<()> {
                     }
                 }
             }
-            TRAY_FOCUS_CHAT => {
-                emit_command(app, CMD_WORKSPACE_FOCUS_CHAT);
+            TRAY_FOCUS_DASHBOARD => {
+                emit_command(app, CMD_WORKSPACE_FOCUS_DASHBOARD);
             }
             TRAY_RETRY_CONNECTION => {
                 emit_command(app, CMD_WORKSPACE_RETRY_CONNECTION);
@@ -432,11 +448,11 @@ fn install_tray(app: &tauri::AppHandle<tauri::Wry>) -> tauri::Result<()> {
 
 fn handle_app_menu_event(app: &tauri::AppHandle<tauri::Wry>, id: &str) {
     match id {
-        CMD_WORKSPACE_FOCUS_CHAT
-        | CMD_WORKSPACE_FOCUS_CODE
+        CMD_WORKSPACE_FOCUS_DASHBOARD
+        | CMD_WORKSPACE_NEW_CODE_TASK
         | CMD_WORKSPACE_OPEN_PROJECT
-        | CMD_WORKSPACE_NEW_CHAT
-        | CMD_WORKSPACE_REFRESH_CHATS
+        | CMD_WORKSPACE_NEW_TASK
+        | CMD_WORKSPACE_REFRESH_TASKS
         | CMD_WORKSPACE_RETRY_CONNECTION
         | CMD_SETTINGS_OPEN
         | CMD_SETTINGS_OPEN_SETUP_CENTER

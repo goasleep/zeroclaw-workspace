@@ -398,6 +398,62 @@ async chatLocalAssignSessionWorkspace(connectionId: string, sessionId: string, w
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+async taskList(connectionId: string) : Promise<Result<StudioTask[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("task_list", { connectionId }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async taskUpsert(task: StudioTask) : Promise<Result<StudioTask, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("task_upsert", { task }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async taskPatch(id: string, patch: TaskPatch) : Promise<Result<StudioTask, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("task_patch", { id, patch }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async taskArchive(id: string) : Promise<Result<StudioTask, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("task_archive", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async taskDeleteLocal(id: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("task_delete_local", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async taskLinkSession(id: string, sessionId: string) : Promise<Result<StudioTask, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("task_link_session", { id, sessionId }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async taskBackfillSessions(connectionId: string, sessions: TaskBackfillSession[], workspaceBindings: ([string, string])[]) : Promise<Result<StudioTask[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("task_backfill_sessions", { connectionId, sessions, workspaceBindings }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -483,6 +539,8 @@ export type Lifecycle =
  */
 "remote"
 export type PairResult = { outcome: string; token: string | null }
+export type PinnedResult = { kind: PinnedResultKind; label: string; value: string; created_at: string }
+export type PinnedResultKind = "message" | "file" | "text"
 export type PrepareChatAttachmentsRequest = { paths: string[]; connection_id: string }
 export type RiskProfileSummary = { alias: string; label: string; picker_badge: string | null; used_by_agents: string[]; level: string; workspace_only: boolean | null; allowed_commands: string[]; forbidden_paths: string[]; allowed_roots: string[]; require_approval_for_medium_risk: boolean | null; block_high_risk_commands: boolean | null; auto_approve: string[]; always_ask: string[]; allowed_tools: string[]; excluded_tools: string[]; sandbox_enabled: boolean | null; sandbox_backend: string }
 export type RuntimeProfileSummary = { alias: string; label: string; picker_badge: string | null; used_by_agents: string[]; agentic: boolean | null; max_tool_iterations: number | null; max_actions_per_hour: number | null; max_cost_per_day_cents: number | null; shell_timeout_secs: number | null; max_context_tokens: number | null; max_history_messages: number | null; compact_context: boolean | null; parallel_tools: boolean | null; strict_tool_parsing: boolean | null; tool_dispatcher: string }
@@ -526,7 +584,12 @@ remote_port: number;
  * Local port the workspace forwards to. `None` → pick an ephemeral port.
  */
 local_forward_port: number | null }
+export type StudioTask = { id: string; connection_id: string; title: string; goal?: string | null; session_id?: string | null; cron_job_id?: string | null; workspace_root?: string | null; agent_alias?: string | null; mode: TaskMode; status: TaskStatus; tags?: string[]; pinned_result?: PinnedResult | null; created_at: string; updated_at: string; last_activity_at?: string | null; archived_at?: string | null }
 export type SupervisorStatus = "Stopped" | "Running" | "Exited" | "Backoff" | "Error"
+export type TaskBackfillSession = { session_id: string; name: string; agent_alias?: string | null; created_at?: string | null; updated_at?: string | null; last_message_at?: string | null; message_count?: number | null }
+export type TaskMode = "chat" | "acp" | "automation"
+export type TaskPatch = { title?: string | null; goal?: string | null; session_id?: string | null; cron_job_id?: string | null; workspace_root?: string | null; agent_alias?: string | null; mode?: TaskMode | null; status?: TaskStatus | null; tags?: string[] | null; pinned_result?: PinnedResult | null; last_activity_at?: string | null; archived_at?: string | null }
+export type TaskStatus = "draft" | "running" | "needs_approval" | "done" | "failed" | "archived"
 export type Transport = 
 /**
  * Direct loopback (`http://127.0.0.1:PORT`).

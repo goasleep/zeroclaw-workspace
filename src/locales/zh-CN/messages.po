@@ -75,13 +75,11 @@ msgid "{0} lines"
 msgstr "{0} 行"
 
 #. placeholder {0}: thread.message_count
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:335
 msgid "{0} message"
 msgstr "{0} 条消息"
 
 #. placeholder {0}: channel.message_count
 #. placeholder {0}: thread.message_count
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:336
 #: src/features/integrations/IntegrationsPanel.tsx:312
 msgid "{0} messages"
 msgstr "{0} 条消息"
@@ -361,7 +359,6 @@ msgid "Areas"
 msgstr "区域"
 
 #: src/app/workspace-shell/SettingsPage.tsx:292
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:304
 msgid "Attachments"
 msgstr "附件"
 
@@ -803,13 +800,10 @@ msgstr ""
 msgid "Delete cron job?"
 msgstr ""
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:371
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:425
 msgid "Delete session"
 msgstr "删除会话"
 
 #. placeholder {0}: thread.name
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:422
 msgid "Delete session \"{0}\"?"
 msgstr "删除会话“{0}”？"
 
@@ -1001,7 +995,6 @@ msgstr ""
 msgid "General session"
 msgstr "通用会话"
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:265
 msgid "General Sessions"
 msgstr "通用会话"
 
@@ -1337,11 +1330,9 @@ msgstr ""
 msgid "New folder"
 msgstr ""
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:271
 msgid "New general session"
 msgstr "新建通用会话"
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:208
 msgid "New project session"
 msgstr "新建项目会话"
 
@@ -1441,7 +1432,6 @@ msgstr "未打开文件夹"
 msgid "No gateway running on port {DEFAULT_PORT} right now. That's fine — if a local zeroclaw binary is installed, the workspace will start it automatically when you save this connection."
 msgstr "当前端口 {DEFAULT_PORT} 上没有运行中的网关。没关系，如果本地已安装 zeroclaw 二进制文件，保存此连接后工作区会自动启动它。"
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:287
 msgid "No general sessions yet."
 msgstr "还没有通用会话。"
 
@@ -1502,8 +1492,6 @@ msgstr "没有符合搜索条件的工具。"
 msgid "No tools or skills sections"
 msgstr "没有工具或 skills 区域"
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:117
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:171
 msgid "No workspace selected for this runtime."
 msgstr ""
 
@@ -1590,8 +1578,6 @@ msgstr "打开控制台"
 msgid "Open fields"
 msgstr "打开字段"
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:163
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:178
 #: src/features/chat/ChatComposer.tsx:202
 msgid "Open project"
 msgstr "打开项目"
@@ -1740,7 +1726,6 @@ msgstr "探测等待中"
 msgid "Probing localhost:{DEFAULT_PORT}…"
 msgstr "正在探测 localhost:{DEFAULT_PORT}…"
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:157
 msgid "Project"
 msgstr "项目"
 
@@ -1867,7 +1852,6 @@ msgstr "刷新"
 msgid "Refresh {what}"
 msgstr "刷新 {what}"
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:279
 msgid "Refresh sessions"
 msgstr "刷新会话"
 
@@ -1901,10 +1885,6 @@ msgstr "远程网关端口"
 msgid "Remote working directory"
 msgstr "远程工作目录"
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:359
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:363
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:411
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:415
 msgid "Rename session"
 msgstr "重命名会话"
 
@@ -2100,7 +2080,6 @@ msgstr "设置新的本地 zeroclaw"
 msgid "Set up and use"
 msgstr "设置并使用"
 
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:99
 msgid "Settings"
 msgstr "设置"
 
@@ -2417,7 +2396,6 @@ msgid "What do you want to work on in this session?"
 msgstr "这个会话中你想做什么？"
 
 #: src/app/workspace-shell/SettingsPage.tsx:273
-#: src/app/workspace-shell/WorkspaceSidebar.tsx:114
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:310
 msgid "Workspace"
 msgstr "工作区"

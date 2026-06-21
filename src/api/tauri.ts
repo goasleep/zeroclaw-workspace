@@ -24,6 +24,9 @@ import type {
   PrepareChatAttachmentsRequest,
   SetupActionRequest,
   SetupContext,
+  StudioTask,
+  TaskBackfillSession,
+  TaskPatch,
 } from "./bindings";
 
 /** Unpack a specta `Result` union into a throwing promise (Tauri's native IPC
@@ -70,8 +73,13 @@ export type {
   Transport,
   RiskProfileSummary,
   RuntimeProfileSummary,
+  StudioTask,
   WorkspaceGitStatus,
   WorkspaceLocalState,
+  TaskBackfillSession,
+  TaskMode,
+  TaskPatch,
+  TaskStatus,
 } from "./bindings";
 
 // ---- Event payloads emitted by the backend (not specta-typed) ----
@@ -266,3 +274,24 @@ export const chatLocalAssignSessionWorkspace = (
   sessionId: string,
   workspaceRoot: string,
 ) => unwrap(commands.chatLocalAssignSessionWorkspace(connectionId, sessionId, workspaceRoot));
+
+// ---- Studio-owned task metadata ----
+
+export const taskList = (connectionId: string) => unwrap(commands.taskList(connectionId));
+
+export const taskUpsert = (task: StudioTask) => unwrap(commands.taskUpsert(task));
+
+export const taskPatch = (id: string, patch: TaskPatch) => unwrap(commands.taskPatch(id, patch));
+
+export const taskArchive = (id: string) => unwrap(commands.taskArchive(id));
+
+export const taskDeleteLocal = (id: string) => unwrap(commands.taskDeleteLocal(id));
+
+export const taskLinkSession = (id: string, sessionId: string) =>
+  unwrap(commands.taskLinkSession(id, sessionId));
+
+export const taskBackfillSessions = (
+  connectionId: string,
+  sessions: TaskBackfillSession[],
+  workspaceBindings: Array<[string, string]>,
+) => unwrap(commands.taskBackfillSessions(connectionId, sessions, workspaceBindings));
