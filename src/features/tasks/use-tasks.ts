@@ -12,11 +12,7 @@ import {
 import type { StudioTask, TaskPatch } from "./task-model";
 import { taskActivityTime, visibleTasks } from "./task-model";
 
-export function useTasks({
-  connectionId,
-}: {
-  connectionId: string | null;
-}) {
+export function useTasks({ connectionId }: { connectionId: string | null }) {
   const [tasks, setTasks] = useState<StudioTask[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

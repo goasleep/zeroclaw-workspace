@@ -31,7 +31,9 @@ export function useApprovals(connectionId: string | null = null) {
       if (connectionId) {
         setApprovals(event.payload.approvals);
       } else {
-        setApprovals((prev) => mergeApprovalUpdates(prev, event.payload.approvals, event.payload.connection_id));
+        setApprovals((prev) =>
+          mergeApprovalUpdates(prev, event.payload.approvals, event.payload.connection_id),
+        );
       }
       setError(null);
     });
@@ -40,24 +42,20 @@ export function useApprovals(connectionId: string | null = null) {
     };
   }, [connectionId]);
 
-  const respond = useCallback(
-    async (approval: PendingApproval, decision: ApprovalDecision) => {
-      await approvalRespond(
-        approval.connection_id,
-        approval.session_id,
-        approval.request_id,
-        decision,
-      );
-      setApprovals((prev) =>
-        prev.filter(
-          (item) =>
-            item.connection_id !== approval.connection_id ||
-            item.request_id !== approval.request_id,
-        ),
-      );
-    },
-    [],
-  );
+  const respond = useCallback(async (approval: PendingApproval, decision: ApprovalDecision) => {
+    await approvalRespond(
+      approval.connection_id,
+      approval.session_id,
+      approval.request_id,
+      decision,
+    );
+    setApprovals((prev) =>
+      prev.filter(
+        (item) =>
+          item.connection_id !== approval.connection_id || item.request_id !== approval.request_id,
+      ),
+    );
+  }, []);
 
   return useMemo(
     () => ({
@@ -76,5 +74,7 @@ export function mergeApprovalUpdates(
   connectionId: string,
 ) {
   const withoutConnection = prev.filter((approval) => approval.connection_id !== connectionId);
-  return [...withoutConnection, ...updates].sort((a, b) => b.created_at.localeCompare(a.created_at));
+  return [...withoutConnection, ...updates].sort((a, b) =>
+    b.created_at.localeCompare(a.created_at),
+  );
 }

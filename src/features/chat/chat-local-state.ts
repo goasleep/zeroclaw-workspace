@@ -59,10 +59,7 @@ export async function forgetSessionLocalState(connectionId: string, sessionId: s
   await chatLocalForgetSession(connectionId, sessionId);
 }
 
-export async function pruneMissingSessionLocalState(
-  connectionId: string,
-  sessionIds: string[],
-) {
+export async function pruneMissingSessionLocalState(connectionId: string, sessionIds: string[]) {
   await migrateLegacyLocalState(connectionId);
   await chatLocalPruneMissingSessions(connectionId, sessionIds);
 }

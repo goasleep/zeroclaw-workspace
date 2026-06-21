@@ -96,15 +96,7 @@ export function useTaskSessions() {
       remove,
       forgetLocal,
     }),
-    [
-      sessions,
-      loading,
-      error,
-      refresh,
-      rename,
-      remove,
-      forgetLocal,
-    ],
+    [sessions, loading, error, refresh, rename, remove, forgetLocal],
   );
 }
 

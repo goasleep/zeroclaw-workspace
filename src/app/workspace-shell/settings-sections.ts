@@ -27,7 +27,12 @@ export const SETTINGS_SECTIONS: Array<{
   { id: "gateway-overview", label: msg`Gateway Overview`, group: "Gateway", icon: Cog },
   { id: "models-providers", label: msg`Models & Providers`, group: "Gateway", icon: PlugZap },
   { id: "agents", label: msg`Agents`, group: "Gateway", icon: Bot },
-  { id: "runtime-safety", label: msg`Runtime Profiles & Safety`, group: "Gateway", icon: ShieldCheck },
+  {
+    id: "runtime-safety",
+    label: msg`Runtime Profiles & Safety`,
+    group: "Gateway",
+    icon: ShieldCheck,
+  },
   { id: "channels", label: msg`Channels`, group: "Gateway", icon: Network },
   { id: "memory", label: msg`Memory`, group: "Capabilities", icon: Database },
   { id: "tools-skills", label: msg`Tools & Skills`, group: "Capabilities", icon: Wrench },

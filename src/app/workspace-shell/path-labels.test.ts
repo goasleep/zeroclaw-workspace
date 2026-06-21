@@ -3,11 +3,15 @@ import { workspacePathLabel } from "./path-labels";
 
 describe("workspacePathLabel", () => {
   it("uses the final path segment for unix paths", () => {
-    expect(workspacePathLabel("/Users/fengpeng/Project/opensource/firecracker")).toBe("firecracker");
+    expect(workspacePathLabel("/Users/fengpeng/Project/opensource/firecracker")).toBe(
+      "firecracker",
+    );
   });
 
   it("ignores trailing path separators", () => {
-    expect(workspacePathLabel("/Users/fengpeng/Project/opensource/firecracker/")).toBe("firecracker");
+    expect(workspacePathLabel("/Users/fengpeng/Project/opensource/firecracker/")).toBe(
+      "firecracker",
+    );
   });
 
   it("uses the final path segment for windows paths", () => {
