@@ -54,6 +54,20 @@ If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is 
 - Rust checks individually: `pnpm rust:fmt`, `pnpm rust:clippy`,
   `pnpm rust:test`
 
+## Verification Guidance
+
+- Use `pnpm dev` with a browser for pure React/Vite behavior: layout, styling,
+  routing, local component state, and browser-visible dialogs that do not depend
+  on Tauri APIs.
+- Do not treat browser-only checks as valid for behavior that crosses the Tauri
+  IPC boundary. Anything that calls `@/api/tauri`, generated Tauri commands,
+  native dialogs, filesystem/window APIs, sidecars, or setup actions must be
+  verified in the desktop shell with `pnpm desktop:dev`, an appropriate Rust
+  test, or the Tauri e2e path.
+- When reporting verification, be explicit about the surface used: browser/Vite
+  checks validate frontend presentation, while Tauri shell checks validate IPC
+  and native behavior.
+
 ## Commit Messages
 
 All agent-created commits must use Conventional Commits style:
