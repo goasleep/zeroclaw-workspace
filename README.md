@@ -238,6 +238,8 @@ For formatting, generated Tauri command bindings, and PR workflow, see
   protocol notes.
 - [`docs/product-data-boundaries.md`](docs/product-data-boundaries.md) — product
   data ownership between Studio, ZeroClaw, and user resources.
+- [`docs/productization-roadmap.md`](docs/productization-roadmap.md) — roadmap
+  for turning Studio into a productized ZeroClaw workspace.
 - [`SECURITY.md`](SECURITY.md) — supported versions, vulnerability reporting,
   data boundaries, and security notes.
 

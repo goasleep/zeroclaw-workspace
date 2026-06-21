@@ -183,6 +183,7 @@ pnpm desktop:build
 - [`docs/development.md`](docs/development.md)：本地开发流程。
 - [`docs/gateway-protocol-notes.md`](docs/gateway-protocol-notes.md)：gateway 协议说明。
 - [`docs/product-data-boundaries.md`](docs/product-data-boundaries.md)：Studio、ZeroClaw 和用户资源之间的产品数据归属。
+- [`docs/productization-roadmap.md`](docs/productization-roadmap.md)：将 Studio 产品化为 ZeroClaw 工作区的路线图。
 - [`SECURITY.md`](SECURITY.md)：支持版本、漏洞报告、数据边界和安全说明。
 
 ## 安全说明
