@@ -47,7 +47,7 @@ export const CONFIG_CATEGORIES: Record<ConfigCategoryId, ConfigCategory> = {
   },
   "runtime-safety": {
     id: "runtime-safety",
-    label: "Runtime & Safety",
+    label: "Runtime Profiles & Safety",
     description: "Manage risk profiles, runtime tuning, sandbox settings, and command policy.",
     sectionKeys: ["risk_profiles", "runtime_profiles"],
     icon: ShieldCheck,
@@ -83,7 +83,7 @@ export function configCategoryLabel(id: ConfigCategoryId, i18n: LinguiI18n) {
     case "agents":
       return i18n._(msg`Agents`);
     case "runtime-safety":
-      return i18n._(msg`Runtime & Safety`);
+      return i18n._(msg`Runtime Profiles & Safety`);
     case "channels":
       return i18n._(msg`Channels`);
     case "tools-skills":

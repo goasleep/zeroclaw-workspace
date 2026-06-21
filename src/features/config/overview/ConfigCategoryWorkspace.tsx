@@ -119,7 +119,7 @@ export function ConfigCategoryWorkspace({
               }`}
             >
               <Code2 size={12} />
-              {t`Advanced`}
+              {t`Raw paths`}
             </button>
           </div>
         </div>
@@ -366,7 +366,7 @@ function ToolsSkillsBeginnerHome({
               className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-white/10 px-3 py-1.5 text-xs text-neutral-300 hover:border-cyan-400/50 hover:text-cyan-300"
             >
               <Code2 size={12} />
-              {t`Advanced`}
+              {t`Raw paths`}
             </button>
           </div>
         </section>

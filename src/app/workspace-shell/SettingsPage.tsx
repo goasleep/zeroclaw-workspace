@@ -6,11 +6,7 @@ import { useWorkspace } from "@/app/workspace-context";
 import { AgentWorkspacePanel } from "@/features/agent-workspace/AgentWorkspacePanel";
 import { ConfigDraftProvider, ConfigDraftStatusBar } from "@/features/config/config-drafts";
 import { ConfigPanel, type ConfigCategoryId } from "@/features/config/ConfigPanel";
-import { RuntimeAutomationsPanel } from "@/features/cron/RuntimeAutomationsPanel";
-import { DevicesPanel } from "@/features/devices/DevicesPanel";
-import { DoctorPanel } from "@/features/doctor/DoctorPanel";
 import { IntegrationsPanel } from "@/features/integrations/IntegrationsPanel";
-import { LogsPanel } from "@/features/logs/LogsPanel";
 import { MemoryPanel } from "@/features/memory/MemoryPanel";
 import { SetupCenterPanel } from "@/features/setup/SetupCenterPanel";
 import { setAppLocale } from "@/i18n/i18n";
@@ -27,7 +23,7 @@ import { SETTINGS_SECTIONS, type SettingsGroup } from "./settings-sections";
 import { normalizeSettingsSection, settingsSectionForConfigTarget } from "./settings-routing";
 import type { SettingsSection } from "./types";
 
-const SETTINGS_GROUPS: SettingsGroup[] = ["App", "Gateway", "Capabilities", "Operations"];
+const SETTINGS_GROUPS: SettingsGroup[] = ["App", "Gateway", "Capabilities"];
 
 interface SettingsPageProps {
   section: SettingsSection;
@@ -88,13 +84,9 @@ export function SettingsPage({
               <AgentWorkspacePanel focusAlias={agentWorkspaceFocusAlias} />
             )}
             {effectiveSection === "memory" && <MemoryPanel />}
-            {effectiveSection === "automations" && <RuntimeAutomationsPanel />}
             {effectiveSection === "integrations" && (
               <IntegrationsPanel onConfigure={(targetSection) => openConfigTarget(targetSection)} />
             )}
-            {effectiveSection === "logs" && <LogsPanel />}
-            {effectiveSection === "doctor" && <DoctorPanel />}
-            {effectiveSection === "devices" && <DevicesPanel />}
           </div>
         </ConfigDraftProvider>
       </main>
@@ -131,8 +123,6 @@ function SettingsNav({
         return t`Gateway`;
       case "Capabilities":
         return t`Capabilities`;
-      case "Operations":
-        return t`Operations`;
     }
   }
 

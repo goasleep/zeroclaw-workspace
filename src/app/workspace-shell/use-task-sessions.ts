@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { ApiError } from "@/api/base";
 import { apiSessionDelete, apiSessionRename, apiSessions } from "@/api/sessions";
 import {
   isVisibleSession,
@@ -74,7 +75,11 @@ export function useTaskSessions() {
 
   const remove = useCallback(
     async (sessionId: string) => {
-      await apiSessionDelete(sessionId);
+      try {
+        await apiSessionDelete(sessionId);
+      } catch (err) {
+        if (!isSessionNotFoundError(err)) throw err;
+      }
       await refresh();
     },
     [refresh],
@@ -84,4 +89,11 @@ export function useTaskSessions() {
     () => ({ sessions, workspaceMap, loading, error, refresh, rename, remove }),
     [sessions, workspaceMap, loading, error, refresh, rename, remove],
   );
+}
+
+function isSessionNotFoundError(err: unknown) {
+  if (err instanceof ApiError) {
+    return err.status === 404 && /session not found/i.test(err.envelope.message);
+  }
+  return false;
 }

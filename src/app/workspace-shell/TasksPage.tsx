@@ -11,6 +11,7 @@ interface TasksPageProps {
   currentRoot: string | null;
   renderCreateControl: () => ReactNode;
   onTask: (task: StudioTask) => void;
+  onRenameTask: (task: StudioTask) => void;
 }
 
 type Scope = "all" | "current" | "general";
@@ -22,6 +23,7 @@ export function TasksPage({
   currentRoot,
   renderCreateControl,
   onTask,
+  onRenameTask,
 }: TasksPageProps) {
   const { t } = useLingui();
   const [scope, setScope] = useState<Scope>("all");
@@ -114,6 +116,10 @@ export function TasksPage({
                     key={task.id}
                     type="button"
                     onClick={() => onTask(task)}
+                    onContextMenu={(event) => {
+                      event.preventDefault();
+                      onRenameTask(task);
+                    }}
                     className="grid w-full gap-3 px-4 py-3 text-left hover:bg-white/[0.04] md:grid-cols-[minmax(0,1fr)_160px_120px]"
                   >
                     <span className="flex min-w-0 items-start gap-3">

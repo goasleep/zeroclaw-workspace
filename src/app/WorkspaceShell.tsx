@@ -1,10 +1,10 @@
 // Workspace shell — page-level state, deep links, native menu commands, and
 // the single-gateway task workspace.
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { useLingui } from "@lingui/react/macro";
-import { Plus, Sparkles } from "lucide-react";
+import { MessageSquare, Plus, Sparkles } from "lucide-react";
 import { useWorkspace } from "@/app/workspace-context";
 import { useConnections } from "@/app/connection-context";
 import { apiCron, apiCronCreate, type CronJobCreate } from "@/api/tools";
@@ -19,11 +19,12 @@ import { TaskDetail } from "./workspace-shell/TaskDetail";
 import { ApprovalsPage, type PendingApproval } from "./workspace-shell/ApprovalsPage";
 import { AutomationsPage } from "./workspace-shell/AutomationsPage";
 import { RuntimeDetail } from "./workspace-shell/RuntimeDetail";
+import { ChatPanel } from "@/features/chat/ChatPanel";
 import { settingsSectionForConfigTarget } from "./workspace-shell/settings-routing";
 import { isSettingsSection } from "./workspace-shell/settings-sections";
 import { useTaskSessions } from "./workspace-shell/use-task-sessions";
 import { useWorkspaceCommands } from "./workspace-shell/use-workspace-commands";
-import type { SettingsSection, WorkspacePage } from "./workspace-shell/types";
+import type { RuntimeTab, SettingsSection, WorkspacePage } from "./workspace-shell/types";
 import {
   createDraftTask,
   nowIso,
@@ -38,6 +39,9 @@ export function WorkspaceShell() {
   const { active } = useConnections();
   const [page, setPage] = useState<WorkspacePage>("dashboard");
   const [settingsSection, setSettingsSection] = useState<SettingsSection>("app");
+  const [runtimeTab, setRuntimeTab] = useState<RuntimeTab>("overview");
+  const [composeWorkspaceRoot, setComposeWorkspaceRoot] = useState<string | null>(null);
+  const [composeSeed, setComposeSeed] = useState(0);
   const [configFocusSection, setConfigFocusSection] = useState<string | null>(null);
   const [agentWorkspaceFocusAlias, setAgentWorkspaceFocusAlias] = useState<string | null>(null);
   const [agents, setAgents] = useState<string[]>([]);
@@ -46,6 +50,9 @@ export function WorkspaceShell() {
   const [pendingTaskSessionId, setPendingTaskSessionId] = useState<string | null>(null);
   const [approvals, setApprovals] = useState<PendingApproval[]>([]);
   const [automationCount, setAutomationCount] = useState(0);
+  const composeTitleRef = useRef("New chat");
+  const composeWorkspaceRootRef = useRef<string | null>(null);
+  const promotedComposeSessionRef = useRef<string | null>(null);
   const taskSessions = useTaskSessions();
   const tasks = useTasks({
     connectionId,
@@ -117,14 +124,6 @@ export function WorkspaceShell() {
     return typeof chosen === "string" ? chosen : null;
   }, [active, root]);
 
-  const openProjectRoot = useCallback(
-    async (path: string) => {
-      await setRoot(path);
-      setPage("dashboard");
-    },
-    [setRoot],
-  );
-
   const openSettings = useCallback((section: string) => {
     setSettingsSection(isSettingsSection(section) ? section : "app");
     setConfigFocusSection(null);
@@ -139,6 +138,11 @@ export function WorkspaceShell() {
     setAgentWorkspaceFocusAlias(null);
     setSettingsSection(settingsSectionForConfigTarget(clean));
     setPage("settings");
+  }, []);
+
+  const openRuntimeTab = useCallback((tab: RuntimeTab) => {
+    setRuntimeTab(tab);
+    setPage("runtime");
   }, []);
 
   const openAgentWorkspace = useCallback((alias: string) => {
@@ -230,6 +234,53 @@ export function WorkspaceShell() {
     [focusComposer, setRoot],
   );
 
+  const openComposer = useCallback(
+    async (workspaceRoot: string | null = root) => {
+      if (workspaceRoot) await setRoot(workspaceRoot);
+      composeTitleRef.current = t`New chat`;
+      composeWorkspaceRootRef.current = workspaceRoot;
+      promotedComposeSessionRef.current = null;
+      setComposeWorkspaceRoot(workspaceRoot);
+      setActiveTaskId(null);
+      setComposeSeed((seed) => seed + 1);
+      setPage("compose");
+      window.requestAnimationFrame(focusComposer);
+    },
+    [focusComposer, root, setRoot, t],
+  );
+
+  const openProjectRoot = useCallback(
+    async (path: string) => {
+      await openComposer(path);
+    },
+    [openComposer],
+  );
+
+  const promoteComposeSession = useCallback(
+    async (sessionId: string) => {
+      if (!connectionId || promotedComposeSessionRef.current === sessionId) return;
+      promotedComposeSessionRef.current = sessionId;
+      const workspaceRoot = composeWorkspaceRootRef.current;
+      const task = createDraftTask({
+        connectionId,
+        title: composeTitleRef.current,
+        workspaceRoot,
+        agentAlias: activeAgent ?? agents[0] ?? null,
+        mode: "chat",
+      });
+      const saved = await tasks.upsert(task);
+      await tasks.linkSession(saved.id, sessionId);
+      const patched = await tasks.patch(saved.id, {
+        status: "running",
+        last_activity_at: nowIso(),
+      });
+      void taskSessions.refresh();
+      setActiveTaskId(patched.id);
+      setPage("task");
+    },
+    [activeAgent, agents, connectionId, taskSessions, tasks],
+  );
+
   const patchTask = useCallback(
     async (id: string, patch: TaskPatch) => {
       const saved = await tasks.patch(id, patch);
@@ -255,20 +306,12 @@ export function WorkspaceShell() {
     [tasks, taskSessions],
   );
 
-  const archiveTask = useCallback(
-    async (id: string) => {
-      const saved = await tasks.archive(id);
-      if (activeTaskId === id) {
-        setActiveTaskId(null);
-        setPage("dashboard");
-      }
-      return saved;
-    },
-    [activeTaskId, tasks],
-  );
-
   const createTaskFromCommand = useCallback(
     async (workspaceRoot: string | null, mode: "chat" | "acp" = "chat") => {
+      if (mode === "chat") {
+        await openComposer(workspaceRoot);
+        return;
+      }
       if (workspaceRoot) await setRoot(workspaceRoot);
       await createTask({
         mode,
@@ -276,7 +319,7 @@ export function WorkspaceShell() {
         workspaceRoot,
       });
     },
-    [createTask, setRoot],
+    [createTask, openComposer, setRoot],
   );
 
   useEffect(() => {
@@ -290,6 +333,9 @@ export function WorkspaceShell() {
   useEffect(() => {
     setActiveTaskId(null);
     setPendingTaskSessionId(null);
+    setComposeWorkspaceRoot(null);
+    composeWorkspaceRootRef.current = null;
+    promotedComposeSessionRef.current = null;
     setApprovals([]);
     setPage("dashboard");
   }, [connectionId]);
@@ -323,6 +369,7 @@ export function WorkspaceShell() {
     focusComposer,
     openAgentWorkspace,
     openConfigTarget,
+    openRuntimeTab,
     openSettings,
     pickProject,
     selectAgent,
@@ -334,6 +381,34 @@ export function WorkspaceShell() {
   function openTaskId(taskId: string) {
     const task = tasks.tasks.find((item) => item.id === taskId);
     if (task) void openTask(task);
+  }
+
+  function renameTask(task: StudioTask) {
+    const next = window.prompt(t`Rename task`, task.title);
+    if (next?.trim()) void patchTask(task.id, { title: next.trim() });
+  }
+
+  async function deleteTask(task: StudioTask) {
+    const confirmed = window.confirm(
+      task.session_id ? t`Delete session "${task.title}"?` : t`Delete ${task.title}?`,
+    );
+    if (!confirmed) return;
+
+    try {
+      if (task.session_id) {
+        await taskSessions.remove(task.session_id);
+      }
+      await tasks.removeLocal(task.id);
+      if (activeTaskId === task.id) {
+        setActiveTaskId(null);
+        setPage("dashboard");
+      }
+      if (pendingTaskSessionId === task.session_id) {
+        setPendingTaskSessionId(null);
+      }
+    } catch (err) {
+      window.alert(err instanceof Error ? err.message : String(err));
+    }
   }
 
   function renderCreatePopover(
@@ -378,8 +453,62 @@ export function WorkspaceShell() {
     );
   }
 
+  function renderNewChatControl(workspaceRoot: string | null = root) {
+    return (
+      <button
+        type="button"
+        disabled={!active}
+        onClick={() => void openComposer(workspaceRoot)}
+        className="inline-flex items-center gap-1.5 rounded-md bg-sky-400 px-3 py-1.5 text-xs font-medium text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <MessageSquare size={13} />
+        {t`New Chat`}
+      </button>
+    );
+  }
+
   function renderPage() {
     switch (page) {
+      case "compose": {
+        const agentAlias = activeAgent ?? agents[0] ?? null;
+        return agentAlias ? (
+          <ChatPanel
+            key={`compose:${composeSeed}:${connectionId ?? "no-connection"}:${agentAlias}:${
+              composeWorkspaceRoot ?? "general"
+            }`}
+            agentAlias={agentAlias}
+            agents={agents}
+            onAgentChange={selectAgent}
+            mode="chat"
+            workspaceRoot={composeWorkspaceRoot}
+            onWorkspaceRoot={(path) => {
+              composeWorkspaceRootRef.current = path;
+              setComposeWorkspaceRoot(path);
+            }}
+            startBlank
+            onFirstMessage={(message) => {
+              composeTitleRef.current = titleFromFirstMessage(message);
+            }}
+            onTaskSession={(sessionId) => void promoteComposeSession(sessionId)}
+          />
+        ) : (
+          <main className="flex h-full items-center justify-center bg-[#020818]/70 p-8 text-center">
+            <div className="max-w-sm">
+              <h1 className="text-sm font-semibold text-neutral-100">{t`No agent configured`}</h1>
+              <p className="mt-1 text-xs leading-relaxed text-neutral-500">
+                {t`Set up an agent for this runtime before starting a chat.`}
+              </p>
+              <button
+                type="button"
+                onClick={() => openSettings("agents")}
+                className="mt-4 rounded-md bg-sky-400 px-3 py-1.5 text-xs font-medium text-slate-950 hover:bg-cyan-300"
+              >
+                {t`Set up agent`}
+              </button>
+            </div>
+          </main>
+        );
+      }
       case "dashboard":
         return (
           <WorkDashboard
@@ -387,21 +516,7 @@ export function WorkspaceShell() {
             loading={tasks.loading}
             error={tasks.error}
             approvalCount={approvals.length}
-            renderCreateControl={() =>
-              renderCreatePopover(
-                <button
-                  type="button"
-                  disabled={!active}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-sky-400 px-3 py-1.5 text-xs font-medium text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <Plus size={13} />
-                  {t`New Task`}
-                </button>,
-                "task",
-                undefined,
-                "bottom",
-              )
-            }
+            renderCreateControl={() => renderNewChatControl(root)}
             onTask={(task) => void openTask(task)}
             onPage={setPage}
           />
@@ -413,22 +528,9 @@ export function WorkspaceShell() {
             loading={tasks.loading}
             error={tasks.error}
             currentRoot={root}
-            renderCreateControl={() =>
-              renderCreatePopover(
-                <button
-                  type="button"
-                  disabled={!active}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-sky-400 px-3 py-1.5 text-xs font-medium text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <Plus size={13} />
-                  {t`New Task`}
-                </button>,
-                "task",
-                undefined,
-                "bottom",
-              )
-            }
+            renderCreateControl={() => renderNewChatControl(root)}
             onTask={(task) => void openTask(task)}
+            onRenameTask={renameTask}
           />
         );
       case "task":
@@ -443,9 +545,7 @@ export function WorkspaceShell() {
             }}
             onPatchTask={patchTask}
             onLinkSession={linkTaskSession}
-            onArchive={archiveTask}
             onOpenDashboard={() => setPage("dashboard")}
-            onOpenRuntime={() => setPage("runtime")}
             onOpenAgentSetup={() => openSettings("agents")}
             onOpenSetupCenter={() => openSettings("setup-center")}
           />
@@ -483,7 +583,13 @@ export function WorkspaceShell() {
           />
         );
       case "runtime":
-        return <RuntimeDetail onSettings={() => openSettings("gateway-overview")} />;
+        return (
+          <RuntimeDetail
+            tab={runtimeTab}
+            onTab={setRuntimeTab}
+            onSettings={() => openSettings("gateway-overview")}
+          />
+        );
       case "settings":
         return (
           <SettingsPage
@@ -513,6 +619,8 @@ export function WorkspaceShell() {
             automationCount={automationCount}
             onPage={setPage}
             onTask={(task) => void openTask(task)}
+            onRenameTask={renameTask}
+            onDeleteTask={(task) => void deleteTask(task)}
             createControl={renderCreatePopover(
               <button
                 type="button"
@@ -531,4 +639,14 @@ export function WorkspaceShell() {
       )}
     </div>
   );
+}
+
+function titleFromFirstMessage(message: string) {
+  const singleLine = message
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .find(Boolean);
+  const compact = (singleLine ?? message).replace(/\s+/g, " ").trim();
+  if (compact.length <= 60) return compact || "New chat";
+  return `${compact.slice(0, 57).trimEnd()}...`;
 }

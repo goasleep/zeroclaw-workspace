@@ -10,14 +10,20 @@ import { LogsPanel } from "@/features/logs/LogsPanel";
 import { DoctorPanel } from "@/features/doctor/DoctorPanel";
 import { DevicesPanel } from "@/features/devices/DevicesPanel";
 import { AutomationsPage } from "./AutomationsPage";
+import type { RuntimeTab } from "./types";
 
-type RuntimeTab = "overview" | "tools" | "memory" | "automations" | "logs" | "doctor" | "devices";
-
-export function RuntimeDetail({ onSettings }: { onSettings: () => void }) {
+export function RuntimeDetail({
+  tab,
+  onTab,
+  onSettings,
+}: {
+  tab: RuntimeTab;
+  onTab: (tab: RuntimeTab) => void;
+  onSettings: () => void;
+}) {
   const { t } = useLingui();
   const { active, health, activation, retry } = useConnections();
   const activeId = active?.id ?? null;
-  const [tab, setTab] = useState<RuntimeTab>("overview");
   const [summary, setSummary] = useState({
     version: "",
     tools: 0,
@@ -67,43 +73,43 @@ export function RuntimeDetail({ onSettings }: { onSettings: () => void }) {
             active={tab === "overview"}
             icon={Gauge}
             label={t`Overview`}
-            onClick={() => setTab("overview")}
+            onClick={() => onTab("overview")}
           />
           <TabButton
             active={tab === "tools"}
             icon={Wrench}
             label={t`Tools`}
-            onClick={() => setTab("tools")}
+            onClick={() => onTab("tools")}
           />
           <TabButton
             active={tab === "memory"}
             icon={Database}
             label={t`Memory`}
-            onClick={() => setTab("memory")}
+            onClick={() => onTab("memory")}
           />
           <TabButton
             active={tab === "automations"}
             icon={Activity}
             label={t`Automations`}
-            onClick={() => setTab("automations")}
+            onClick={() => onTab("automations")}
           />
           <TabButton
             active={tab === "logs"}
             icon={HardDrive}
             label={t`Logs`}
-            onClick={() => setTab("logs")}
+            onClick={() => onTab("logs")}
           />
           <TabButton
             active={tab === "doctor"}
             icon={Bug}
             label={t`Doctor`}
-            onClick={() => setTab("doctor")}
+            onClick={() => onTab("doctor")}
           />
           <TabButton
             active={tab === "devices"}
             icon={Cpu}
             label={t`Devices`}
-            onClick={() => setTab("devices")}
+            onClick={() => onTab("devices")}
           />
         </div>
         <button
@@ -112,7 +118,7 @@ export function RuntimeDetail({ onSettings }: { onSettings: () => void }) {
           className="mt-4 flex w-full items-center gap-2 rounded-md border border-white/10 px-2 py-1.5 text-left text-xs text-neutral-300 hover:border-cyan-400 hover:text-cyan-300"
         >
           <Settings size={13} />
-          {t`Advanced settings`}
+          {t`Gateway config`}
         </button>
       </aside>
       <main className="min-h-0 min-w-0 overflow-hidden">
@@ -159,7 +165,7 @@ export function RuntimeDetail({ onSettings }: { onSettings: () => void }) {
                     onClick={onSettings}
                     className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-neutral-300 hover:border-cyan-400 hover:text-cyan-300"
                   >
-                    {t`Open settings`}
+                    {t`Open gateway config`}
                   </button>
                 </div>
               </div>
@@ -168,7 +174,7 @@ export function RuntimeDetail({ onSettings }: { onSettings: () => void }) {
         )}
         {tab === "tools" && <ToolsPanel />}
         {tab === "memory" && <MemoryPanel />}
-        {tab === "automations" && <AutomationsPage onRuntime={() => setTab("overview")} />}
+        {tab === "automations" && <AutomationsPage onRuntime={() => onTab("overview")} />}
         {tab === "logs" && <LogsPanel />}
         {tab === "doctor" && <DoctorPanel />}
         {tab === "devices" && <DevicesPanel />}

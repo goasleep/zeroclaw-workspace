@@ -144,7 +144,11 @@ export function ConfigDraftProvider({ children }: { children: ReactNode }) {
             continue;
           }
           const nextEntry = entryByPath.get(path) ?? staged.entry;
-          if (staged.title === title && staged.entry === nextEntry && staged.seed === nextSeed) {
+          if (
+            staged.title === title &&
+            configEntriesEquivalent(staged.entry, nextEntry) &&
+            staged.seed === nextSeed
+          ) {
             next[path] = staged;
             continue;
           }
@@ -386,6 +390,25 @@ export function ConfigDraftProvider({ children }: { children: ReactNode }) {
   );
 
   return <ConfigDraftContext.Provider value={value}>{children}</ConfigDraftContext.Provider>;
+}
+
+function configEntriesEquivalent(a: ConfigListEntry, b: ConfigListEntry) {
+  return (
+    a.path === b.path &&
+    a.category === b.category &&
+    a.kind === b.kind &&
+    a.type_hint === b.type_hint &&
+    a.populated === b.populated &&
+    a.is_secret === b.is_secret &&
+    a.is_env_overridden === b.is_env_overridden &&
+    a.section === b.section &&
+    a.tab === b.tab &&
+    enumVariantsKey(a.enum_variants) === enumVariantsKey(b.enum_variants)
+  );
+}
+
+function enumVariantsKey(variants?: string[]) {
+  return variants?.join("\u0000") ?? "";
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

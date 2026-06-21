@@ -1,16 +1,12 @@
 import {
   Bot,
-  Clock,
   Cog,
   Database,
-  HardDrive,
   Network,
   PackageCheck,
   PlugZap,
   Settings,
   ShieldCheck,
-  Stethoscope,
-  Terminal,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -18,7 +14,7 @@ import { msg } from "@lingui/core/macro";
 import type { MacroMessageDescriptor } from "@lingui/core/macro";
 import type { SettingsSection } from "./types";
 
-export type SettingsGroup = "App" | "Gateway" | "Capabilities" | "Operations";
+export type SettingsGroup = "App" | "Gateway" | "Capabilities";
 
 export const SETTINGS_SECTIONS: Array<{
   id: SettingsSection;
@@ -31,15 +27,11 @@ export const SETTINGS_SECTIONS: Array<{
   { id: "gateway-overview", label: msg`Gateway Overview`, group: "Gateway", icon: Cog },
   { id: "models-providers", label: msg`Models & Providers`, group: "Gateway", icon: PlugZap },
   { id: "agents", label: msg`Agents`, group: "Gateway", icon: Bot },
-  { id: "runtime-safety", label: msg`Runtime & Safety`, group: "Gateway", icon: ShieldCheck },
+  { id: "runtime-safety", label: msg`Runtime Profiles & Safety`, group: "Gateway", icon: ShieldCheck },
   { id: "channels", label: msg`Channels`, group: "Gateway", icon: Network },
   { id: "memory", label: msg`Memory`, group: "Capabilities", icon: Database },
   { id: "tools-skills", label: msg`Tools & Skills`, group: "Capabilities", icon: Wrench },
   { id: "integrations", label: msg`Integrations`, group: "Capabilities", icon: PlugZap },
-  { id: "automations", label: msg`Automations`, group: "Operations", icon: Clock },
-  { id: "logs", label: msg`Logs`, group: "Operations", icon: Terminal },
-  { id: "doctor", label: msg`Doctor`, group: "Operations", icon: Stethoscope },
-  { id: "devices", label: msg`Devices`, group: "Operations", icon: HardDrive },
 ];
 
 export function isSettingsSection(value: string): value is SettingsSection {
@@ -47,6 +39,10 @@ export function isSettingsSection(value: string): value is SettingsSection {
     SETTINGS_SECTIONS.some((section) => section.id === value) ||
     value === "gateway-config" ||
     value === "tools" ||
-    value === "cron"
+    value === "automations" ||
+    value === "cron" ||
+    value === "logs" ||
+    value === "doctor" ||
+    value === "devices"
   );
 }

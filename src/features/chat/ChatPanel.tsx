@@ -87,6 +87,9 @@ export function ChatPanel({
   taskTitle = null,
   onTaskSession,
   onTaskStatus,
+  onTaskTitle,
+  startBlank = false,
+  onFirstMessage,
 }: {
   agentAlias: string;
   agents: string[];
@@ -99,6 +102,9 @@ export function ChatPanel({
   taskTitle?: string | null;
   onTaskSession?: (sessionId: string) => void;
   onTaskStatus?: (status: "running" | "needs_approval" | "done" | "failed") => void;
+  onTaskTitle?: (title: string) => void;
+  startBlank?: boolean;
+  onFirstMessage?: (message: string) => void;
 }) {
   const { t } = useLingui();
   const { active } = useConnections();
@@ -118,6 +124,7 @@ export function ChatPanel({
     mode,
     workspaceRoot,
     workspaceDir: appliedCwd || workspaceDir || workspaceRoot || null,
+    startBlank,
   });
   const { selectSession, newSession, refreshSessions } = chat;
   const [draft, setDraft] = useState("");
@@ -516,6 +523,12 @@ export function ChatPanel({
       ];
       const limitError = attachmentTotalLimitError(attachments);
       if (limitError) throw new Error(limitError);
+      if (!hasMessages) {
+        onFirstMessage?.(trimmed);
+        if (shouldAutoTitleTask(taskTitle)) {
+          onTaskTitle?.(titleFromFirstMessage(trimmed));
+        }
+      }
       chat.send(trimmed, attachments);
       setDraft("");
       clearAttachments();
@@ -724,6 +737,22 @@ export function ChatPanel({
       {preview && <FilePreviewDialog preview={preview} onClose={() => setPreview(null)} />}
     </div>
   );
+}
+
+function shouldAutoTitleTask(title: string | null | undefined) {
+  if (!title) return true;
+  const normalized = title.trim().toLowerCase();
+  return normalized === "new chat" || normalized === "new task" || normalized === "untitled task";
+}
+
+function titleFromFirstMessage(message: string) {
+  const singleLine = message
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .find(Boolean);
+  const compact = (singleLine ?? message).replace(/\s+/g, " ").trim();
+  if (compact.length <= 60) return compact || "New chat";
+  return `${compact.slice(0, 57).trimEnd()}...`;
 }
 
 function RunTimelineSummary({ items }: { items: TaskTimelineItem[] }) {

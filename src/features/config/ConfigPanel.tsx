@@ -273,7 +273,7 @@ export function ConfigPanel({
             }`}
           >
             <Code2 size={13} />
-            <span className="min-w-0 flex-1 truncate">{t`Advanced raw paths`}</span>
+            <span className="min-w-0 flex-1 truncate">{t`Raw config paths`}</span>
           </button>
         </div>
       </PanelSidebar>

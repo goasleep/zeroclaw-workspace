@@ -60,7 +60,11 @@ export function taskActivityTime(task: StudioTask) {
 }
 
 export function visibleTasks(tasks: StudioTask[]) {
-  return tasks.filter((task) => task.status !== "archived");
+  return tasks.filter((task) => task.status !== "archived" && !isUnstartedChatDraft(task));
+}
+
+export function isUnstartedChatDraft(task: StudioTask) {
+  return task.mode === "chat" && task.status === "draft" && !task.session_id && !task.goal;
 }
 
 export function taskMatchesSession(task: StudioTask, sessionId: string | null) {

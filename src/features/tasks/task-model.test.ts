@@ -28,9 +28,24 @@ describe("task model", () => {
   });
 
   it("hides archived tasks by default", () => {
-    const active = createDraftTask({ connectionId: "conn", title: "Active", mode: "chat" });
+    const active = {
+      ...createDraftTask({ connectionId: "conn", title: "Active", mode: "chat" }),
+      session_id: "session",
+    };
     const archived = { ...active, id: "archived", status: "archived" as const };
     expect(visibleTasks([active, archived]).map((task) => task.id)).toEqual([active.id]);
+  });
+
+  it("hides unstarted chat placeholders", () => {
+    const placeholder = createDraftTask({ connectionId: "conn", title: "New chat", mode: "chat" });
+    const planned = createDraftTask({
+      connectionId: "conn",
+      title: "Planned",
+      goal: "ship it",
+      mode: "chat",
+    });
+
+    expect(visibleTasks([placeholder, planned]).map((task) => task.id)).toEqual([planned.id]);
   });
 
   it("maps sessions to backfill payloads", () => {

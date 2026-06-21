@@ -330,7 +330,7 @@ fn install_app_menu(app: &tauri::AppHandle<tauri::Wry>) -> tauri::Result<()> {
             .build(app)?;
     let agents = MenuItemBuilder::with_id(CMD_SETTINGS_OPEN_AGENTS, "Agents").build(app)?;
     let runtime_safety =
-        MenuItemBuilder::with_id(CMD_SETTINGS_OPEN_RUNTIME_SAFETY, "Runtime & Safety")
+        MenuItemBuilder::with_id(CMD_SETTINGS_OPEN_RUNTIME_SAFETY, "Runtime Profiles & Safety")
             .build(app)?;
     let tools_skills =
         MenuItemBuilder::with_id(CMD_SETTINGS_OPEN_TOOLS_SKILLS, "Tools & Skills").build(app)?;

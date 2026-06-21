@@ -52,6 +52,21 @@ export function ConfigFieldForm({
   const [activeTab, setActiveTab] = useState<"fields" | "setup">(
     target.initialTab === "setup" ? "setup" : "fields",
   );
+  const getDraftsForPrefixRef = useRef(getDraftsForPrefix);
+  const registerFormRef = useRef(registerForm);
+  const seedRef = useRef(seed);
+
+  useEffect(() => {
+    getDraftsForPrefixRef.current = getDraftsForPrefix;
+  }, [getDraftsForPrefix]);
+
+  useEffect(() => {
+    registerFormRef.current = registerForm;
+  }, [registerForm]);
+
+  useEffect(() => {
+    seedRef.current = seed;
+  }, [seed]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -62,15 +77,15 @@ export function ConfigFieldForm({
       for (const entry of data.entries) nextSeed[entry.path] = defaultDraft(entry);
       setEntries(data.entries);
       setSeed(nextSeed);
-      setDraft(getDraftsForPrefix(target.prefix, nextSeed));
-      registerForm(target.prefix, target.title, data.entries, nextSeed);
+      setDraft(getDraftsForPrefixRef.current(target.prefix, nextSeed));
+      registerFormRef.current(target.prefix, target.title, data.entries, nextSeed);
       setValidationErrors({});
     } catch (e) {
       setError(errorMessage(e));
     } finally {
       setLoading(false);
     }
-  }, [getDraftsForPrefix, registerForm, target.prefix, target.title]);
+  }, [target.prefix, target.title]);
 
   useEffect(() => {
     void load();
@@ -107,9 +122,9 @@ export function ConfigFieldForm({
   }
 
   useEffect(() => {
-    setDraft(seed);
+    setDraft(seedRef.current);
     setValidationErrors({});
-  }, [resetVersion, seed]);
+  }, [resetVersion]);
 
   useEffect(() => {
     if (lastSavedVersionRef.current === savedVersion) return;

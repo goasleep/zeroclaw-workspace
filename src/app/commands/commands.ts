@@ -1,4 +1,4 @@
-import type { SettingsSection } from "@/app/workspace-shell/types";
+import type { RuntimeTab, SettingsSection } from "@/app/workspace-shell/types";
 
 export const APP_COMMAND_EVENT = "zeroclaw://command";
 
@@ -72,7 +72,7 @@ export const APP_COMMANDS = {
   },
   settingsOpenRuntimeSafety: {
     id: "settings.openRuntimeSafety",
-    label: "Runtime & Safety",
+    label: "Runtime Profiles & Safety",
     menu: "Settings",
     section: "runtime-safety",
   },
@@ -86,19 +86,19 @@ export const APP_COMMANDS = {
     id: "diagnostics.openLogs",
     label: "Logs",
     menu: "Diagnostics",
-    section: "logs",
+    runtimeTab: "logs",
   },
   diagnosticsOpenDoctor: {
     id: "diagnostics.openDoctor",
     label: "Doctor",
     menu: "Diagnostics",
-    section: "doctor",
+    runtimeTab: "doctor",
   },
   diagnosticsOpenDevices: {
     id: "diagnostics.openDevices",
     label: "Devices",
     menu: "Diagnostics",
-    section: "devices",
+    runtimeTab: "devices",
   },
 } as const;
 
@@ -120,6 +120,12 @@ export const SETTINGS_COMMAND_SECTIONS: Partial<Record<AppCommandId, SettingsSec
       )
       .map((command) => [command.id, command.section]),
   );
+
+export const RUNTIME_COMMAND_TABS: Partial<Record<AppCommandId, RuntimeTab>> = Object.fromEntries(
+  Object.values(APP_COMMANDS)
+    .filter((command): command is AppCommand & { runtimeTab: RuntimeTab } => "runtimeTab" in command)
+    .map((command) => [command.id, command.runtimeTab]),
+);
 
 const COMMAND_IDS = new Set<string>(Object.values(APP_COMMANDS).map((command) => command.id));
 const LEGACY_COMMAND_ALIASES: Record<string, AppCommandId> = {

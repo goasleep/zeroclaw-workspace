@@ -1,11 +1,14 @@
 export type WorkspacePage =
   | "dashboard"
+  | "compose"
   | "task"
   | "tasks"
   | "approvals"
   | "automations"
   | "runtime"
   | "settings";
+
+export type RuntimeTab = "overview" | "tools" | "memory" | "automations" | "logs" | "doctor" | "devices";
 
 export type SettingsSection =
   | "app"

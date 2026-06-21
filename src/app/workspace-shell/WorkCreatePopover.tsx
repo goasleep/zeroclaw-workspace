@@ -75,7 +75,7 @@ export function WorkCreatePopover({
     setRequirement("");
     setTaskMode("chat");
     setAgentAlias(activeAgent ?? agents[0] ?? "");
-    setWorkspaceRoot(root);
+    setWorkspaceRoot(null);
     setTime(defaultTime());
     setBusy(false);
     setError(null);
@@ -85,10 +85,26 @@ export function WorkCreatePopover({
     () => agents.map((agent) => ({ value: agent, label: agent })),
     [agents],
   );
+  const hourOptions = useMemo(
+    () =>
+      Array.from({ length: 24 }, (_, hour) => {
+        const value = String(hour).padStart(2, "0");
+        return { value, label: value };
+      }),
+    [],
+  );
+  const minuteOptions = useMemo(
+    () =>
+      Array.from({ length: 60 }, (_, minute) => {
+        const value = String(minute).padStart(2, "0");
+        return { value, label: value };
+      }),
+    [],
+  );
   const workspaceOptions = useMemo(() => {
     const paths = Array.from(new Set([root, ...recentRoots].filter(Boolean) as string[]));
     return [
-      { value: GENERAL_WORKSPACE, label: t`General task` },
+      { value: GENERAL_WORKSPACE, label: t`General chat` },
       ...paths.map((path) => ({ value: path, label: workspaceLabel(path, root) })),
     ];
   }, [recentRoots, root, t]);
@@ -111,6 +127,18 @@ export function WorkCreatePopover({
     } catch (err) {
       setError(errorMessage(err));
     }
+  }
+
+  function changeTaskMode(nextMode: TaskMode) {
+    setTaskMode(nextMode);
+    if (nextMode === "acp" && !workspaceRoot && root) {
+      setWorkspaceRoot(root);
+    }
+  }
+
+  function changeTimePart(part: "hour" | "minute", value: string) {
+    const [hour, minute] = validTime(time) ? time.split(":") : defaultTime().split(":");
+    setTime(part === "hour" ? `${value}:${minute}` : `${hour}:${value}`);
   }
 
   async function submitTask() {
@@ -168,6 +196,7 @@ export function WorkCreatePopover({
           side={side}
           align="start"
           sideOffset={10}
+          onInteractOutside={(event) => event.preventDefault()}
           className="z-50 w-[400px] max-w-[calc(100vw-2rem)] rounded-xl border border-white/10 bg-[#061126] p-3 text-sm text-neutral-100 shadow-2xl shadow-black/50 outline-none"
         >
           <div className="mb-3 flex items-center gap-2">
@@ -243,7 +272,7 @@ export function WorkCreatePopover({
                         { key: "chat", label: t`Chat` },
                         { key: "acp", label: t`Code` },
                       ]}
-                      onChange={setTaskMode}
+                      onChange={changeTaskMode}
                     />
                   </Field>
                   <Field label={t`Agent`} required>
@@ -254,7 +283,7 @@ export function WorkCreatePopover({
                       className="w-full"
                     />
                   </Field>
-                  <Field label={t`Workspace`}>
+                  <Field label={t`Context`}>
                     <div className="flex gap-2">
                       <Select
                         value={workspaceRoot ?? GENERAL_WORKSPACE}
@@ -315,15 +344,21 @@ export function WorkCreatePopover({
                     />
                   </Field>
                   <Field label={t`Execution time`} required>
-                    <div className="grid grid-cols-[120px_minmax(0,1fr)] gap-2">
+                    <div className="grid grid-cols-[120px_minmax(0,1fr)_minmax(0,1fr)] gap-2">
                       <div className="rounded-md border border-white/10 bg-[#020818]/90 px-2 py-1.5 text-xs text-neutral-400">
                         {t`Daily`}
                       </div>
-                      <input
-                        type="time"
-                        value={time}
-                        onChange={(event) => setTime(event.target.value)}
-                        className="w-full rounded-md border border-white/10 bg-[#020818]/90 px-2 py-1.5 text-xs text-neutral-100 outline-none focus:border-cyan-400"
+                      <Select
+                        value={timeHour(time)}
+                        options={hourOptions}
+                        onValueChange={(value) => changeTimePart("hour", value)}
+                        className="w-full"
+                      />
+                      <Select
+                        value={timeMinute(time)}
+                        options={minuteOptions}
+                        onValueChange={(value) => changeTimePart("minute", value)}
+                        className="w-full"
                       />
                     </div>
                   </Field>
@@ -507,6 +542,14 @@ function filenameFromPath(path: string) {
 
 function validTime(value: string) {
   return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+}
+
+function timeHour(value: string) {
+  return validTime(value) ? value.slice(0, 2) : "00";
+}
+
+function timeMinute(value: string) {
+  return validTime(value) ? value.slice(3, 5) : "00";
 }
 
 function dailyCron(value: string) {

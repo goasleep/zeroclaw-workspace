@@ -7,6 +7,7 @@ import { useConnections } from "@/app/connection-context";
 import { useWorkspace } from "@/app/workspace-context";
 import type { StudioTask } from "@/features/tasks/task-model";
 import { taskActivityTime, taskStatusClass, taskStatusLabel } from "@/features/tasks/task-model";
+import { workspacePathLabel } from "./path-labels";
 
 interface WorkDashboardProps {
   tasks: StudioTask[];
@@ -87,7 +88,7 @@ export function WorkDashboard({
               onClick={() => onPage("runtime")}
               className="rounded-md bg-sky-400 px-3 py-1.5 text-xs font-medium text-slate-950 hover:bg-cyan-300"
             >
-              {t`Open runtime settings`}
+              {t`Open runtime`}
             </button>
           }
         />
@@ -109,7 +110,8 @@ export function WorkDashboard({
           icon={ListTodo}
           label={t`Running tasks`}
           value={String(running.length)}
-          detail={root ?? t`No workspace selected`}
+          detail={root ? workspacePathLabel(root) : t`No workspace selected`}
+          detailTitle={root ?? undefined}
           onClick={() => onPage("tasks")}
         />
         <MetricCard
@@ -167,7 +169,7 @@ export function WorkDashboard({
                     {task.title}
                   </span>
                   <span className="mt-0.5 block truncate text-xs text-neutral-500">
-                    {task.workspace_root ?? t`No workspace selected`}
+                    {task.workspace_root ? workspacePathLabel(task.workspace_root) : t`No workspace selected`}
                   </span>
                 </span>
                 <span
@@ -225,7 +227,11 @@ export function WorkDashboard({
                 }
               />
               <Info label={t`Doctor issues`} value={String(doctorIssues)} />
-              <Info label={t`Workspace`} value={root ?? t`No workspace selected`} mono />
+              <Info
+                label={t`Workspace`}
+                value={root ? workspacePathLabel(root) : t`No workspace selected`}
+                title={root ?? undefined}
+              />
             </dl>
           </SummaryPanel>
         </section>
@@ -250,12 +256,14 @@ function MetricCard({
   label,
   value,
   detail,
+  detailTitle,
   onClick,
 }: {
   icon: typeof Gauge;
   label: string;
   value: string;
   detail: string;
+  detailTitle?: string;
   onClick: () => void;
 }) {
   return (
@@ -269,7 +277,9 @@ function MetricCard({
         {label}
       </div>
       <div className="truncate text-xl font-semibold text-neutral-100">{value}</div>
-      <div className="mt-1 truncate text-xs text-neutral-500">{detail}</div>
+      <div className="mt-1 truncate text-xs text-neutral-500" title={detailTitle}>
+        {detail}
+      </div>
     </button>
   );
 }
@@ -337,11 +347,23 @@ function AttentionButton({ children, onClick }: { children: ReactNode; onClick: 
   );
 }
 
-function Info({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
+function Info({
+  label,
+  value,
+  title,
+  mono = false,
+}: {
+  label: string;
+  value: string;
+  title?: string;
+  mono?: boolean;
+}) {
   return (
     <div className="grid grid-cols-[110px_minmax(0,1fr)] gap-2">
       <dt className="text-neutral-500">{label}</dt>
-      <dd className={`truncate text-neutral-200 ${mono ? "font-mono" : ""}`}>{value}</dd>
+      <dd className={`truncate text-neutral-200 ${mono ? "font-mono" : ""}`} title={title}>
+        {value}
+      </dd>
     </div>
   );
 }

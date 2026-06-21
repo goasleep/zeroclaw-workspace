@@ -26,6 +26,7 @@ export function useChat({
   mode = "chat",
   workspaceRoot = null,
   workspaceDir = null,
+  startBlank = false,
 }: UseChatOptions) {
   const [state, dispatch] = useReducer(chatReducer, {
     messages: [],
@@ -53,6 +54,10 @@ export function useChat({
     deleteSession: deleteStoredSession,
   } = sessions;
   const { loadSelected, saveSelected, assignWorkspace } = chatLocalState;
+  const loadInitialSession = useCallback(
+    () => (startBlank ? Promise.resolve(null) : loadSelected()),
+    [loadSelected, startBlank],
+  );
 
   useEffect(() => {
     hydratedSessionRef.current = null;
@@ -84,7 +89,7 @@ export function useChat({
     modelOverride,
     connectionSeed,
     dispatch,
-    loadSelected,
+    loadSelected: loadInitialSession,
     saveSelected,
     assignWorkspace,
     hydrateSession,

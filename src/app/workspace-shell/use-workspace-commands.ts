@@ -3,12 +3,13 @@ import { listen } from "@tauri-apps/api/event";
 import {
   APP_COMMAND_EVENT,
   APP_COMMANDS,
+  RUNTIME_COMMAND_TABS,
   SETTINGS_COMMAND_SECTIONS,
   appCommandFromEvent,
   appCommandFromPayload,
   type AppCommandId,
 } from "@/app/commands/commands";
-import type { WorkspacePage } from "./types";
+import type { RuntimeTab, WorkspacePage } from "./types";
 
 interface WorkspaceCommandHandlers {
   activeTaskWorkspaceRoot: string | null;
@@ -17,6 +18,7 @@ interface WorkspaceCommandHandlers {
   focusComposer: () => void;
   openAgentWorkspace: (alias: string) => void;
   openConfigTarget: (target: string) => void;
+  openRuntimeTab: (tab: RuntimeTab) => void;
   openSettings: (section: string) => void;
   pickProject: () => Promise<void>;
   selectAgent: (agent: string) => void;
@@ -32,6 +34,7 @@ export function useWorkspaceCommands({
   focusComposer,
   openAgentWorkspace,
   openConfigTarget,
+  openRuntimeTab,
   openSettings,
   pickProject,
   selectAgent,
@@ -47,6 +50,11 @@ export function useWorkspaceCommands({
       const settingsTarget = SETTINGS_COMMAND_SECTIONS[command];
       if (settingsTarget) {
         openSettings(settingsTarget);
+        return;
+      }
+      const runtimeTab = RUNTIME_COMMAND_TABS[command];
+      if (runtimeTab) {
+        openRuntimeTab(runtimeTab);
         return;
       }
 
@@ -180,6 +188,7 @@ export function useWorkspaceCommands({
     focusComposer,
     openAgentWorkspace,
     openConfigTarget,
+    openRuntimeTab,
     openSettings,
     pickProject,
     selectAgent,

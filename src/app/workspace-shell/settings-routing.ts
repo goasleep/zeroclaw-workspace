@@ -3,7 +3,15 @@ import type { SettingsSection } from "./types";
 export function normalizeSettingsSection(section: SettingsSection): SettingsSection {
   if (section === "gateway-config") return "gateway-overview";
   if (section === "tools") return "tools-skills";
-  if (section === "cron") return "automations";
+  if (
+    section === "automations" ||
+    section === "cron" ||
+    section === "logs" ||
+    section === "doctor" ||
+    section === "devices"
+  ) {
+    return "gateway-overview";
+  }
   return section;
 }
 
@@ -22,7 +30,7 @@ export function settingsSectionForConfigTarget(targetSection: string): SettingsS
     return "runtime-safety";
   }
   if (targetSection === "channels" || targetSection.startsWith("channels.")) return "channels";
-  if (targetSection === "cron" || targetSection.startsWith("cron.")) return "automations";
+  if (targetSection === "cron" || targetSection.startsWith("cron.")) return "gateway-overview";
   if (
     targetSection === "tools" ||
     targetSection.startsWith("tools.") ||

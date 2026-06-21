@@ -46,6 +46,7 @@ export interface UseChatOptions {
   mode?: ChatMode;
   workspaceRoot?: string | null;
   workspaceDir?: string | null;
+  startBlank?: boolean;
 }
 
 export interface ChatModelOverride {
