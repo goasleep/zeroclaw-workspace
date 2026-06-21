@@ -103,7 +103,7 @@ export function WorkDashboard({
           icon={Gauge}
           label={t`Runtime`}
           value={health ? (health.healthy ? t`online` : t`offline`) : (activation?.type ?? t`idle`)}
-          detail={gatewayVersion ? t`Gateway ${gatewayVersion}` : active.name}
+          detail={gatewayVersion ? t`Runtime ${gatewayVersion}` : active.name}
           onClick={() => onPage("runtime")}
         />
         <MetricCard
@@ -136,7 +136,7 @@ export function WorkDashboard({
             <div>
               <h2 className="text-sm font-semibold text-neutral-100">{t`Recent tasks`}</h2>
               <p className="mt-0.5 text-xs text-neutral-500">
-                {t`Task shells are stored locally; execution stays in ZeroClaw runtime runs.`}
+                {t`Saved chats and tasks stay here.`}
               </p>
             </div>
             {renderCreateControl()}
@@ -149,7 +149,7 @@ export function WorkDashboard({
                 <EmptyState
                   icon={ListTodo}
                   title={t`No tasks yet`}
-                  body={t`Create a task to wrap the next runtime run in a product workflow.`}
+                  body={t`Start a chat or create code work to keep it here.`}
                   action={renderCreateControl()}
                 />
               </div>
@@ -169,7 +169,9 @@ export function WorkDashboard({
                     {task.title}
                   </span>
                   <span className="mt-0.5 block truncate text-xs text-neutral-500">
-                    {task.workspace_root ? workspacePathLabel(task.workspace_root) : t`No workspace selected`}
+                    {task.workspace_root
+                      ? workspacePathLabel(task.workspace_root)
+                      : t`No workspace selected`}
                   </span>
                 </span>
                 <span

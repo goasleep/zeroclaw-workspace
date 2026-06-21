@@ -71,6 +71,11 @@ Task:
 The corresponding messages, tool calls, approvals, cron execution records,
 logs, and memory changes remain ZeroClaw runtime data.
 
+`Task.status` is a Studio-owned cache of ZeroClaw execution state. It is updated
+by the Tauri task observer/reconciler from gateway sessions, session state,
+runtime events, cron jobs, and cron run history. React views display and
+subscribe to this projection; they do not own the task lifecycle state machine.
+
 ## ZeroClaw Data
 
 ZeroClaw data is runtime state owned by the selected gateway. Studio accesses

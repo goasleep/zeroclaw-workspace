@@ -57,7 +57,7 @@ export function RunControls({
         type="button"
         onClick={onNewRun}
         className="inline-flex h-7 w-7 items-center justify-center rounded-md text-neutral-500 hover:bg-white/[0.05] hover:text-cyan-300"
-        title={selectedModelChoice ? t`New run with ${selectedModelChoice.value}` : t`New run`}
+        title={selectedModelChoice ? t`New chat with ${selectedModelChoice.value}` : t`New chat`}
       >
         <Plus size={13} />
       </button>
@@ -65,7 +65,7 @@ export function RunControls({
         type="button"
         onClick={onAbort}
         className="inline-flex h-7 w-7 items-center justify-center rounded-md text-neutral-500 hover:bg-white/[0.05] hover:text-red-300"
-        title={t`Stop current run`}
+        title={t`Stop current chat`}
       >
         <CircleStop size={13} />
       </button>

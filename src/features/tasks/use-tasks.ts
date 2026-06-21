@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { listen } from "@tauri-apps/api/event";
 import {
   taskArchive,
   taskBackfillSessions,
@@ -7,10 +8,11 @@ import {
   taskList,
   taskPatch,
   taskUpsert,
+  type TasksUpdatedEvent,
 } from "@/api/tauri";
 import type { NormalizedSession } from "@/features/chat/use-chat";
 import type { StudioTask, TaskPatch } from "./task-model";
-import { sessionToBackfillSession, visibleTasks } from "./task-model";
+import { sessionToBackfillSession, taskActivityTime, visibleTasks } from "./task-model";
 
 export function useTasks({
   connectionId,
@@ -69,6 +71,19 @@ export function useTasks({
     if (connectionId && sessionSnapshotVersion > 0) void backfill();
   }, [backfill, connectionId, sessionSnapshotVersion]);
 
+  useEffect(() => {
+    if (!connectionId) return;
+    const unlisten = listen<TasksUpdatedEvent>("zeroclaw://tasks-updated", (event) => {
+      if (event.payload.connection_id !== connectionId) return;
+      const updates = event.payload.tasks;
+      if (updates.length === 0) return;
+      setTasks((prev) => mergeTaskUpdates(prev, updates));
+    });
+    return () => {
+      void unlisten.then((dispose) => dispose());
+    };
+  }, [connectionId]);
+
   const upsert = useCallback(async (task: StudioTask) => {
     const saved = await taskUpsert(task);
     setTasks((prev) => [saved, ...prev.filter((item) => item.id !== saved.id)]);
@@ -113,4 +128,14 @@ export function useTasks({
     }),
     [archive, error, linkSession, loading, patch, refresh, removeLocal, tasks, upsert],
   );
+}
+
+export function mergeTaskUpdates(prev: StudioTask[], updates: StudioTask[]) {
+  const byId = new Map(updates.map((task) => [task.id, task]));
+  const next = prev.map((task) => byId.get(task.id) ?? task);
+  const existing = new Set(prev.map((task) => task.id));
+  for (const task of updates) {
+    if (!existing.has(task.id)) next.push(task);
+  }
+  return next.sort((a, b) => taskActivityTime(b).localeCompare(taskActivityTime(a)));
 }

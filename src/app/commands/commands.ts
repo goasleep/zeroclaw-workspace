@@ -23,7 +23,7 @@ export const APP_COMMANDS = {
   },
   workspaceNewTask: {
     id: "workspace.newTask",
-    label: "New Task",
+    label: "New Chat",
     menu: "Workspace",
     accelerator: "CmdOrCtrl+N",
   },
@@ -123,7 +123,9 @@ export const SETTINGS_COMMAND_SECTIONS: Partial<Record<AppCommandId, SettingsSec
 
 export const RUNTIME_COMMAND_TABS: Partial<Record<AppCommandId, RuntimeTab>> = Object.fromEntries(
   Object.values(APP_COMMANDS)
-    .filter((command): command is AppCommand & { runtimeTab: RuntimeTab } => "runtimeTab" in command)
+    .filter(
+      (command): command is AppCommand & { runtimeTab: RuntimeTab } => "runtimeTab" in command,
+    )
     .map((command) => [command.id, command.runtimeTab]),
 );
 

@@ -19,7 +19,7 @@ msgstr "（未命名）"
 
 #. placeholder {0}: gitStatus.branch
 #. placeholder {1}: gitStatus.changed_count
-#: src/features/chat/ChatPanel.tsx:559
+#: src/features/chat/ChatPanel.tsx:572
 msgid "{0} · {1} changed"
 msgstr "{0} · {1} 项变更"
 
@@ -34,12 +34,12 @@ msgid "{0} attachments"
 msgstr "{0} 个附件"
 
 #. placeholder {0}: cronJobs.length
-#: src/app/workspace-shell/WorkDashboard.tsx:126
+#: src/app/workspace-shell/WorkDashboard.tsx:128
 msgid "{0} automations"
 msgstr ""
 
 #. placeholder {0}: gitStatus.changed_count
-#: src/features/chat/ChatPanel.tsx:561
+#: src/features/chat/ChatPanel.tsx:574
 msgid "{0} changed"
 msgstr "{0} 项变更"
 
@@ -49,7 +49,7 @@ msgid "{0} configured"
 msgstr "{0} 个已配置"
 
 #. placeholder {0}: items.length
-#: src/features/chat/ChatPanel.tsx:742
+#: src/features/chat/ChatPanel.tsx:771
 msgid "{0} events"
 msgstr ""
 
@@ -139,7 +139,7 @@ msgstr "{0} 个区域"
 
 #. placeholder {0}: channels.length
 #. placeholder {0}: selectedFiles.length
-#: src/app/workspace-shell/WorkSidebar.tsx:150
+#: src/app/workspace-shell/WorkSidebar.tsx:226
 #: src/features/chat/AgentSetupWizard.tsx:249
 msgid "{0} selected"
 msgstr ""
@@ -150,7 +150,7 @@ msgid "{0} setup"
 msgstr "{0} 设置"
 
 #. placeholder {0}: group.tasks.length
-#: src/app/workspace-shell/TasksPage.tsx:108
+#: src/app/workspace-shell/TasksPage.tsx:110
 msgid "{0} tasks"
 msgstr ""
 
@@ -169,11 +169,11 @@ msgstr "{0} 个未配置"
 msgid "{0} will not save persistent memory."
 msgstr "{0} 不会保存持久记忆。"
 
-#: src/features/chat/ChatPanel.tsx:744
+#: src/features/chat/ChatPanel.tsx:773
 msgid "{approvalCount} approvals"
 msgstr ""
 
-#: src/app/workspace-shell/WorkDashboard.tsx:193
+#: src/app/workspace-shell/WorkDashboard.tsx:197
 msgid "{approvalCount} approvals waiting"
 msgstr ""
 
@@ -186,7 +186,7 @@ msgstr "{ready} 个就绪 / {0} 个区域"
 msgid "{readyCount} ready"
 msgstr "{readyCount} 个就绪"
 
-#: src/features/chat/ChatPanel.tsx:743
+#: src/features/chat/ChatPanel.tsx:772
 msgid "{toolCount} tool calls"
 msgstr ""
 
@@ -203,7 +203,7 @@ msgstr "1 个附件"
 msgid "Actions"
 msgstr "操作"
 
-#: src/app/workspace-shell/SettingsPage.tsx:284
+#: src/app/workspace-shell/SettingsPage.tsx:274
 msgid "Activation"
 msgstr "激活"
 
@@ -217,7 +217,7 @@ msgstr "已启用"
 msgid "Active"
 msgstr "已启用"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:143
+#: src/app/workspace-shell/RuntimeDetail.tsx:131
 msgid "Active automations"
 msgstr ""
 
@@ -244,8 +244,8 @@ msgid "Add or attach a channel before creating peer groups."
 msgstr ""
 
 #: src/app/WelcomeScreen.tsx:36
-msgid "Add remote"
-msgstr "添加远程"
+#~ msgid "Add remote"
+#~ msgstr "添加远程"
 
 #: src/app/ConnectionPicker.tsx:274
 #: src/app/ConnectionPicker.tsx:373
@@ -263,8 +263,8 @@ msgstr "添加第一个 MCP 服务器"
 
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:122
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:369
-msgid "Advanced"
-msgstr "高级"
+#~ msgid "Advanced"
+#~ msgstr "高级"
 
 #: src/features/memory/MemoryPanel.tsx:656
 msgid "Advanced backend setup"
@@ -275,18 +275,17 @@ msgid "Advanced fields"
 msgstr "高级字段"
 
 #: src/features/config/ConfigPanel.tsx:276
-msgid "Advanced raw paths"
-msgstr "高级原始路径"
+#~ msgid "Advanced raw paths"
+#~ msgstr "高级原始路径"
 
 #: src/app/workspace-shell/RuntimeDetail.tsx:115
-msgid "Advanced settings"
-msgstr ""
+#~ msgid "Advanced settings"
+#~ msgstr ""
 
 #: src/app/workspace-shell/ApprovalsPage.tsx:74
 #: src/app/workspace-shell/AutomationsPage.tsx:167
-#: src/app/workspace-shell/TaskDetail.tsx:200
-#: src/app/workspace-shell/WorkCreatePopover.tsx:249
-#: src/app/workspace-shell/WorkCreatePopover.tsx:309
+#: src/app/workspace-shell/WorkCreatePopover.tsx:258
+#: src/app/workspace-shell/WorkCreatePopover.tsx:318
 #: src/features/chat/ChatComposer.tsx:148
 #: src/features/config/config-categories.ts:148
 #: src/features/memory/MemoryPanel.tsx:390
@@ -318,7 +317,7 @@ msgstr ""
 msgid "Agent Workspace"
 msgstr "Agent 工作区"
 
-#: src/app/workspace-shell/settings-sections.ts:33
+#: src/app/workspace-shell/settings-sections.ts:29
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:298
 #: src/features/config/config-categories.ts:84
 msgid "Agents"
@@ -337,7 +336,7 @@ msgstr "别名"
 msgid "Aliases"
 msgstr "别名"
 
-#: src/app/workspace-shell/TasksPage.tsx:62
+#: src/app/workspace-shell/TasksPage.tsx:64
 #: src/features/config/ConfigPanel.tsx:205
 msgid "All"
 msgstr "全部"
@@ -366,9 +365,9 @@ msgstr ""
 msgid "Always allow"
 msgstr "始终允许"
 
-#: src/app/workspace-shell/settings-sections.ts:29
-#: src/app/workspace-shell/SettingsPage.tsx:129
-#: src/app/workspace-shell/SettingsPage.tsx:218
+#: src/app/workspace-shell/settings-sections.ts:25
+#: src/app/workspace-shell/SettingsPage.tsx:121
+#: src/app/workspace-shell/SettingsPage.tsx:208
 msgid "App"
 msgstr "应用"
 
@@ -377,7 +376,7 @@ msgstr "应用"
 msgid "Applied {0}"
 msgstr "已应用 {0}"
 
-#: src/features/chat/ChatPanel.tsx:648
+#: src/features/chat/ChatPanel.tsx:661
 #: src/features/config/SetupDoctorTab.tsx:348
 msgid "Apply"
 msgstr "应用"
@@ -397,8 +396,8 @@ msgid "Approval required"
 msgstr "需要批准"
 
 #: src/app/workspace-shell/ApprovalsPage.tsx:35
-#: src/app/workspace-shell/WorkDashboard.tsx:117
-#: src/app/workspace-shell/WorkSidebar.tsx:102
+#: src/app/workspace-shell/WorkDashboard.tsx:119
+#: src/app/workspace-shell/WorkSidebar.tsx:157
 msgid "Approvals"
 msgstr ""
 
@@ -418,13 +417,17 @@ msgstr "区域"
 msgid "Arguments summary"
 msgstr ""
 
-#: src/app/workspace-shell/SettingsPage.tsx:282
+#: src/app/WelcomeScreen.tsx:41
+msgid "Attach to a ZeroClaw runtime you already installed or started on this machine."
+msgstr ""
+
+#: src/app/workspace-shell/SettingsPage.tsx:272
 msgid "Attachments"
 msgstr "附件"
 
 #. placeholder {0}: formatBytes(totalSize)
 #. placeholder {1}: formatBytes(totalLimit)
-#: src/features/chat/ChatPanel.tsx:441
+#: src/features/chat/ChatPanel.tsx:448
 msgid "Attachments total {0} exceeds upload limit {1}."
 msgstr ""
 
@@ -433,7 +436,7 @@ msgstr ""
 msgid "Auto-denies after {0}s without a response."
 msgstr "{0} 秒内无响应将自动拒绝。"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:360
+#: src/app/workspace-shell/WorkCreatePopover.tsx:375
 msgid "Automation"
 msgstr ""
 
@@ -459,10 +462,8 @@ msgid "automations"
 msgstr ""
 
 #: src/app/workspace-shell/AutomationsPage.tsx:93
-#: src/app/workspace-shell/RuntimeDetail.tsx:87
-#: src/app/workspace-shell/settings-sections.ts:39
-#: src/app/workspace-shell/WorkDashboard.tsx:124
-#: src/app/workspace-shell/WorkSidebar.tsx:109
+#: src/app/workspace-shell/WorkDashboard.tsx:126
+#: src/app/workspace-shell/WorkSidebar.tsx:164
 msgid "Automations"
 msgstr ""
 
@@ -482,7 +483,7 @@ msgstr "可用"
 msgid "Available to manage"
 msgstr "可管理"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:179
+#: src/app/workspace-shell/WorkCreatePopover.tsx:198
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:344
 #: src/features/memory/MemoryPanel.tsx:1200
 msgid "Back"
@@ -493,7 +494,7 @@ msgstr "返回"
 msgid "Back to agents"
 msgstr ""
 
-#: src/app/workspace-shell/SettingsPage.tsx:149
+#: src/app/workspace-shell/SettingsPage.tsx:139
 msgid "Back to app"
 msgstr "返回应用"
 
@@ -513,7 +514,11 @@ msgstr ""
 msgid "Before upload: each file up to {0}, total up to {1}."
 msgstr ""
 
-#: src/features/chat/ChatPanel.tsx:656
+#: src/app/WelcomeScreen.tsx:46
+msgid "Begin on this computer, then open a project and start a chat. ZeroClaw Studio will manage the local runtime for you."
+msgstr ""
+
+#: src/features/chat/ChatPanel.tsx:669
 msgid "Browse"
 msgstr "浏览"
 
@@ -533,12 +538,12 @@ msgstr "Browser agent-browser"
 msgid "bytes"
 msgstr "字节"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:483
+#: src/app/workspace-shell/WorkCreatePopover.tsx:498
 #: src/features/cron/RuntimeAutomationsPanel.tsx:311
 msgid "Cancel"
 msgstr ""
 
-#: src/app/workspace-shell/SettingsPage.tsx:133
+#: src/app/workspace-shell/SettingsPage.tsx:125
 msgid "Capabilities"
 msgstr "能力"
 
@@ -550,7 +555,7 @@ msgstr "类别"
 msgid "Change"
 msgstr "更改"
 
-#: src/app/workspace-shell/SettingsPage.tsx:303
+#: src/app/workspace-shell/SettingsPage.tsx:293
 msgid "Change the app interface language."
 msgstr ""
 
@@ -559,7 +564,7 @@ msgstr ""
 msgid "Channel"
 msgstr ""
 
-#: src/app/workspace-shell/settings-sections.ts:35
+#: src/app/workspace-shell/settings-sections.ts:31
 #: src/features/chat/AgentSetupWizard.tsx:690
 #: src/features/config/config-categories.ts:88
 #: src/features/integrations/IntegrationsPanel.tsx:267
@@ -574,8 +579,8 @@ msgstr ""
 msgid "Channels reviewed."
 msgstr ""
 
-#: src/app/workspace-shell/TasksPage.tsx:138
-#: src/app/workspace-shell/WorkCreatePopover.tsx:243
+#: src/app/workspace-shell/TasksPage.tsx:144
+#: src/app/workspace-shell/WorkSidebar.tsx:216
 #: src/features/integrations/IntegrationsPanel.tsx:391
 msgid "Chat"
 msgstr "聊天"
@@ -616,11 +621,15 @@ msgstr "选择记忆选项"
 msgid "Choose a runtime before inspecting scheduled work."
 msgstr ""
 
+#: src/app/workspace-shell/WorkCreatePopover.tsx:216
+msgid "Choose a secondary work type."
+msgstr ""
+
 #: src/features/config/sections/SectionExplorer.tsx:32
 msgid "Choose a section to inspect its picker, aliases, and editable fields."
 msgstr "选择一个区域以查看选择器、别名和可编辑字段。"
 
-#: src/app/workspace-shell/TaskDetail.tsx:71
+#: src/app/workspace-shell/TaskDetail.tsx:65
 msgid "Choose a task from the sidebar or create a new one from the dashboard."
 msgstr ""
 
@@ -649,7 +658,7 @@ msgstr "选择一个集成以查看状态、已配置别名和相关配置区域
 msgid "Choose an option above to create, choose, or inspect its config fields."
 msgstr "选择上方选项以创建、选择或查看其配置字段。"
 
-#: src/app/workspace-shell/WorkDashboard.tsx:83
+#: src/app/workspace-shell/WorkDashboard.tsx:84
 msgid "Choose or create a ZeroClaw runtime before starting task work."
 msgstr ""
 
@@ -658,15 +667,15 @@ msgid "Choose skills folder"
 msgstr "选择 skills 文件夹"
 
 #: src/app/workspace-shell/WorkCreatePopover.tsx:197
-msgid "Choose what kind of work to create."
-msgstr ""
+#~ msgid "Choose what kind of work to create."
+#~ msgstr ""
 
 #. placeholder {0}: usage.label
 #: src/features/memory/MemoryPanel.tsx:1627
 msgid "Choose where memories are saved for {0}."
 msgstr "选择 {0} 的记忆保存位置。"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:272
+#: src/app/workspace-shell/WorkCreatePopover.tsx:281
 msgid "Choose..."
 msgstr ""
 
@@ -686,19 +695,28 @@ msgstr "点击“运行诊断”开始。"
 msgid "clipboard"
 msgstr ""
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:204
+#: src/app/workspace-shell/WorkCreatePopover.tsx:223
+#: src/app/workspace-shell/WorkSidebar.tsx:273
 #: src/features/chat/AgentSetupWizard.tsx:539
 #: src/features/cron/RuntimeAutomationsPanel.tsx:385
 msgid "Close"
 msgstr ""
 
-#: src/app/workspace-shell/TasksPage.tsx:138
-#: src/app/workspace-shell/WorkCreatePopover.tsx:244
+#: src/app/workspace-shell/TasksPage.tsx:144
+#: src/app/workspace-shell/WorkSidebar.tsx:216
 msgid "Code"
 msgstr ""
 
+#: src/app/workspace-shell/WorkCreatePopover.tsx:369
+msgid "Code Task"
+msgstr ""
+
 #: src/app/workspace-shell/WorkCreatePopover.tsx:277
-msgid "Code tasks work best with a project workspace."
+#~ msgid "Code tasks work best with a project workspace."
+#~ msgstr ""
+
+#: src/app/workspace-shell/WorkCreatePopover.tsx:286
+msgid "Code tasks work best with a project."
 msgstr ""
 
 #: src/features/chat/AgentSetupWizard.tsx:936
@@ -768,17 +786,23 @@ msgstr "已配置别名"
 msgid "Connect a model service, add credentials, and make it available to agents."
 msgstr "连接模型服务、添加凭据，并让 agent 可用。"
 
+#: src/app/WelcomeScreen.tsx:35
+msgid "Connect another machine"
+msgstr ""
+
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:285
 msgid "Connect external tools and local services so agents can use them safely."
 msgstr "连接外部工具和本地服务，让 agent 能安全使用它们。"
 
+#: src/app/WelcomeScreen.tsx:37
+msgid "Connect remote"
+msgstr ""
+
 #: src/app/AddConnectionDialog.tsx:453
-#: src/app/WelcomeScreen.tsx:34
 msgid "Connect to a remote zeroclaw"
 msgstr "连接到远程 zeroclaw"
 
 #: src/app/AddConnectionDialog.tsx:454
-#: src/app/WelcomeScreen.tsx:39
 msgid "Connect to local zeroclaw"
 msgstr "连接到本地 zeroclaw"
 
@@ -786,8 +810,8 @@ msgstr "连接到本地 zeroclaw"
 msgid "Connected"
 msgstr "已连接"
 
-#: src/app/workspace-shell/SettingsPage.tsx:232
-#: src/app/workspace-shell/WorkDashboard.tsx:216
+#: src/app/workspace-shell/SettingsPage.tsx:222
+#: src/app/workspace-shell/WorkDashboard.tsx:220
 msgid "Connection"
 msgstr "连接"
 
@@ -798,14 +822,18 @@ msgid "Connection name"
 msgstr "连接名称"
 
 #: src/features/chat/ChatComposer.tsx:103
-msgid "Continue this run..."
+msgid "Continue the chat..."
 msgstr ""
+
+#: src/features/chat/ChatComposer.tsx:103
+#~ msgid "Continue this run..."
+#~ msgstr ""
 
 #: src/features/chat/ChatComposer.tsx:104
 #~ msgid "Continue this session..."
 #~ msgstr "继续这个会话..."
 
-#: src/features/chat/ChatPanel.tsx:768
+#: src/features/chat/ChatPanel.tsx:797
 #: src/features/chat/MessageList.tsx:303
 msgid "Copy path"
 msgstr "复制路径"
@@ -814,8 +842,8 @@ msgstr "复制路径"
 msgid "cost"
 msgstr "费用"
 
-#: src/app/WorkspaceShell.tsx:476
-#: src/app/WorkspaceShell.tsx:522
+#: src/app/workspace-shell/WorkCreatePopover.tsx:209
+#: src/app/WorkspaceShell.tsx:621
 msgid "Create"
 msgstr ""
 
@@ -824,16 +852,16 @@ msgid "Create a server entry when you want agents to use an external tool."
 msgstr "当你希望 agent 使用外部工具时，创建一个服务器条目。"
 
 #: src/app/workspace-shell/TasksPage.tsx:86
-msgid "Create a task and choose whether it belongs to a project or general work."
-msgstr ""
+#~ msgid "Create a task and choose whether it belongs to a project or general work."
+#~ msgstr ""
 
 #: src/app/workspace-shell/TasksPage.tsx:85
-msgid "Create a task for the current project to keep its work together."
-msgstr ""
+#~ msgid "Create a task for the current project to keep its work together."
+#~ msgstr ""
 
 #: src/app/workspace-shell/WorkDashboard.tsx:150
-msgid "Create a task to wrap the next runtime run in a product workflow."
-msgstr ""
+#~ msgid "Create a task to wrap the next runtime run in a product workflow."
+#~ msgstr ""
 
 #: src/features/chat/AgentSetupWizard.tsx:524
 #: src/features/chat/AgentSetupWizard.tsx:1000
@@ -848,8 +876,12 @@ msgstr ""
 msgid "Create another entry"
 msgstr "创建另一个条目"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:334
+#: src/app/workspace-shell/WorkCreatePopover.tsx:349
 msgid "Create automation"
+msgstr ""
+
+#: src/app/workspace-shell/WorkCreatePopover.tsx:294
+msgid "Create code task"
 msgstr ""
 
 #: src/app/AddConnectionDialog.tsx:234
@@ -879,12 +911,12 @@ msgid "Create or select {0}"
 msgstr "创建或选择 {0}"
 
 #: src/app/workspace-shell/WorkCreatePopover.tsx:285
-msgid "Create task"
-msgstr ""
+#~ msgid "Create task"
+#~ msgstr ""
 
 #: src/app/workspace-shell/WorkCreatePopover.tsx:190
-msgid "Create work"
-msgstr ""
+#~ msgid "Create work"
+#~ msgstr ""
 
 #: src/features/memory/MemoryPanel.tsx:1509
 msgid "created"
@@ -938,27 +970,27 @@ msgstr "已创建新的 {0}"
 #~ msgid "Cron run history"
 #~ msgstr ""
 
-#: src/app/workspace-shell/TasksPage.tsx:69
+#: src/app/workspace-shell/TasksPage.tsx:71
 msgid "Current project"
 msgstr ""
 
-#: src/app/workspace-shell/SettingsPage.tsx:235
+#: src/app/workspace-shell/SettingsPage.tsx:225
 msgid "Current runtime selected in the title bar."
 msgstr ""
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:320
+#: src/app/workspace-shell/WorkCreatePopover.tsx:329
 msgid "Daily"
 msgstr ""
 
-#: src/app/workspace-shell/SettingsPage.tsx:326
+#: src/app/workspace-shell/SettingsPage.tsx:316
 msgid "Dark"
 msgstr "深色"
 
-#: src/app/workspace-shell/WorkSidebar.tsx:89
+#: src/app/workspace-shell/WorkSidebar.tsx:144
 msgid "Dashboard"
 msgstr ""
 
-#: src/app/workspace-shell/SettingsPage.tsx:378
+#: src/app/workspace-shell/SettingsPage.tsx:368
 msgid "Deep link scheme"
 msgstr "深度链接协议"
 
@@ -969,6 +1001,8 @@ msgid "Delete"
 msgstr ""
 
 #. placeholder {0}: entry.path
+#. placeholder {0}: task.title
+#: src/app/WorkspaceShell.tsx:394
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:391
 msgid "Delete {0}?"
 msgstr ""
@@ -989,6 +1023,15 @@ msgstr ""
 
 #: src/features/cron/RuntimeAutomationsPanel.tsx:293
 msgid "Delete automation?"
+msgstr ""
+
+#: src/app/workspace-shell/WorkSidebar.tsx:303
+msgid "Delete chat"
+msgstr ""
+
+#. placeholder {0}: task.title
+#: src/app/WorkspaceShell.tsx:394
+msgid "Delete chat \"{0}\"?"
 msgstr ""
 
 #: src/features/cron/CronPanel.tsx:273
@@ -1015,8 +1058,8 @@ msgid "Detect again"
 msgstr "重新检测"
 
 #: src/app/WelcomeScreen.tsx:41
-msgid "Detect local"
-msgstr "检测本地"
+#~ msgid "Detect local"
+#~ msgstr "检测本地"
 
 #: src/features/setup/SetupCenterPanel.tsx:183
 msgid "Detect Python and prepare risk-profile command allowlists."
@@ -1030,8 +1073,7 @@ msgstr "检测 sandbox 后端并启用自动 sandbox 配置。"
 msgid "devices"
 msgstr "设备"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:105
-#: src/app/workspace-shell/settings-sections.ts:42
+#: src/app/workspace-shell/RuntimeDetail.tsx:92
 msgid "Devices"
 msgstr "设备"
 
@@ -1060,8 +1102,7 @@ msgid "Docker Runtime"
 msgstr "Docker 运行时"
 
 #: src/app/ConnectionPicker.tsx:155
-#: src/app/workspace-shell/RuntimeDetail.tsx:99
-#: src/app/workspace-shell/settings-sections.ts:41
+#: src/app/workspace-shell/RuntimeDetail.tsx:86
 msgid "Doctor"
 msgstr "诊断"
 
@@ -1069,8 +1110,8 @@ msgstr "诊断"
 msgid "Doctor a stdio MCP server command and transport."
 msgstr "诊断 stdio MCP 服务器命令和传输。"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:144
-#: src/app/workspace-shell/WorkDashboard.tsx:227
+#: src/app/workspace-shell/RuntimeDetail.tsx:135
+#: src/app/workspace-shell/WorkDashboard.tsx:231
 msgid "Doctor issues"
 msgstr ""
 
@@ -1122,7 +1163,7 @@ msgstr "错误"
 msgid "Execution"
 msgstr "执行"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:317
+#: src/app/workspace-shell/WorkCreatePopover.tsx:326
 msgid "Execution time"
 msgstr ""
 
@@ -1134,7 +1175,7 @@ msgstr ""
 msgid "External peers"
 msgstr "外部 peer"
 
-#: src/app/workspace-shell/SettingsPage.tsx:266
+#: src/app/workspace-shell/SettingsPage.tsx:256
 msgid "Files and runtime activity visible to the app."
 msgstr ""
 
@@ -1151,7 +1192,7 @@ msgstr "筛选"
 msgid "Filter {0}s..."
 msgstr "筛选 {0}..."
 
-#: src/app/workspace-shell/SettingsPage.tsx:275
+#: src/app/workspace-shell/SettingsPage.tsx:265
 msgid "Folder"
 msgstr "文件夹"
 
@@ -1163,17 +1204,21 @@ msgstr "已找到"
 msgid "Foundation"
 msgstr "基础"
 
-#: src/app/workspace-shell/SettingsPage.tsx:131
+#: src/app/workspace-shell/SettingsPage.tsx:123
 msgid "Gateway"
 msgstr "网关"
 
 #: src/app/workspace-shell/WorkDashboard.tsx:105
-msgid "Gateway {gatewayVersion}"
-msgstr ""
+#~ msgid "Gateway {gatewayVersion}"
+#~ msgstr ""
 
 #: src/features/integrations/IntegrationsPanel.tsx:254
 msgid "Gateway catalog"
 msgstr "网关目录"
+
+#: src/app/workspace-shell/RuntimeDetail.tsx:102
+msgid "Gateway config"
+msgstr ""
 
 #: src/features/config/overview/ConfigOverview.tsx:68
 msgid "Gateway control center"
@@ -1187,7 +1232,7 @@ msgstr "网关健康状态"
 msgid "Gateway overview"
 msgstr "网关概览"
 
-#: src/app/workspace-shell/settings-sections.ts:31
+#: src/app/workspace-shell/settings-sections.ts:27
 msgid "Gateway Overview"
 msgstr "网关概览"
 
@@ -1206,12 +1251,11 @@ msgid "Gateway URL"
 msgstr "网关 URL"
 
 #: src/app/ConnectionPicker.tsx:147
-#: src/app/workspace-shell/RuntimeDetail.tsx:141
 msgid "Gateway version"
 msgstr "网关版本"
 
-#: src/app/workspace-shell/TasksPage.tsx:72
-#: src/features/chat/ChatPanel.tsx:611
+#: src/app/workspace-shell/TasksPage.tsx:74
+#: src/features/chat/ChatPanel.tsx:624
 msgid "General"
 msgstr ""
 
@@ -1223,19 +1267,19 @@ msgstr ""
 #~ msgstr "通用会话"
 
 #: src/app/workspace-shell/WorkCreatePopover.tsx:91
-msgid "General task"
-msgstr ""
+#~ msgid "General task"
+#~ msgstr ""
 
 #: src/features/chat/ChatComposer.tsx:216
 msgid "General task run"
 msgstr ""
 
-#: src/app/workspace-shell/SettingsPage.tsx:338
+#: src/app/workspace-shell/SettingsPage.tsx:328
 msgid "Global shortcut"
 msgstr "全局快捷键"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:132
-#: src/app/workspace-shell/WorkDashboard.tsx:218
+#: src/app/workspace-shell/RuntimeDetail.tsx:119
+#: src/app/workspace-shell/WorkDashboard.tsx:222
 msgid "Health"
 msgstr ""
 
@@ -1244,9 +1288,9 @@ msgstr ""
 msgid "health {0}"
 msgstr "健康状态 {0}"
 
-#: src/app/workspace-shell/SettingsPage.tsx:284
-#: src/app/workspace-shell/WorkDashboard.tsx:104
-#: src/app/workspace-shell/WorkSidebar.tsx:74
+#: src/app/workspace-shell/SettingsPage.tsx:274
+#: src/app/workspace-shell/WorkDashboard.tsx:105
+#: src/app/workspace-shell/WorkSidebar.tsx:129
 msgid "idle"
 msgstr "空闲"
 
@@ -1267,28 +1311,28 @@ msgid "Install and verify agent-browser plus Chrome for Testing."
 msgstr "安装并验证 agent-browser 以及 Chrome for Testing。"
 
 #: src/app/WelcomeScreen.tsx:46
-msgid "Install locally"
-msgstr "本地安装"
+#~ msgid "Install locally"
+#~ msgstr "本地安装"
 
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:277
 msgid "Install or enable groups of skills from trusted sources."
 msgstr "从可信来源安装或启用多组 skills。"
 
 #: src/app/WelcomeScreen.tsx:45
-msgid "Install the upstream zeroclaw binary on this machine and let the workspace manage it for you."
-msgstr "在这台机器上安装上游 zeroclaw 二进制文件，并让工作区替你管理。"
+#~ msgid "Install the upstream zeroclaw binary on this machine and let the workspace manage it for you."
+#~ msgstr "在这台机器上安装上游 zeroclaw 二进制文件，并让工作区替你管理。"
 
 #: src/features/setup/SetupCenterPanel.tsx:101
 msgid "Install, configure, and verify local capabilities without opening raw config first."
 msgstr "无需先打开原始配置，即可安装、配置并验证本地能力。"
 
-#: src/app/workspace-shell/settings-sections.ts:38
+#: src/app/workspace-shell/settings-sections.ts:34
 #: src/features/config/config-categories.ts:154
 #: src/features/config/overview/ConfigOverview.tsx:286
 msgid "Integrations"
 msgstr "集成"
 
-#: src/app/workspace-shell/SettingsPage.tsx:368
+#: src/app/workspace-shell/SettingsPage.tsx:358
 msgid "Keep the desktop menu bar integration enabled."
 msgstr ""
 
@@ -1298,7 +1342,7 @@ msgstr ""
 msgid "Known attachment total {0} exceeds upload limit {1}."
 msgstr ""
 
-#: src/app/workspace-shell/SettingsPage.tsx:302
+#: src/app/workspace-shell/SettingsPage.tsx:292
 msgid "Language"
 msgstr "语言"
 
@@ -1314,11 +1358,11 @@ msgstr ""
 msgid "Last updated when refreshed."
 msgstr "刷新时更新。"
 
-#: src/app/workspace-shell/SettingsPage.tsx:251
+#: src/app/workspace-shell/SettingsPage.tsx:241
 msgid "Lifecycle"
 msgstr "生命周期"
 
-#: src/app/workspace-shell/SettingsPage.tsx:327
+#: src/app/workspace-shell/SettingsPage.tsx:317
 msgid "Light"
 msgstr "亮色"
 
@@ -1365,7 +1409,7 @@ msgid "Loading memory config..."
 msgstr "正在加载记忆配置..."
 
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:438
-#: src/features/chat/ChatPanel.tsx:784
+#: src/features/chat/ChatPanel.tsx:813
 msgid "Loading preview..."
 msgstr "正在加载预览..."
 
@@ -1377,8 +1421,8 @@ msgstr ""
 msgid "Loading setup..."
 msgstr "正在加载设置..."
 
-#: src/app/workspace-shell/TasksPage.tsx:76
-#: src/app/workspace-shell/WorkDashboard.tsx:143
+#: src/app/workspace-shell/TasksPage.tsx:78
+#: src/app/workspace-shell/WorkDashboard.tsx:145
 msgid "Loading tasks..."
 msgstr ""
 
@@ -1397,7 +1441,7 @@ msgstr "加载中…"
 msgid "Local"
 msgstr "本地"
 
-#: src/app/workspace-shell/SettingsPage.tsx:221
+#: src/app/workspace-shell/SettingsPage.tsx:211
 msgid "Local app state, workspace context, and preferences for this desktop client."
 msgstr ""
 
@@ -1418,8 +1462,7 @@ msgstr "本地记忆"
 msgid "Local single-file memory for a workstation runtime."
 msgstr "适合工作站运行时的本地单文件记忆。"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:93
-#: src/app/workspace-shell/settings-sections.ts:40
+#: src/app/workspace-shell/RuntimeDetail.tsx:80
 msgid "Logs"
 msgstr "日志"
 
@@ -1436,8 +1479,8 @@ msgid "Lucid sync"
 msgstr "Lucid 同步"
 
 #: src/app/WelcomeScreen.tsx:35
-msgid "Manage a homelab, cloud VM, or Raspberry Pi. Works with direct URL, SSH tunnel, or Tailscale. No local install required."
-msgstr "管理家庭实验室、云虚拟机或 Raspberry Pi。支持直接 URL、SSH 隧道或 Tailscale。无需本地安装。"
+#~ msgid "Manage a homelab, cloud VM, or Raspberry Pi. Works with direct URL, SSH tunnel, or Tailscale. No local install required."
+#~ msgstr "管理家庭实验室、云虚拟机或 Raspberry Pi。支持直接 URL、SSH 隧道或 Tailscale。无需本地安装。"
 
 #: src/features/config/config-categories.ts:104
 msgid "Manage risk profiles, runtime tuning, sandbox settings, and command policy."
@@ -1452,8 +1495,8 @@ msgid "Managed runtime"
 msgstr "托管运行时"
 
 #: src/app/workspace-shell/WorkCreatePopover.tsx:355
-msgid "Manual agent work you start now."
-msgstr ""
+#~ msgid "Manual agent work you start now."
+#~ msgstr ""
 
 #: src/features/config/SetupDoctorTab.tsx:360
 msgid "Manual remediation"
@@ -1488,8 +1531,7 @@ msgstr "MCP 服务器"
 msgid "MCP stdio Doctor"
 msgstr "MCP stdio 诊断"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:81
-#: src/app/workspace-shell/settings-sections.ts:36
+#: src/app/workspace-shell/settings-sections.ts:32
 #: src/features/chat/AgentSetupWizard.tsx:674
 #: src/features/config/overview/ConfigOverview.tsx:286
 #: src/features/memory/MemoryPanel.tsx:411
@@ -1522,6 +1564,10 @@ msgstr "记忆关闭"
 msgid "Memory options"
 msgstr "记忆选项"
 
+#: src/features/chat/ChatComposer.tsx:103
+msgid "Message the agent..."
+msgstr ""
+
 #: src/features/tools/ToolsPanel.tsx:177
 msgid "Metadata"
 msgstr "元数据"
@@ -1543,16 +1589,20 @@ msgstr "模型连接"
 msgid "Model provider"
 msgstr ""
 
-#: src/app/workspace-shell/settings-sections.ts:32
+#: src/app/workspace-shell/settings-sections.ts:28
 msgid "Models & Providers"
 msgstr "模型和提供商"
+
+#: src/app/WorkspaceShell.tsx:503
+msgid "More create options"
+msgstr ""
 
 #: src/features/config/config-categories.ts:150
 msgid "Multi-agent"
 msgstr "多 agent"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:222
-#: src/app/workspace-shell/WorkCreatePopover.tsx:292
+#: src/app/workspace-shell/WorkCreatePopover.tsx:241
+#: src/app/workspace-shell/WorkCreatePopover.tsx:301
 #: src/features/chat/AgentSetupWizard.tsx:906
 #: src/features/cron/RuntimeAutomationsPanel.tsx:108
 msgid "Name"
@@ -1562,8 +1612,8 @@ msgstr "名称"
 msgid "Needs"
 msgstr "需要处理"
 
-#: src/app/workspace-shell/WorkDashboard.tsx:119
-#: src/app/workspace-shell/WorkDashboard.tsx:186
+#: src/app/workspace-shell/WorkDashboard.tsx:121
+#: src/app/workspace-shell/WorkDashboard.tsx:190
 #: src/features/config/overview/ConfigOverview.tsx:142
 msgid "Needs attention"
 msgstr "需要注意"
@@ -1586,18 +1636,41 @@ msgstr "需要设置"
 msgid "Network"
 msgstr "网络"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:61
-#: src/app/workspace-shell/WorkCreatePopover.tsx:74
-#: src/app/workspace-shell/WorkCreatePopover.tsx:187
+#: src/app/workspace-shell/WorkCreatePopover.tsx:60
+#: src/app/workspace-shell/WorkCreatePopover.tsx:72
+#: src/app/workspace-shell/WorkCreatePopover.tsx:206
 msgid "New automation"
+msgstr ""
+
+#: src/app/WorkspaceShell.tsx:241
+#: src/features/chat/ChatPanel.tsx:568
+#: src/features/chat/RunControls.tsx:60
+msgid "New chat"
+msgstr ""
+
+#: src/app/WorkspaceShell.tsx:481
+#: src/app/WorkspaceShell.tsx:496
+msgid "New Chat"
+msgstr ""
+
+#. placeholder {0}: selectedModelChoice.value
+#: src/features/chat/RunControls.tsx:60
+msgid "New chat with {0}"
 msgstr ""
 
 #: src/features/chat/ChatPanel.tsx:502
 #~ msgid "New code"
 #~ msgstr "新代码会话"
 
-#: src/features/chat/ChatPanel.tsx:555
-msgid "New code run"
+#: src/features/chat/ChatPanel.tsx:568
+#~ msgid "New code run"
+#~ msgstr ""
+
+#: src/app/workspace-shell/WorkCreatePopover.tsx:59
+#: src/app/workspace-shell/WorkCreatePopover.tsx:71
+#: src/app/workspace-shell/WorkCreatePopover.tsx:208
+#: src/features/chat/ChatPanel.tsx:568
+msgid "New code task"
 msgstr ""
 
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:200
@@ -1616,15 +1689,14 @@ msgstr ""
 #~ msgid "New project session"
 #~ msgstr "新建项目会话"
 
-#: src/features/chat/ChatPanel.tsx:555
 #: src/features/chat/RunControls.tsx:60
-msgid "New run"
-msgstr ""
+#~ msgid "New run"
+#~ msgstr ""
 
 #. placeholder {0}: selectedModelChoice.value
 #: src/features/chat/RunControls.tsx:60
-msgid "New run with {0}"
-msgstr ""
+#~ msgid "New run with {0}"
+#~ msgstr ""
 
 #: src/features/chat/ChatPanel.tsx:502
 #: src/features/chat/SessionControls.tsx:61
@@ -1639,13 +1711,13 @@ msgstr ""
 #: src/app/workspace-shell/WorkCreatePopover.tsx:60
 #: src/app/workspace-shell/WorkCreatePopover.tsx:73
 #: src/app/workspace-shell/WorkCreatePopover.tsx:189
-msgid "New task"
-msgstr ""
+#~ msgid "New task"
+#~ msgstr ""
 
 #: src/app/WorkspaceShell.tsx:398
 #: src/app/WorkspaceShell.tsx:424
-msgid "New Task"
-msgstr ""
+#~ msgid "New Task"
+#~ msgstr ""
 
 #: src/features/config/sections/section-status.tsx:8
 msgid "next"
@@ -1666,16 +1738,16 @@ msgid "No {0}s match this filter."
 msgstr "没有符合筛选条件的 {0}。"
 
 #: src/app/workspace-shell/AutomationsPage.tsx:114
-#: src/app/workspace-shell/WorkDashboard.tsx:82
+#: src/app/workspace-shell/WorkDashboard.tsx:83
 msgid "No active connection"
 msgstr ""
 
-#: src/app/workspace-shell/SettingsPage.tsx:255
-#: src/features/chat/ChatPanel.tsx:485
+#: src/app/workspace-shell/SettingsPage.tsx:245
+#: src/features/chat/ChatPanel.tsx:492
 msgid "No active connection."
 msgstr "没有活动连接。"
 
-#: src/features/chat/ChatPanel.tsx:411
+#: src/features/chat/ChatPanel.tsx:418
 msgid "No active workspace."
 msgstr ""
 
@@ -1683,8 +1755,9 @@ msgstr ""
 msgid "No additional metadata reported."
 msgstr "未报告其他元数据。"
 
-#: src/app/workspace-shell/TaskDetail.tsx:160
-#: src/app/workspace-shell/WorkCreatePopover.tsx:409
+#: src/app/workspace-shell/TaskDetail.tsx:89
+#: src/app/workspace-shell/WorkCreatePopover.tsx:424
+#: src/app/WorkspaceShell.tsx:542
 msgid "No agent configured"
 msgstr ""
 
@@ -1697,7 +1770,6 @@ msgstr "当前还没有可用的 agent 记忆设置。"
 msgid "No agent sections"
 msgstr "没有 agent 区域"
 
-#: src/app/workspace-shell/TaskDetail.tsx:201
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:304
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:373
 #: src/features/memory/MemoryPanel.tsx:393
@@ -1713,7 +1785,7 @@ msgstr "没有符合搜索条件的 agent。"
 msgid "No aliases configured."
 msgstr "尚未配置别名。"
 
-#: src/app/workspace-shell/WorkDashboard.tsx:188
+#: src/app/workspace-shell/WorkDashboard.tsx:192
 msgid "No approvals, failed tasks, or recent log errors."
 msgstr ""
 
@@ -1735,10 +1807,8 @@ msgstr "此渠道类型未报告已配置别名。"
 
 #: src/app/ConnectionPicker.tsx:218
 #: src/app/workspace-shell/ApprovalsPage.tsx:68
-#: src/app/workspace-shell/RuntimeDetail.tsx:124
-#: src/app/workspace-shell/TaskDetail.tsx:106
-#: src/app/workspace-shell/TaskDetail.tsx:191
-#: src/app/workspace-shell/WorkSidebar.tsx:66
+#: src/app/workspace-shell/RuntimeDetail.tsx:111
+#: src/app/workspace-shell/WorkSidebar.tsx:121
 msgid "No connection"
 msgstr "无连接"
 
@@ -1746,7 +1816,7 @@ msgstr "无连接"
 msgid "No editable memory fields"
 msgstr "没有可编辑的记忆字段"
 
-#: src/app/workspace-shell/SettingsPage.tsx:278
+#: src/app/workspace-shell/SettingsPage.tsx:268
 msgid "No folder open"
 msgstr "未打开文件夹"
 
@@ -1790,21 +1860,26 @@ msgid "No pending approvals"
 msgstr ""
 
 #: src/app/workspace-shell/TaskDetail.tsx:230
-msgid "No pinned result yet."
-msgstr ""
+#~ msgid "No pinned result yet."
+#~ msgstr ""
 
+#: src/app/workspace-shell/WorkCreatePopover.tsx:104
 #: src/features/chat/ChatComposer.tsx:196
-#: src/features/chat/ChatPanel.tsx:554
+#: src/features/chat/ChatPanel.tsx:567
 msgid "No project"
 msgstr "无项目"
 
-#: src/app/workspace-shell/TasksPage.tsx:128
+#: src/app/workspace-shell/WorkSidebar.tsx:133
+msgid "No project open."
+msgstr ""
+
+#: src/app/workspace-shell/TasksPage.tsx:134
 msgid "No requirement captured"
 msgstr ""
 
 #: src/app/workspace-shell/TaskDetail.tsx:217
-msgid "No requirement captured yet."
-msgstr ""
+#~ msgid "No requirement captured yet."
+#~ msgstr ""
 
 #: src/features/cron/RuntimeAutomationsPanel.tsx:399
 msgid "No runs recorded yet."
@@ -1818,7 +1893,7 @@ msgstr "没有运行时或安全区域"
 msgid "No saved connections yet."
 msgstr "还没有保存的连接。"
 
-#: src/app/workspace-shell/WorkDashboard.tsx:126
+#: src/app/workspace-shell/WorkDashboard.tsx:128
 msgid "No schedules"
 msgstr ""
 
@@ -1826,19 +1901,19 @@ msgstr ""
 msgid "No setup doctor"
 msgstr "无设置诊断"
 
-#: src/app/workspace-shell/TaskDetail.tsx:69
+#: src/app/workspace-shell/TaskDetail.tsx:63
 msgid "No task selected"
 msgstr ""
 
-#: src/app/workspace-shell/TasksPage.tsx:82
+#: src/app/workspace-shell/TasksPage.tsx:84
 msgid "No tasks here yet"
 msgstr ""
 
-#: src/app/workspace-shell/WorkDashboard.tsx:149
+#: src/app/workspace-shell/WorkDashboard.tsx:151
 msgid "No tasks yet"
 msgstr ""
 
-#: src/app/workspace-shell/WorkSidebar.tsx:158
+#: src/app/workspace-shell/WorkSidebar.tsx:235
 msgid "No tasks yet."
 msgstr ""
 
@@ -1850,22 +1925,20 @@ msgstr "没有符合搜索条件的工具。"
 msgid "No tools or skills sections"
 msgstr "没有工具或 skills 区域"
 
-#: src/app/workspace-shell/TasksPage.tsx:104
+#: src/app/workspace-shell/TasksPage.tsx:106
 msgid "No workspace bound"
 msgstr ""
 
 #: src/app/workspace-shell/ApprovalsPage.tsx:71
-#: src/app/workspace-shell/TaskDetail.tsx:109
-#: src/app/workspace-shell/TaskDetail.tsx:195
-#: src/app/workspace-shell/WorkDashboard.tsx:112
-#: src/app/workspace-shell/WorkDashboard.tsx:170
-#: src/app/workspace-shell/WorkDashboard.tsx:228
+#: src/app/workspace-shell/WorkDashboard.tsx:113
+#: src/app/workspace-shell/WorkDashboard.tsx:174
+#: src/app/workspace-shell/WorkDashboard.tsx:234
 msgid "No workspace selected"
 msgstr ""
 
 #: src/app/workspace-shell/WorkSidebar.tsx:78
-msgid "No workspace selected for this runtime."
-msgstr ""
+#~ msgid "No workspace selected for this runtime."
+#~ msgstr ""
 
 #: src/app/AddConnectionDialog.tsx:372
 msgid "No zeroclaw binary found. Run this in your terminal:"
@@ -1881,8 +1954,8 @@ msgid "Not configured yet"
 msgstr "尚未配置"
 
 #: src/app/workspace-shell/TaskDetail.tsx:206
-msgid "Not linked yet"
-msgstr ""
+#~ msgid "Not linked yet"
+#~ msgstr ""
 
 #: src/features/chat/AgentSetupWizard.tsx:253
 msgid "Not named"
@@ -1901,15 +1974,15 @@ msgstr ""
 msgid "Not selected"
 msgstr ""
 
-#: src/app/workspace-shell/WorkDashboard.tsx:119
+#: src/app/workspace-shell/WorkDashboard.tsx:121
 msgid "Nothing waiting"
 msgstr ""
 
-#: src/app/workspace-shell/SettingsPage.tsx:356
+#: src/app/workspace-shell/SettingsPage.tsx:346
 msgid "Notifications"
 msgstr "通知"
 
-#: src/app/workspace-shell/SettingsPage.tsx:357
+#: src/app/workspace-shell/SettingsPage.tsx:347
 msgid "Notify on hidden-window approvals and completed turns."
 msgstr "窗口隐藏时，对批准请求和已完成的轮次发送通知。"
 
@@ -1917,15 +1990,15 @@ msgstr "窗口隐藏时，对批准请求和已完成的轮次发送通知。"
 msgid "Off"
 msgstr "关闭"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:137
-#: src/app/workspace-shell/WorkDashboard.tsx:104
-#: src/app/workspace-shell/WorkDashboard.tsx:223
-#: src/app/workspace-shell/WorkSidebar.tsx:74
+#: src/app/workspace-shell/RuntimeDetail.tsx:124
+#: src/app/workspace-shell/WorkDashboard.tsx:105
+#: src/app/workspace-shell/WorkDashboard.tsx:227
+#: src/app/workspace-shell/WorkSidebar.tsx:129
 msgid "offline"
 msgstr ""
 
 #: src/app/ConnectionPicker.tsx:307
-#: src/app/workspace-shell/SettingsPage.tsx:399
+#: src/app/workspace-shell/SettingsPage.tsx:389
 msgid "Offline"
 msgstr "离线"
 
@@ -1933,15 +2006,15 @@ msgstr "离线"
 msgid "On"
 msgstr "开启"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:136
-#: src/app/workspace-shell/WorkDashboard.tsx:104
-#: src/app/workspace-shell/WorkDashboard.tsx:222
-#: src/app/workspace-shell/WorkSidebar.tsx:74
+#: src/app/workspace-shell/RuntimeDetail.tsx:123
+#: src/app/workspace-shell/WorkDashboard.tsx:105
+#: src/app/workspace-shell/WorkDashboard.tsx:226
+#: src/app/workspace-shell/WorkSidebar.tsx:129
 msgid "online"
 msgstr ""
 
 #: src/app/ConnectionPicker.tsx:307
-#: src/app/workspace-shell/SettingsPage.tsx:399
+#: src/app/workspace-shell/SettingsPage.tsx:389
 msgid "Online"
 msgstr "在线"
 
@@ -1967,7 +2040,7 @@ msgstr "打开已配置条目"
 msgid "Open console"
 msgstr "打开控制台"
 
-#: src/app/workspace-shell/TaskDetail.tsx:78
+#: src/app/workspace-shell/TaskDetail.tsx:72
 msgid "Open dashboard"
 msgstr ""
 
@@ -1976,12 +2049,16 @@ msgstr ""
 msgid "Open fields"
 msgstr "打开字段"
 
-#: src/app/workspace-shell/WorkSidebar.tsx:132
+#: src/app/workspace-shell/RuntimeDetail.tsx:153
+msgid "Open gateway config"
+msgstr ""
+
+#: src/app/workspace-shell/WorkSidebar.tsx:192
 #: src/features/chat/ChatComposer.tsx:200
 msgid "Open project"
 msgstr "打开项目"
 
-#: src/features/chat/ChatPanel.tsx:706
+#: src/features/chat/ChatPanel.tsx:719
 msgid "Open Project"
 msgstr "打开项目"
 
@@ -1989,20 +2066,24 @@ msgstr "打开项目"
 msgid "Open project..."
 msgstr "打开项目..."
 
-#: src/app/workspace-shell/TaskDetail.tsx:238
-msgid "Open runtime diagnostics"
+#: src/app/workspace-shell/WorkDashboard.tsx:91
+msgid "Open runtime"
 msgstr ""
+
+#: src/app/workspace-shell/TaskDetail.tsx:238
+#~ msgid "Open runtime diagnostics"
+#~ msgstr ""
 
 #: src/app/workspace-shell/WorkDashboard.tsx:90
-msgid "Open runtime settings"
-msgstr ""
+#~ msgid "Open runtime settings"
+#~ msgstr ""
 
 #: src/app/workspace-shell/RuntimeDetail.tsx:162
-msgid "Open settings"
-msgstr ""
+#~ msgid "Open settings"
+#~ msgstr ""
 
-#: src/app/workspace-shell/TaskDetail.tsx:179
-#: src/app/workspace-shell/WorkCreatePopover.tsx:426
+#: src/app/workspace-shell/TaskDetail.tsx:108
+#: src/app/workspace-shell/WorkCreatePopover.tsx:441
 msgid "Open Setup Center"
 msgstr ""
 
@@ -2019,7 +2100,6 @@ msgstr "正在打开 {0}..."
 msgid "Opening fields..."
 msgstr "正在打开字段..."
 
-#: src/app/workspace-shell/SettingsPage.tsx:135
 #: src/features/config/config-categories.ts:160
 msgid "Operations"
 msgstr "运维"
@@ -2038,7 +2118,7 @@ msgstr "其他"
 msgid "Output"
 msgstr ""
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:69
+#: src/app/workspace-shell/RuntimeDetail.tsx:74
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:140
 msgid "Overview"
 msgstr "概览"
@@ -2089,7 +2169,7 @@ msgstr ""
 
 #: src/app/ConnectionPicker.tsx:252
 #: src/app/ConnectionPicker.tsx:319
-#: src/app/workspace-shell/SettingsPage.tsx:246
+#: src/app/workspace-shell/SettingsPage.tsx:236
 msgid "pending tunnel"
 msgstr "隧道待建立"
 
@@ -2102,8 +2182,8 @@ msgid "Pick a choice"
 msgstr "选择一项"
 
 #: src/app/WelcomeScreen.tsx:60
-msgid "Pick how you want to reach a ZeroClaw gateway. You can have any number of connections — local, remote, or both. Local install is optional."
-msgstr "选择你希望如何访问 ZeroClaw 网关。你可以创建任意数量的本地或远程连接，也可以两者都用。本地安装是可选的。"
+#~ msgid "Pick how you want to reach a ZeroClaw gateway. You can have any number of connections — local, remote, or both. Local install is optional."
+#~ msgstr "选择你希望如何访问 ZeroClaw 网关。你可以创建任意数量的本地或远程连接，也可以两者都用。本地安装是可选的。"
 
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:316
 msgid "Pick where local skill markdown and community bundles should live."
@@ -2114,8 +2194,8 @@ msgid "Pick where this workspace should save memories."
 msgstr "选择此 workspace 保存记忆的位置。"
 
 #: src/app/workspace-shell/TaskDetail.tsx:221
-msgid "Pinned result"
-msgstr ""
+#~ msgid "Pinned result"
+#~ msgstr ""
 
 #: src/features/integrations/IntegrationsPanel.tsx:397
 msgid "Platform"
@@ -2125,7 +2205,7 @@ msgstr "平台"
 msgid "Postgres"
 msgstr "Postgres"
 
-#: src/app/workspace-shell/SettingsPage.tsx:293
+#: src/app/workspace-shell/SettingsPage.tsx:283
 msgid "Preferences"
 msgstr ""
 
@@ -2153,8 +2233,17 @@ msgstr "探测等待中"
 msgid "Probing localhost:{DEFAULT_PORT}…"
 msgstr "正在探测 localhost:{DEFAULT_PORT}…"
 
-#~ msgid "Project"
-#~ msgstr "项目"
+#: src/features/chat/ChatPanel.tsx:769
+msgid "Progress"
+msgstr ""
+
+#: src/app/workspace-shell/WorkCreatePopover.tsx:266
+msgid "Project"
+msgstr "项目"
+
+#: src/app/workspace-shell/WorkCreatePopover.tsx:370
+msgid "Project-scoped code work you start now."
+msgstr ""
 
 #: src/features/chat/ChatComposer.tsx:200
 msgid "Project: {workspaceName}"
@@ -2184,13 +2273,17 @@ msgstr "Python Skills"
 msgid "Qdrant"
 msgstr "Qdrant"
 
-#: src/app/workspace-shell/SettingsPage.tsx:339
+#: src/app/workspace-shell/SettingsPage.tsx:329
 msgid "Quickly bring ZeroClaw Studio to the front."
 msgstr ""
 
 #: src/features/config/overview/ConfigCategoryWorkspace.tsx:345
 msgid "raw config"
 msgstr "原始配置"
+
+#: src/features/config/ConfigPanel.tsx:276
+msgid "Raw config paths"
+msgstr ""
 
 #: src/features/chat/MessageList.tsx:161
 msgid "raw details"
@@ -2200,6 +2293,8 @@ msgstr "原始详情"
 msgid "Raw integration payload"
 msgstr "原始集成 payload"
 
+#: src/features/config/overview/ConfigCategoryWorkspace.tsx:122
+#: src/features/config/overview/ConfigCategoryWorkspace.tsx:369
 #: src/features/config/overview/ConfigOverview.tsx:90
 msgid "Raw paths"
 msgstr "原始路径"
@@ -2249,15 +2344,15 @@ msgstr "可直接使用"
 msgid "Recent log error"
 msgstr "最近的日志错误"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:145
+#: src/app/workspace-shell/RuntimeDetail.tsx:136
 msgid "Recent log warnings"
 msgstr ""
 
-#: src/app/workspace-shell/WorkDashboard.tsx:135
+#: src/app/workspace-shell/WorkDashboard.tsx:137
 msgid "Recent tasks"
 msgstr ""
 
-#: src/app/workspace-shell/WorkSidebar.tsx:155
+#: src/app/workspace-shell/WorkSidebar.tsx:232
 msgid "Recent Tasks"
 msgstr ""
 
@@ -2303,7 +2398,7 @@ msgstr "刷新 {what}"
 msgid "Refreshing..."
 msgstr "正在刷新..."
 
-#: src/app/workspace-shell/SettingsPage.tsx:380
+#: src/app/workspace-shell/SettingsPage.tsx:370
 msgid "Registered"
 msgstr ""
 
@@ -2324,15 +2419,16 @@ msgstr "远程数据库"
 msgid "Remote gateway port"
 msgstr "远程网关端口"
 
-#: src/features/chat/ChatPanel.tsx:383
-#: src/features/chat/ChatPanel.tsx:640
+#: src/features/chat/ChatPanel.tsx:390
+#: src/features/chat/ChatPanel.tsx:653
 msgid "Remote working directory"
 msgstr "远程工作目录"
 
 #~ msgid "Rename session"
 #~ msgstr "重命名会话"
 
-#: src/app/workspace-shell/TaskDetail.tsx:122
+#: src/app/workspace-shell/WorkSidebar.tsx:294
+#: src/app/WorkspaceShell.tsx:388
 msgid "Rename task"
 msgstr ""
 
@@ -2345,9 +2441,8 @@ msgstr "缺少必填字段：{0}"
 msgid "required steps ready"
 msgstr ""
 
-#: src/app/workspace-shell/TaskDetail.tsx:211
-#: src/app/workspace-shell/WorkCreatePopover.tsx:230
-#: src/app/workspace-shell/WorkCreatePopover.tsx:300
+#: src/app/workspace-shell/WorkCreatePopover.tsx:249
+#: src/app/workspace-shell/WorkCreatePopover.tsx:309
 msgid "Requirement"
 msgstr ""
 
@@ -2365,7 +2460,7 @@ msgstr "继续"
 msgid "Retry"
 msgstr "重试"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:155
+#: src/app/workspace-shell/RuntimeDetail.tsx:146
 msgid "Retry activation"
 msgstr ""
 
@@ -2419,37 +2514,40 @@ msgstr "运行此命令？\n"
 "\n"
 "{command}"
 
-#: src/features/chat/ChatPanel.tsx:740
-msgid "Run Timeline"
-msgstr ""
+#: src/features/chat/ChatPanel.tsx:769
+#~ msgid "Run Timeline"
+#~ msgstr ""
 
 #: src/features/config/SetupDoctorTab.tsx:221
 msgid "Running local setup checks..."
 msgstr "正在运行本地设置检查..."
 
-#: src/app/workspace-shell/WorkDashboard.tsx:110
+#: src/app/workspace-shell/WorkDashboard.tsx:111
 msgid "Running tasks"
 msgstr ""
 
 #: src/app/ConnectionPicker.tsx:204
 #: src/app/workspace-shell/ApprovalsPage.tsx:68
-#: src/app/workspace-shell/RuntimeDetail.tsx:64
-#: src/app/workspace-shell/TaskDetail.tsx:191
-#: src/app/workspace-shell/WorkDashboard.tsx:103
-#: src/app/workspace-shell/WorkSidebar.tsx:205
+#: src/app/workspace-shell/RuntimeDetail.tsx:69
+#: src/app/workspace-shell/WorkDashboard.tsx:104
+#: src/app/workspace-shell/WorkSidebar.tsx:264
 msgid "Runtime"
 msgstr "运行时"
 
+#: src/app/workspace-shell/WorkDashboard.tsx:106
+msgid "Runtime {gatewayVersion}"
+msgstr ""
+
 #: src/app/workspace-shell/settings-sections.ts:34
 #: src/features/config/config-categories.ts:86
-msgid "Runtime & Safety"
-msgstr "运行时和安全"
+#~ msgid "Runtime & Safety"
+#~ msgstr "运行时和安全"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:148
+#: src/app/workspace-shell/RuntimeDetail.tsx:139
 msgid "Runtime actions"
 msgstr ""
 
-#: src/app/workspace-shell/WorkDashboard.tsx:214
+#: src/app/workspace-shell/WorkDashboard.tsx:218
 msgid "Runtime health"
 msgstr ""
 
@@ -2457,16 +2555,25 @@ msgstr ""
 msgid "Runtime profile"
 msgstr "运行时配置"
 
-#: src/app/workspace-shell/TaskDetail.tsx:205
-msgid "Runtime reference"
+#: src/app/workspace-shell/settings-sections.ts:30
+#: src/features/config/config-categories.ts:86
+msgid "Runtime Profiles & Safety"
 msgstr ""
 
+#: src/app/workspace-shell/TaskDetail.tsx:205
+#~ msgid "Runtime reference"
+#~ msgstr ""
+
 #: src/app/workspace-shell/RuntimeDetail.tsx:127
-msgid "Runtime state comes from the selected ZeroClaw gateway."
+#~ msgid "Runtime state comes from the selected ZeroClaw gateway."
+#~ msgstr ""
+
+#: src/app/workspace-shell/RuntimeDetail.tsx:128
+msgid "Runtime version"
 msgstr ""
 
 #: src/app/ConnectionPicker.tsx:233
-#: src/app/workspace-shell/SettingsPage.tsx:283
+#: src/app/workspace-shell/SettingsPage.tsx:273
 msgid "Runtimes"
 msgstr "运行时"
 
@@ -2484,6 +2591,10 @@ msgstr "保存"
 msgid "Saved"
 msgstr "已保存"
 
+#: src/app/workspace-shell/WorkDashboard.tsx:139
+msgid "Saved chats and tasks stay here."
+msgstr ""
+
 #: src/features/memory/MemoryPanel.tsx:419
 msgid "Saving"
 msgstr "正在保存"
@@ -2493,12 +2604,20 @@ msgid "Schedule"
 msgstr "计划"
 
 #: src/app/workspace-shell/WorkCreatePopover.tsx:194
-msgid "Schedule repeat work on this runtime."
+#~ msgid "Schedule repeat work on this runtime."
+#~ msgstr ""
+
+#: src/app/workspace-shell/WorkCreatePopover.tsx:213
+msgid "Schedule repeated agent work."
+msgstr ""
+
+#: src/app/workspace-shell/WorkCreatePopover.tsx:376
+msgid "Scheduled agent work that repeats daily."
 msgstr ""
 
 #: src/app/workspace-shell/WorkCreatePopover.tsx:361
-msgid "Scheduled work that repeats daily."
-msgstr ""
+#~ msgid "Scheduled work that repeats daily."
+#~ msgstr ""
 
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:258
 #: src/features/memory/MemoryPanel.tsx:493
@@ -2569,20 +2688,28 @@ msgid "Set up {0} memory."
 msgstr "设置 {0} 记忆。"
 
 #: src/app/AddConnectionDialog.tsx:455
-#: src/app/WelcomeScreen.tsx:44
 msgid "Set up a new local zeroclaw"
 msgstr "设置新的本地 zeroclaw"
 
-#: src/app/workspace-shell/TaskDetail.tsx:171
-#: src/app/workspace-shell/WorkCreatePopover.tsx:419
+#: src/app/workspace-shell/TaskDetail.tsx:100
+#: src/app/workspace-shell/WorkCreatePopover.tsx:434
+#: src/app/WorkspaceShell.tsx:551
 msgid "Set up agent"
 msgstr ""
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:411
-msgid "Set up an agent before creating task work."
+#: src/app/workspace-shell/WorkCreatePopover.tsx:426
+msgid "Set up an agent before creating code tasks or automations."
 msgstr ""
 
-#: src/app/workspace-shell/TaskDetail.tsx:162
+#: src/app/workspace-shell/WorkCreatePopover.tsx:411
+#~ msgid "Set up an agent before creating task work."
+#~ msgstr ""
+
+#: src/app/WorkspaceShell.tsx:544
+msgid "Set up an agent for this runtime before starting a chat."
+msgstr ""
+
+#: src/app/workspace-shell/TaskDetail.tsx:91
 msgid "Set up an agent for this runtime before starting the task run."
 msgstr ""
 
@@ -2593,7 +2720,7 @@ msgstr "设置并使用"
 #~ msgid "Settings"
 #~ msgstr "设置"
 
-#: src/app/workspace-shell/settings-sections.ts:30
+#: src/app/workspace-shell/settings-sections.ts:26
 #: src/features/setup/SetupCenterPanel.tsx:98
 msgid "Setup Center"
 msgstr "设置中心"
@@ -2647,6 +2774,22 @@ msgstr "SSH 隧道"
 msgid "SSH user"
 msgstr "SSH 用户"
 
+#: src/app/workspace-shell/TasksPage.tsx:88
+msgid "Start a chat and choose whether it belongs to a project or general work."
+msgstr ""
+
+#: src/app/workspace-shell/TasksPage.tsx:87
+msgid "Start a chat for the current project to keep its work together."
+msgstr ""
+
+#: src/app/workspace-shell/WorkDashboard.tsx:152
+msgid "Start a chat or create code work to keep it here."
+msgstr ""
+
+#: src/app/workspace-shell/WorkCreatePopover.tsx:215
+msgid "Start code work with a project context."
+msgstr ""
+
 #: src/features/chat/AgentSetupWizard.tsx:849
 msgid "Start from scratch"
 msgstr ""
@@ -2655,16 +2798,28 @@ msgstr ""
 msgid "Start here if you are setting up tools and skills for the first time."
 msgstr "如果你是第一次设置工具和 skills，可以从这里开始。"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:196
-msgid "Start one piece of agent work."
+#: src/app/WelcomeScreen.tsx:47
+msgid "Start local"
 msgstr ""
+
+#: src/app/WelcomeScreen.tsx:45
+msgid "Start locally"
+msgstr ""
+
+#: src/app/workspace-shell/WorkCreatePopover.tsx:196
+#~ msgid "Start one piece of agent work."
+#~ msgstr ""
 
 #: src/features/chat/ChatComposer.tsx:104
 #~ msgid "Start this session..."
 #~ msgstr "开始这个会话..."
 
 #: src/features/chat/ChatComposer.tsx:103
-msgid "Start this task..."
+#~ msgid "Start this task..."
+#~ msgstr ""
+
+#: src/app/WelcomeScreen.tsx:61
+msgid "Start with a local runtime for the shortest path to work, or connect a runtime you already manage."
 msgstr ""
 
 #: src/features/chat/AgentSetupWizard.tsx:848
@@ -2690,15 +2845,23 @@ msgstr "状态"
 msgid "status {0}"
 msgstr "状态 {0}"
 
-#: src/features/chat/RunControls.tsx:68
-msgid "Stop current run"
+#: src/app/workspace-shell/RuntimeDetail.tsx:114
+msgid "Status and diagnostics for the selected runtime."
 msgstr ""
+
+#: src/features/chat/RunControls.tsx:68
+msgid "Stop current chat"
+msgstr ""
+
+#: src/features/chat/RunControls.tsx:68
+#~ msgid "Stop current run"
+#~ msgstr ""
 
 #: src/features/config/config-categories.ts:158
 msgid "Storage"
 msgstr "存储"
 
-#: src/app/workspace-shell/SettingsPage.tsx:296
+#: src/app/workspace-shell/SettingsPage.tsx:286
 msgid "Stored locally on this device."
 msgstr ""
 
@@ -2714,7 +2877,7 @@ msgstr "结构化图记忆。"
 msgid "Summary"
 msgstr "摘要"
 
-#: src/app/workspace-shell/SettingsPage.tsx:321
+#: src/app/workspace-shell/SettingsPage.tsx:311
 msgid "Switch between the dark workspace and a lighter workspace surface."
 msgstr "在深色工作区和更明亮的工作区界面之间切换。"
 
@@ -2731,24 +2894,23 @@ msgid "Tailscale"
 msgstr "Tailscale"
 
 #: src/app/workspace-shell/ApprovalsPage.tsx:67
-#: src/app/workspace-shell/WorkCreatePopover.tsx:354
 msgid "Task"
 msgstr ""
 
 #: src/app/workspace-shell/TaskDetail.tsx:189
-msgid "Task Inspector"
-msgstr ""
+#~ msgid "Task Inspector"
+#~ msgstr ""
 
 #: src/app/workspace-shell/WorkDashboard.tsx:137
-msgid "Task shells are stored locally; execution stays in ZeroClaw runtime runs."
-msgstr ""
+#~ msgid "Task shells are stored locally; execution stays in ZeroClaw runtime runs."
+#~ msgstr ""
 
-#: src/app/workspace-shell/TasksPage.tsx:52
-#: src/app/workspace-shell/WorkSidebar.tsx:95
+#: src/app/workspace-shell/TasksPage.tsx:54
+#: src/app/workspace-shell/WorkSidebar.tsx:150
 msgid "Tasks"
 msgstr ""
 
-#: src/app/workspace-shell/TasksPage.tsx:54
+#: src/app/workspace-shell/TasksPage.tsx:56
 msgid "Tasks stay grouped by project when a workspace is attached."
 msgstr ""
 
@@ -2760,7 +2922,7 @@ msgstr "网关未报告记忆配置区域。"
 msgid "The gateway did not report editable fields for this memory target."
 msgstr "网关未报告此记忆目标下的可编辑字段。"
 
-#: src/app/workspace-shell/SettingsPage.tsx:320
+#: src/app/workspace-shell/SettingsPage.tsx:310
 msgid "Theme"
 msgstr "主题"
 
@@ -2816,13 +2978,11 @@ msgstr "工具"
 msgid "tool input"
 msgstr "工具输入"
 
-#: src/app/workspace-shell/RuntimeDetail.tsx:75
-#: src/app/workspace-shell/RuntimeDetail.tsx:142
 #: src/features/config/config-categories.ts:152
 msgid "Tools"
 msgstr "工具"
 
-#: src/app/workspace-shell/settings-sections.ts:37
+#: src/app/workspace-shell/settings-sections.ts:33
 #: src/features/config/config-categories.ts:90
 msgid "Tools & Skills"
 msgstr "工具和技能"
@@ -2831,11 +2991,15 @@ msgstr "工具和技能"
 msgid "Tools and automation"
 msgstr "工具和自动化"
 
-#: src/app/workspace-shell/SettingsPage.tsx:250
+#: src/app/workspace-shell/RuntimeDetail.tsx:129
+msgid "Tools available"
+msgstr ""
+
+#: src/app/workspace-shell/SettingsPage.tsx:240
 msgid "Transport"
 msgstr "传输"
 
-#: src/app/workspace-shell/SettingsPage.tsx:367
+#: src/app/workspace-shell/SettingsPage.tsx:357
 msgid "Tray / menu bar"
 msgstr "托盘 / 菜单栏"
 
@@ -2851,7 +3015,6 @@ msgstr "关闭记忆"
 msgid "Turn on the skills system before managing or installing skills."
 msgstr "在管理或安装 skills 前，先启用 skills 系统。"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:239
 #: src/features/chat/AgentSetupWizard.tsx:759
 msgid "Type"
 msgstr "类型"
@@ -2862,14 +3025,14 @@ msgid "type {0}"
 msgstr "类型 {0}"
 
 #: src/app/ConnectionPicker.tsx:147
-#: src/app/workspace-shell/RuntimeDetail.tsx:138
-#: src/app/workspace-shell/WorkDashboard.tsx:224
+#: src/app/workspace-shell/RuntimeDetail.tsx:125
+#: src/app/workspace-shell/WorkDashboard.tsx:228
 msgid "unknown"
 msgstr "未知"
 
 #: src/app/workspace-shell/AutomationsPage.tsx:167
 #: src/app/workspace-shell/AutomationsPage.tsx:170
-#: src/app/workspace-shell/RuntimeDetail.tsx:141
+#: src/app/workspace-shell/RuntimeDetail.tsx:128
 #: src/features/integrations/IntegrationsPanel.tsx:405
 msgid "Unknown"
 msgstr "未知"
@@ -2878,12 +3041,21 @@ msgstr "未知"
 msgid "unset"
 msgstr "未设置"
 
-#: src/app/WelcomeScreen.tsx:40
-msgid "Use a zeroclaw binary that's already installed and (optionally) running on this machine. Auto-detected from PATH."
-msgstr "使用这台机器上已安装并可选运行中的 zeroclaw 二进制文件。会从 PATH 自动检测。"
+#: src/app/WelcomeScreen.tsx:36
+msgid "Use a homelab, cloud VM, workstation, or Raspberry Pi through a direct URL or SSH tunnel."
+msgstr ""
 
+#: src/app/WelcomeScreen.tsx:40
+#~ msgid "Use a zeroclaw binary that's already installed and (optionally) running on this machine. Auto-detected from PATH."
+#~ msgstr "使用这台机器上已安装并可选运行中的 zeroclaw 二进制文件。会从 PATH 自动检测。"
+
+#: src/app/WelcomeScreen.tsx:42
 #: src/features/chat/agent-setup-wizard/components.tsx:213
 msgid "Use existing"
+msgstr ""
+
+#: src/app/WelcomeScreen.tsx:40
+msgid "Use existing local runtime"
 msgstr ""
 
 #: src/features/memory/MemoryPanel.tsx:706
@@ -2902,7 +3074,7 @@ msgstr "当你知道要查看或编辑的精确配置路径时使用此入口。
 msgid "Used by"
 msgstr "使用方"
 
-#: src/app/workspace-shell/SettingsPage.tsx:379
+#: src/app/workspace-shell/SettingsPage.tsx:369
 msgid "Used by zeroclaw:// links from the operating system."
 msgstr ""
 
@@ -2943,45 +3115,51 @@ msgstr "正在等待健康检查…"
 msgid "Waiting for the gateway to restart and load the new agent."
 msgstr "正在等待网关重启并加载新的 agent。"
 
-#: src/app/WelcomeScreen.tsx:57
+#: src/app/WelcomeScreen.tsx:58
 msgid "Welcome to ZeroClaw Studio"
+msgstr ""
+
+#: src/features/chat/ChatPanel.tsx:709
+msgid "What do you want to do?"
 msgstr ""
 
 #: src/features/chat/ChatPanel.tsx:642
 #~ msgid "What do you want to work on in this session?"
 #~ msgstr "这个会话中你想做什么？"
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:305
+#: src/app/workspace-shell/WorkCreatePopover.tsx:314
 msgid "What should run every day?"
 msgstr ""
 
-#: src/app/workspace-shell/WorkCreatePopover.tsx:235
+#: src/app/workspace-shell/WorkCreatePopover.tsx:254
 msgid "What should the agent do?"
 msgstr ""
 
-#: src/features/chat/ChatPanel.tsx:696
-msgid "What should this task do?"
+#: src/features/chat/ChatPanel.tsx:709
+msgid "What should this code task do?"
 msgstr ""
+
+#: src/features/chat/ChatPanel.tsx:709
+#~ msgid "What should this task do?"
+#~ msgstr ""
 
 #: src/app/workspace-shell/ApprovalsPage.tsx:47
 msgid "When an active task requests a tool approval, it will appear here with runtime and workspace context."
 msgstr ""
 
-#: src/app/workspace-shell/WorkSidebar.tsx:85
+#: src/app/workspace-shell/WorkSidebar.tsx:140
 msgid "Work"
 msgstr ""
 
-#: src/app/workspace-shell/WorkDashboard.tsx:79
-#: src/app/workspace-shell/WorkDashboard.tsx:99
+#: src/app/workspace-shell/WorkDashboard.tsx:80
+#: src/app/workspace-shell/WorkDashboard.tsx:100
 msgid "Work Dashboard"
 msgstr ""
 
 #: src/app/workspace-shell/ApprovalsPage.tsx:70
-#: src/app/workspace-shell/SettingsPage.tsx:263
-#: src/app/workspace-shell/TaskDetail.tsx:194
-#: src/app/workspace-shell/WorkCreatePopover.tsx:257
-#: src/app/workspace-shell/WorkDashboard.tsx:228
-#: src/app/workspace-shell/WorkSidebar.tsx:115
+#: src/app/workspace-shell/SettingsPage.tsx:253
+#: src/app/workspace-shell/WorkDashboard.tsx:233
+#: src/app/workspace-shell/WorkSidebar.tsx:170
 #: src/features/agent-workspace/AgentWorkspacePanel.tsx:310
 msgid "Workspace"
 msgstr "工作区"

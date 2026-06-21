@@ -26,6 +26,7 @@ export function useChat({
   mode = "chat",
   workspaceRoot = null,
   workspaceDir = null,
+  initialSessionId = null,
   startBlank = false,
 }: UseChatOptions) {
   const [state, dispatch] = useReducer(chatReducer, {
@@ -55,13 +56,18 @@ export function useChat({
   } = sessions;
   const { loadSelected, saveSelected, assignWorkspace } = chatLocalState;
   const loadInitialSession = useCallback(
-    () => (startBlank ? Promise.resolve(null) : loadSelected()),
-    [loadSelected, startBlank],
+    () =>
+      initialSessionId
+        ? Promise.resolve(initialSessionId)
+        : startBlank
+          ? Promise.resolve(null)
+          : loadSelected(),
+    [initialSessionId, loadSelected, startBlank],
   );
 
   useEffect(() => {
     hydratedSessionRef.current = null;
-  }, [agentAlias, connectionId, mode, workspaceRoot, workspaceDir, connectionSeed]);
+  }, [agentAlias, connectionId, initialSessionId, mode, workspaceRoot, workspaceDir, connectionSeed]);
 
   const hydrateSession = useCallback(
     async (sessionId: string, messageCount?: number) => {

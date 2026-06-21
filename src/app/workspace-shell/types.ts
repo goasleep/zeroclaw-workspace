@@ -8,7 +8,7 @@ export type WorkspacePage =
   | "runtime"
   | "settings";
 
-export type RuntimeTab = "overview" | "tools" | "memory" | "automations" | "logs" | "doctor" | "devices";
+export type RuntimeTab = "overview" | "logs" | "doctor" | "devices" | "config";
 
 export type SettingsSection =
   | "app"

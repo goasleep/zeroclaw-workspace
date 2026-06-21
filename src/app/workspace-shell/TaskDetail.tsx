@@ -1,9 +1,8 @@
 import { Bot, PackageCheck, Sparkles } from "lucide-react";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { ChatPanel } from "@/features/chat/ChatPanel";
-import type { StudioTask, TaskPatch, TaskStatus } from "@/features/tasks/task-model";
-import { nowIso } from "@/features/tasks/task-model";
+import type { StudioTask, TaskPatch } from "@/features/tasks/task-model";
 
 interface TaskDetailProps {
   task: StudioTask | null;
@@ -31,23 +30,10 @@ export function TaskDetail({
   onOpenSetupCenter,
 }: TaskDetailProps) {
   const { t } = useLingui();
-  const lastStatusRef = useRef<TaskStatus | null>(null);
-
-  const patchStatus = useCallback(
-    (status: "running" | "needs_approval" | "done" | "failed") => {
-      if (!task || lastStatusRef.current === status) return;
-      lastStatusRef.current = status;
-      void onPatchTask(task.id, {
-        status,
-        last_activity_at: nowIso(),
-      });
-    },
-    [onPatchTask, task],
-  );
 
   const linkSession = useCallback(
     (sessionId: string) => {
-      if (!task || task.session_id === sessionId) return;
+      if (!task || task.session_id) return;
       void onLinkSession(task.id, sessionId);
     },
     [onLinkSession, task],
@@ -121,13 +107,14 @@ export function TaskDetail({
       onAgentChange={onAgentChange}
       mode={mode}
       workspaceRoot={task.workspace_root}
+      initialSessionId={task.session_id}
       workspaceDir={mode === "acp" ? task.workspace_root : null}
       onWorkspaceRoot={onWorkspaceRoot}
       taskId={task.id}
       taskTitle={task.title}
-      onTaskSession={linkSession}
-      onTaskStatus={patchStatus}
+      onTaskSession={task.session_id ? undefined : linkSession}
       onTaskTitle={(title) => void onPatchTask(task.id, { title })}
+      startBlank={!task.session_id}
     />
   );
 }

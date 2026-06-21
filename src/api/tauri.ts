@@ -90,6 +90,11 @@ export interface HealthEvent {
   healthy: boolean;
 }
 
+export interface TasksUpdatedEvent {
+  connection_id: string;
+  tasks: StudioTask[];
+}
+
 /**
  * Activation lifecycle events emitted on `zeroclaw://activation` while the
  * backend brings a connection online (probe → spawn → wait healthy → pair).

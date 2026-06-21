@@ -1,9 +1,10 @@
 // Welcome screen shown when there are no connections yet.
 //
-// Three top-level choices, matching plan Phase 1:
-//   1. Connect to remote zeroclaw
-//   2. Connect to local zeroclaw (auto-detect)
-//   3. Set up a new local zeroclaw (only path that triggers installer)
+// First-run screen shown when there are no runtimes yet.
+//
+// The default path is usage-led: start locally, then open a project and chat.
+// Remote and existing local runtime paths remain available for users who
+// already know where their work should run.
 
 import { Cable, Cloud, HardDrive, Sparkles } from "lucide-react";
 import { Trans, useLingui } from "@lingui/react/macro";
@@ -14,16 +15,16 @@ interface Props {
 
 const cards = [
   {
-    id: "remote" as const,
-    icon: Cloud,
+    id: "local-install" as const,
+    icon: Sparkles,
   },
   {
     id: "local-attach" as const,
     icon: HardDrive,
   },
   {
-    id: "local-install" as const,
-    icon: Sparkles,
+    id: "remote" as const,
+    icon: Cloud,
   },
 ];
 
@@ -31,19 +32,19 @@ export function WelcomeScreen({ onChoose }: Props) {
   const { t } = useLingui();
   const copy = {
     remote: {
-      title: t`Connect to a remote zeroclaw`,
-      body: t`Manage a homelab, cloud VM, or Raspberry Pi. Works with direct URL, SSH tunnel, or Tailscale. No local install required.`,
-      cta: t`Add remote`,
+      title: t`Connect another machine`,
+      body: t`Use a homelab, cloud VM, workstation, or Raspberry Pi through a direct URL or SSH tunnel.`,
+      cta: t`Connect remote`,
     },
     "local-attach": {
-      title: t`Connect to local zeroclaw`,
-      body: t`Use a zeroclaw binary that's already installed and (optionally) running on this machine. Auto-detected from PATH.`,
-      cta: t`Detect local`,
+      title: t`Use existing local runtime`,
+      body: t`Attach to a ZeroClaw runtime you already installed or started on this machine.`,
+      cta: t`Use existing`,
     },
     "local-install": {
-      title: t`Set up a new local zeroclaw`,
-      body: t`Install the upstream zeroclaw binary on this machine and let the workspace manage it for you.`,
-      cta: t`Install locally`,
+      title: t`Start locally`,
+      body: t`Begin on this computer, then open a project and start a chat. ZeroClaw Studio will manage the local runtime for you.`,
+      cta: t`Start local`,
     },
   };
 
@@ -58,8 +59,8 @@ export function WelcomeScreen({ onChoose }: Props) {
         </h1>
         <p className="max-w-lg text-sm text-slate-400">
           <Trans>
-            Pick how you want to reach a ZeroClaw gateway. You can have any number of connections —
-            local, remote, or both. Local install is optional.
+            Start with a local runtime for the shortest path to work, or connect a runtime you
+            already manage.
           </Trans>
         </p>
       </div>

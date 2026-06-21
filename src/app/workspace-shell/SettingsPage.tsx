@@ -24,12 +24,21 @@ import { normalizeSettingsSection, settingsSectionForConfigTarget } from "./sett
 import type { SettingsSection } from "./types";
 
 const SETTINGS_GROUPS: SettingsGroup[] = ["App", "Gateway", "Capabilities"];
+const APP_SETTINGS_SECTIONS = SETTINGS_SECTIONS.filter((section) => section.id === "app");
 
 interface SettingsPageProps {
   section: SettingsSection;
   configFocusSection: string | null;
   onSection: (section: SettingsSection) => void;
   onBackToApp: () => void;
+  onConfigFocusSection: (section: string | null) => void;
+  agentWorkspaceFocusAlias?: string | null;
+}
+
+interface SettingsContentProps {
+  section: SettingsSection;
+  configFocusSection: string | null;
+  onSection: (section: SettingsSection) => void;
   onConfigFocusSection: (section: string | null) => void;
   agentWorkspaceFocusAlias?: string | null;
 }
@@ -49,48 +58,80 @@ export function SettingsPage({
     onSection(normalizeSettingsSection(next));
   }
 
+  return (
+    <section className="grid h-full min-h-0 grid-cols-[280px_minmax(420px,1fr)] overflow-hidden bg-[#020818]/90">
+      <SettingsNav
+        section={effectiveSection}
+        sections={APP_SETTINGS_SECTIONS}
+        onSection={selectSection}
+        onBackToApp={onBackToApp}
+      />
+      <main className="flex min-w-0 flex-col overflow-hidden border-l border-white/10">
+        <SettingsContent
+          section={section}
+          configFocusSection={configFocusSection}
+          onSection={onSection}
+          onConfigFocusSection={onConfigFocusSection}
+          agentWorkspaceFocusAlias={agentWorkspaceFocusAlias}
+        />
+      </main>
+    </section>
+  );
+}
+
+export function SettingsContent({
+  section,
+  configFocusSection,
+  onSection,
+  onConfigFocusSection,
+  agentWorkspaceFocusAlias = null,
+}: SettingsContentProps) {
+  const effectiveSection = normalizeSettingsSection(section);
+
+  function selectSection(next: SettingsSection) {
+    onConfigFocusSection(null);
+    onSection(normalizeSettingsSection(next));
+  }
+
   function openConfigTarget(targetSection: string) {
     onConfigFocusSection(targetSection);
     onSection(settingsSectionForConfigTarget(targetSection));
   }
 
   return (
-    <section className="grid h-full min-h-0 grid-cols-[280px_minmax(420px,1fr)] overflow-hidden bg-[#020818]/90">
-      <SettingsNav section={effectiveSection} onSection={selectSection} onBackToApp={onBackToApp} />
-      <main className="flex min-w-0 flex-col overflow-hidden border-l border-white/10">
-        <ConfigDraftProvider>
-          <ConfigDraftStatusBar />
-          <div className="min-h-0 flex-1 overflow-hidden">
-            {effectiveSection === "app" && <AppSettings />}
-            {effectiveSection === "setup-center" && <SetupCenterPanel />}
-            {effectiveSection === "gateway-overview" && (
-              <ConfigPanel
-                focusSection={configFocusSection}
-                onNavigate={(target) =>
-                  selectSection(normalizeSettingsSection(target as SettingsSection))
-                }
-              />
-            )}
-            {isConfigCategorySection(effectiveSection) && (
-              <ConfigPanel
-                categoryId={effectiveSection}
-                focusSection={configFocusSection}
-                onNavigate={(target) =>
-                  selectSection(normalizeSettingsSection(target as SettingsSection))
-                }
-              />
-            )}
-            {effectiveSection === "agent-workspace" && (
-              <AgentWorkspacePanel focusAlias={agentWorkspaceFocusAlias} />
-            )}
-            {effectiveSection === "memory" && <MemoryPanel />}
-            {effectiveSection === "integrations" && (
-              <IntegrationsPanel onConfigure={(targetSection) => openConfigTarget(targetSection)} />
-            )}
-          </div>
-        </ConfigDraftProvider>
-      </main>
-    </section>
+    <ConfigDraftProvider>
+      <div className="flex h-full min-h-0 flex-col">
+        <ConfigDraftStatusBar />
+        <div className="min-h-0 flex-1 overflow-hidden">
+          {effectiveSection === "app" && <AppSettings />}
+          {effectiveSection === "setup-center" && <SetupCenterPanel />}
+          {effectiveSection === "gateway-overview" && (
+            <ConfigPanel
+              focusSection={configFocusSection}
+              onNavigate={(target) =>
+                selectSection(normalizeSettingsSection(target as SettingsSection))
+              }
+            />
+          )}
+          {isConfigCategorySection(effectiveSection) && (
+            <ConfigPanel
+              categoryId={effectiveSection}
+              focusSection={configFocusSection}
+              onNavigate={(target) =>
+                selectSection(normalizeSettingsSection(target as SettingsSection))
+              }
+            />
+          )}
+          {effectiveSection === "agent-workspace" && (
+            <AgentWorkspacePanel focusAlias={agentWorkspaceFocusAlias} />
+          )}
+          {effectiveSection === "memory" && <MemoryPanel />}
+          {effectiveSection === "integrations" && (
+            <IntegrationsPanel onConfigure={(targetSection) => openConfigTarget(targetSection)} />
+          )}
+        </div>
+      </div>
+    </ConfigDraftProvider>
   );
 }
 
@@ -106,10 +147,12 @@ function isConfigCategorySection(section: SettingsSection): section is ConfigCat
 
 function SettingsNav({
   section,
+  sections = SETTINGS_SECTIONS,
   onSection,
   onBackToApp,
 }: {
   section: SettingsSection;
+  sections?: typeof SETTINGS_SECTIONS;
   onSection: (section: SettingsSection) => void;
   onBackToApp: () => void;
 }) {
@@ -142,32 +185,34 @@ function SettingsNav({
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto p-3 zc-scrollbar">
-        {SETTINGS_GROUPS.map((group) => (
-          <section key={group} className="mb-5">
-            <h2 className="mb-2 text-[10px] uppercase tracking-wide text-neutral-500">
-              {groupLabel(group)}
-            </h2>
-            <div className="space-y-1">
-              {SETTINGS_SECTIONS.filter((s) => s.group === group).map(
-                ({ id, label, icon: Icon }) => (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => onSection(id)}
-                    className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition ${
-                      section === id
-                        ? "bg-cyan-400/10 text-cyan-100"
-                        : "text-neutral-300 hover:bg-white/[0.05] hover:text-neutral-100"
-                    }`}
-                  >
-                    <Icon size={14} className="shrink-0" />
-                    <span className="min-w-0 flex-1 truncate">{t(label)}</span>
-                  </button>
-                ),
-              )}
-            </div>
-          </section>
-        ))}
+        {SETTINGS_GROUPS.filter((group) => sections.some((item) => item.group === group)).map(
+          (group) => (
+            <section key={group} className="mb-5">
+              <h2 className="mb-2 text-[10px] uppercase tracking-wide text-neutral-500">
+                {groupLabel(group)}
+              </h2>
+              <div className="space-y-1">
+                {sections
+                  .filter((s) => s.group === group)
+                  .map(({ id, label, icon: Icon }) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => onSection(id)}
+                      className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition ${
+                        section === id
+                          ? "bg-cyan-400/10 text-cyan-100"
+                          : "text-neutral-300 hover:bg-white/[0.05] hover:text-neutral-100"
+                      }`}
+                    >
+                      <Icon size={14} className="shrink-0" />
+                      <span className="min-w-0 flex-1 truncate">{t(label)}</span>
+                    </button>
+                  ))}
+              </div>
+            </section>
+          ),
+        )}
       </div>
     </aside>
   );

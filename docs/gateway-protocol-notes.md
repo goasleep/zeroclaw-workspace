@@ -190,6 +190,11 @@ Workspace API security rules:
 
 ## Event streams
 
+Studio's task observer uses the session, cron, and event endpoints below to keep
+local task metadata in sync with ZeroClaw execution state. The UI consumes the
+resulting Studio projection instead of deriving task status from mounted React
+pages.
+
 ### SSE: `GET /api/events` and `GET /api/events/history`
 
 Bearer-protected. Event JSON: `{ "type": <kind>, ... }`. Observed kinds:

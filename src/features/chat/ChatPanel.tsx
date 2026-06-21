@@ -1,4 +1,4 @@
-// Task run panel — messages + composer.
+// Chat panel — messages + composer.
 
 import { useEffect, useRef, useState, type ClipboardEvent, type DragEvent } from "react";
 import { useLingui } from "@lingui/react/macro";
@@ -33,7 +33,7 @@ import { ChatComposer } from "./ChatComposer";
 import { MessageList } from "./MessageList";
 import { MODEL_FOLLOWS_AGENT, type ConfiguredModelChoice } from "./ModelOverrideSelect";
 import { RunControls } from "./RunControls";
-import { deriveTaskRunStatus, deriveTaskTimelineItems } from "@/features/tasks/task-run";
+import { deriveTaskTimelineItems } from "@/features/tasks/task-run";
 import type { TaskTimelineItem } from "@/features/tasks/task-run";
 import {
   CLIENT_MAX_ATTACHMENT_REQUEST_BYTES,
@@ -81,12 +81,12 @@ export function ChatPanel({
   onAgentChange,
   mode = "chat",
   workspaceRoot = null,
+  initialSessionId = null,
   onWorkspaceRoot,
   workspaceDir,
   taskId = null,
   taskTitle = null,
   onTaskSession,
-  onTaskStatus,
   onTaskTitle,
   startBlank = false,
   onFirstMessage,
@@ -96,12 +96,12 @@ export function ChatPanel({
   onAgentChange: (agent: string) => void;
   mode?: ChatMode;
   workspaceRoot?: string | null;
+  initialSessionId?: string | null;
   onWorkspaceRoot?: (path: string | null) => void;
   workspaceDir?: string | null;
   taskId?: string | null;
   taskTitle?: string | null;
   onTaskSession?: (sessionId: string) => void;
-  onTaskStatus?: (status: "running" | "needs_approval" | "done" | "failed") => void;
   onTaskTitle?: (title: string) => void;
   startBlank?: boolean;
   onFirstMessage?: (message: string) => void;
@@ -124,6 +124,7 @@ export function ChatPanel({
     mode,
     workspaceRoot,
     workspaceDir: appliedCwd || workspaceDir || workspaceRoot || null,
+    initialSessionId,
     startBlank,
   });
   const { selectSession, newSession, refreshSessions } = chat;
@@ -225,14 +226,8 @@ export function ChatPanel({
   }, [chat.messages]);
 
   useEffect(() => {
-    if (chat.sessionId) onTaskSession?.(chat.sessionId);
-  }, [chat.sessionId, onTaskSession]);
-
-  useEffect(() => {
-    if (!onTaskStatus || chat.messages.length === 0) return;
-    const status = deriveTaskRunStatus(chat.messages);
-    if (status !== "draft") onTaskStatus(status);
-  }, [chat.messages, onTaskStatus]);
+    if (chat.sessionId && chat.messages.length > 0) onTaskSession?.(chat.sessionId);
+  }, [chat.messages.length, chat.sessionId, onTaskSession]);
 
   useEffect(() => {
     if (!taskId) return;
@@ -565,7 +560,7 @@ export function ChatPanel({
   const selectedModelChoice = modelChoices.find((choice) => choice.value === selectedModelProvider);
   const agentOptions = agents.map((agent) => ({ value: agent, label: agent }));
   const workspaceName = workspaceRoot ? filenameFromPath(workspaceRoot) : t`No project`;
-  const runName = currentSession?.name ?? (isCode ? t`New code run` : t`New run`);
+  const chatName = currentSession?.name ?? (isCode ? t`New code task` : t`New chat`);
   const timelineItems = deriveTaskTimelineItems(chat.messages);
   const gitLabel =
     gitStatus?.is_repo && gitStatus.branch
@@ -623,7 +618,7 @@ export function ChatPanel({
                 <div className="flex min-w-0 items-center gap-1.5 text-sm font-medium text-neutral-100">
                   <span className="truncate">{workspaceRoot ? workspaceName : t`General`}</span>
                   <span className="shrink-0 text-neutral-600">/</span>
-                  <span className="truncate text-neutral-300">{runName}</span>
+                  <span className="truncate text-neutral-300">{chatName}</span>
                 </div>
                 {gitLabel && (
                   <div className="mt-0.5 truncate font-mono text-[10px] text-neutral-500">
@@ -706,7 +701,7 @@ export function ChatPanel({
           {!hasMessages && (
             <div className="w-full max-w-4xl">
               <h1 className="mb-4 text-center text-2xl font-medium tracking-normal text-neutral-100">
-                {t`What should this task do?`}
+                {isCode ? t`What should this code task do?` : t`What do you want to do?`}
               </h1>
               {!workspaceRoot && (
                 <div className="mx-auto mb-4 flex max-w-xl items-center justify-center">
@@ -766,7 +761,7 @@ function RunTimelineSummary({ items }: { items: TaskTimelineItem[] }) {
       <div className="flex min-w-0 flex-wrap items-center gap-2 text-[11px] text-neutral-500">
         <span className="inline-flex items-center gap-1 font-medium text-neutral-200">
           <CheckCircle2 size={12} className={completed ? "text-emerald-300" : "text-cyan-300"} />
-          {t`Run Timeline`}
+          {t`Progress`}
         </span>
         <span>{t`${items.length} events`}</span>
         {toolCount > 0 && <span>{t`${toolCount} tool calls`}</span>}

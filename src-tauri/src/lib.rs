@@ -139,6 +139,7 @@ pub fn run() {
                 let workspace_state_for_setup = workspace_state.clone();
                 let local_state_for_setup = local_state.clone();
                 let task_state_for_setup = task_state.clone();
+                let http_client_for_observer = http_client.clone();
                 install_app_menu(app.handle())?;
                 install_tray(app.handle())?;
                 // Load saved connections, then auto-onboard (first-run only)
@@ -200,6 +201,12 @@ pub fn run() {
                         )
                         .await;
                     }
+                    workspace::task_observer::spawn_task_observer(
+                        app_handle,
+                        book_for_setup,
+                        task_state_for_setup,
+                        http_client_for_observer,
+                    );
                 });
                 gateway::health::spawn_health_poller(
                     app.handle().clone(),
@@ -309,7 +316,7 @@ fn install_app_menu(app: &tauri::AppHandle<tauri::Wry>) -> tauri::Result<()> {
     let open_project = MenuItemBuilder::with_id(CMD_WORKSPACE_OPEN_PROJECT, "Open Project...")
         .accelerator("CmdOrCtrl+O")
         .build(app)?;
-    let new_task = MenuItemBuilder::with_id(CMD_WORKSPACE_NEW_TASK, "New Task")
+    let new_task = MenuItemBuilder::with_id(CMD_WORKSPACE_NEW_TASK, "New Chat")
         .accelerator("CmdOrCtrl+N")
         .build(app)?;
     let refresh_tasks = MenuItemBuilder::with_id(CMD_WORKSPACE_REFRESH_TASKS, "Refresh Tasks")
@@ -344,11 +351,11 @@ fn install_app_menu(app: &tauri::AppHandle<tauri::Wry>) -> tauri::Result<()> {
 
     let workspace = SubmenuBuilder::new(app, "Workspace")
         .item(&focus_dashboard)
+        .item(&new_task)
         .item(&new_code_task)
         .separator()
         .item(&open_project)
         .separator()
-        .item(&new_task)
         .item(&refresh_tasks)
         .separator()
         .item(&retry_connection)

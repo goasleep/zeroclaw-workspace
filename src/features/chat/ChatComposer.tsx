@@ -100,7 +100,7 @@ export function ChatComposer({
               }
             }}
             rows={variant === "center" ? 4 : 2}
-            placeholder={variant === "center" ? t`Start this task...` : t`Continue this run...`}
+            placeholder={variant === "center" ? t`Message the agent...` : t`Continue the chat...`}
             className={
               variant === "center"
                 ? "min-h-20 flex-1 resize-none bg-transparent px-2 py-1 text-base text-neutral-100 outline-none placeholder:text-neutral-600"

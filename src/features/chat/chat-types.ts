@@ -46,6 +46,7 @@ export interface UseChatOptions {
   mode?: ChatMode;
   workspaceRoot?: string | null;
   workspaceDir?: string | null;
+  initialSessionId?: string | null;
   startBlank?: boolean;
 }
 

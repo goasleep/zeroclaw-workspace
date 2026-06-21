@@ -84,8 +84,8 @@ export function TasksPage({
               <h2 className="text-sm font-semibold text-neutral-100">{t`No tasks here yet`}</h2>
               <p className="mt-1 max-w-sm text-xs leading-relaxed text-neutral-500">
                 {scope === "current"
-                  ? t`Create a task for the current project to keep its work together.`
-                  : t`Create a task and choose whether it belongs to a project or general work.`}
+                  ? t`Start a chat for the current project to keep its work together.`
+                  : t`Start a chat and choose whether it belongs to a project or general work.`}
               </p>
               <div className="mt-4 flex justify-center">{renderCreateControl()}</div>
             </div>

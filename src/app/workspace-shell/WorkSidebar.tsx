@@ -115,155 +115,155 @@ export function WorkSidebar({
   return (
     <>
       <aside className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden border-r border-white/[0.08] bg-[#020818]/90">
-      <header className="shrink-0 border-b border-white/[0.08] px-3 py-3">
-        <div className="flex items-center gap-2 text-xs font-medium text-neutral-300">
-          <Gauge size={13} className="text-cyan-300" />
-          <span className="min-w-0 flex-1 truncate">{active?.name ?? t`No connection`}</span>
-          <span
-            className={`rounded border px-1.5 py-0.5 text-[10px] ${
-              health?.healthy
-                ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-200"
-                : "border-neutral-500/25 bg-white/[0.04] text-neutral-400"
-            }`}
-          >
-            {health ? (health.healthy ? t`online` : t`offline`) : (activation?.type ?? t`idle`)}
-          </span>
-        </div>
-        <div className="mt-1 truncate text-[11px] text-neutral-500" title={root ?? undefined}>
-          {root ? workspacePathLabel(root) : t`No workspace selected for this runtime.`}
-        </div>
-      </header>
-
-      <div className="shrink-0 border-b border-white/[0.08] p-2">{createControl}</div>
-
-      <div className="min-h-0 flex-1 overflow-y-auto p-3 zc-scrollbar">
-        <NavGroup label={t`Work`}>
-          <NavButton
-            active={page === "dashboard"}
-            icon={Activity}
-            label={t`Dashboard`}
-            onClick={() => onPage("dashboard")}
-          />
-          <NavButton
-            active={page === "tasks"}
-            icon={ListTodo}
-            label={t`Tasks`}
-            badge={tasks.length || undefined}
-            onClick={() => onPage("tasks")}
-          />
-          <NavButton
-            active={page === "approvals"}
-            icon={Inbox}
-            label={t`Approvals`}
-            badge={approvalCount || undefined}
-            onClick={() => onPage("approvals")}
-          />
-          <NavButton
-            active={page === "automations"}
-            icon={Clock3}
-            label={t`Automations`}
-            badge={automationCount || undefined}
-            onClick={() => onPage("automations")}
-          />
-        </NavGroup>
-
-        <NavGroup label={t`Workspace`}>
-          {root ? (
-            <button
-              type="button"
-              onClick={() => onProject(root)}
-              title={root}
-              className={`mb-1 flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs transition ${
-                workspaceActive
-                  ? "bg-cyan-400/10 text-cyan-100"
-                  : "text-neutral-300 hover:bg-white/[0.05] hover:text-neutral-100"
+        <header className="shrink-0 border-b border-white/[0.08] px-3 py-3">
+          <div className="flex items-center gap-2 text-xs font-medium text-neutral-300">
+            <Gauge size={13} className="text-cyan-300" />
+            <span className="min-w-0 flex-1 truncate">{active?.name ?? t`No connection`}</span>
+            <span
+              className={`rounded border px-1.5 py-0.5 text-[10px] ${
+                health?.healthy
+                  ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-200"
+                  : "border-neutral-500/25 bg-white/[0.04] text-neutral-400"
               }`}
             >
-              <FolderOpen size={13} className="text-cyan-300" />
-              <span className="min-w-0 flex-1 truncate">{workspacePathLabel(root)}</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={onPickRoot}
-              className="mb-1 flex w-full items-center gap-2 rounded-md border border-dashed border-white/10 px-2 py-1.5 text-left text-xs text-neutral-500 hover:border-cyan-400/40 hover:text-cyan-300"
-            >
-              <FolderOpen size={13} />
-              {t`Open project`}
-            </button>
-          )}
-          {recentRoots
-            .filter((path) => path !== root)
-            .slice(0, 4)
-            .map((path) => (
-              <button
-                key={path}
-                type="button"
-                onClick={() => onProject(path)}
-                title={path}
-                className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[11px] text-neutral-500 hover:bg-white/[0.05] hover:text-neutral-200"
-              >
-                <span className="min-w-0 flex-1 truncate">{workspacePathLabel(path)}</span>
-              </button>
-            ))}
-          {currentWorkspaceTasks.length > 0 && (
-            <div className="mt-1 space-y-1 border-l border-cyan-400/20 pl-2">
-              {currentWorkspaceTasks.map((task) => (
-                <SidebarTaskButton
-                  key={task.id}
-                  task={task}
-                  active={activeTaskId === task.id}
-                  label={task.mode === "acp" ? t`Code` : t`Chat`}
-                  compact
-                  onClick={() => onTask(task)}
-                  onContextMenu={(event) => openTaskMenu(task, event)}
-                />
-              ))}
-            </div>
-          )}
-          {selectedFiles.length > 0 && (
-            <div className="mt-2 rounded-md border border-cyan-400/20 bg-cyan-400/10 px-2 py-1.5 text-[11px] text-cyan-100">
-              {t`${selectedFiles.length} selected`}
-            </div>
-          )}
-        </NavGroup>
+              {health ? (health.healthy ? t`online` : t`offline`) : (activation?.type ?? t`idle`)}
+            </span>
+          </div>
+          <div className="mt-1 truncate text-[11px] text-neutral-500" title={root ?? undefined}>
+            {root ? workspacePathLabel(root) : t`No project open.`}
+          </div>
+        </header>
 
-        {(tasks.length === 0 || recentTasks.length > 0) && (
-          <NavGroup label={t`Recent Tasks`}>
-            {tasks.length === 0 ? (
-              <div className="rounded-md border border-dashed border-white/10 p-2 text-xs text-neutral-600">
-                {t`No tasks yet.`}
-              </div>
+        <div className="shrink-0 border-b border-white/[0.08] p-2">{createControl}</div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto p-3 zc-scrollbar">
+          <NavGroup label={t`Work`}>
+            <NavButton
+              active={page === "dashboard"}
+              icon={Activity}
+              label={t`Dashboard`}
+              onClick={() => onPage("dashboard")}
+            />
+            <NavButton
+              active={page === "tasks"}
+              icon={ListTodo}
+              label={t`Tasks`}
+              badge={tasks.length || undefined}
+              onClick={() => onPage("tasks")}
+            />
+            <NavButton
+              active={page === "approvals"}
+              icon={Inbox}
+              label={t`Approvals`}
+              badge={approvalCount || undefined}
+              onClick={() => onPage("approvals")}
+            />
+            <NavButton
+              active={page === "automations"}
+              icon={Clock3}
+              label={t`Automations`}
+              badge={automationCount || undefined}
+              onClick={() => onPage("automations")}
+            />
+          </NavGroup>
+
+          <NavGroup label={t`Workspace`}>
+            {root ? (
+              <button
+                type="button"
+                onClick={() => onProject(root)}
+                title={root}
+                className={`mb-1 flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs transition ${
+                  workspaceActive
+                    ? "bg-cyan-400/10 text-cyan-100"
+                    : "text-neutral-300 hover:bg-white/[0.05] hover:text-neutral-100"
+                }`}
+              >
+                <FolderOpen size={13} className="text-cyan-300" />
+                <span className="min-w-0 flex-1 truncate">{workspacePathLabel(root)}</span>
+              </button>
             ) : (
-              recentTasks.map((task) => (
-                <SidebarTaskButton
-                  key={task.id}
-                  task={task}
-                  active={activeTaskId === task.id}
-                  label={taskProjectLabel(task, root)}
-                  onClick={() => onTask(task)}
-                  onContextMenu={(event) => openTaskMenu(task, event)}
-                />
-              ))
+              <button
+                type="button"
+                onClick={onPickRoot}
+                className="mb-1 flex w-full items-center gap-2 rounded-md border border-dashed border-white/10 px-2 py-1.5 text-left text-xs text-neutral-500 hover:border-cyan-400/40 hover:text-cyan-300"
+              >
+                <FolderOpen size={13} />
+                {t`Open project`}
+              </button>
+            )}
+            {recentRoots
+              .filter((path) => path !== root)
+              .slice(0, 4)
+              .map((path) => (
+                <button
+                  key={path}
+                  type="button"
+                  onClick={() => onProject(path)}
+                  title={path}
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[11px] text-neutral-500 hover:bg-white/[0.05] hover:text-neutral-200"
+                >
+                  <span className="min-w-0 flex-1 truncate">{workspacePathLabel(path)}</span>
+                </button>
+              ))}
+            {currentWorkspaceTasks.length > 0 && (
+              <div className="mt-1 space-y-1 border-l border-cyan-400/20 pl-2">
+                {currentWorkspaceTasks.map((task) => (
+                  <SidebarTaskButton
+                    key={task.id}
+                    task={task}
+                    active={activeTaskId === task.id}
+                    label={task.mode === "acp" ? t`Code` : t`Chat`}
+                    compact
+                    onClick={() => onTask(task)}
+                    onContextMenu={(event) => openTaskMenu(task, event)}
+                  />
+                ))}
+              </div>
+            )}
+            {selectedFiles.length > 0 && (
+              <div className="mt-2 rounded-md border border-cyan-400/20 bg-cyan-400/10 px-2 py-1.5 text-[11px] text-cyan-100">
+                {t`${selectedFiles.length} selected`}
+              </div>
             )}
           </NavGroup>
-        )}
-      </div>
 
-      <footer className="shrink-0 border-t border-white/10 p-2">
-        <button
-          type="button"
-          onClick={() => onPage("runtime")}
-          className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs transition ${
-            page === "runtime" || page === "settings"
-              ? "bg-cyan-400/10 text-cyan-100"
-              : "text-neutral-300 hover:bg-white/[0.05] hover:text-neutral-100"
-          }`}
-        >
-          <Settings size={14} />
-          <span className="min-w-0 flex-1 truncate">{t`Runtime`}</span>
-        </button>
-      </footer>
+          {(tasks.length === 0 || recentTasks.length > 0) && (
+            <NavGroup label={t`Recent Tasks`}>
+              {tasks.length === 0 ? (
+                <div className="rounded-md border border-dashed border-white/10 p-2 text-xs text-neutral-600">
+                  {t`No tasks yet.`}
+                </div>
+              ) : (
+                recentTasks.map((task) => (
+                  <SidebarTaskButton
+                    key={task.id}
+                    task={task}
+                    active={activeTaskId === task.id}
+                    label={taskProjectLabel(task, root)}
+                    onClick={() => onTask(task)}
+                    onContextMenu={(event) => openTaskMenu(task, event)}
+                  />
+                ))
+              )}
+            </NavGroup>
+          )}
+        </div>
+
+        <footer className="shrink-0 border-t border-white/10 p-2">
+          <button
+            type="button"
+            onClick={() => onPage("runtime")}
+            className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs transition ${
+              page === "runtime" || page === "settings"
+                ? "bg-cyan-400/10 text-cyan-100"
+                : "text-neutral-300 hover:bg-white/[0.05] hover:text-neutral-100"
+            }`}
+          >
+            <Settings size={14} />
+            <span className="min-w-0 flex-1 truncate">{t`Runtime`}</span>
+          </button>
+        </footer>
       </aside>
 
       {taskMenu && (
@@ -300,7 +300,7 @@ export function WorkSidebar({
               className="flex w-full items-center gap-2 px-2.5 py-2 text-left text-red-300 hover:bg-red-400/10 hover:text-red-200"
             >
               <Trash2 size={13} className="shrink-0" />
-              <span className="min-w-0 flex-1 truncate">{t`Delete session`}</span>
+              <span className="min-w-0 flex-1 truncate">{t`Delete chat`}</span>
             </button>
           </div>
         </>

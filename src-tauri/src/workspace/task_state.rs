@@ -137,6 +137,13 @@ pub struct TaskStateStore {
 
 pub type SharedTaskStateStore = Arc<TaskStateStore>;
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TaskStatusProjection {
+    pub task_id: String,
+    pub status: TaskStatus,
+    pub last_activity_at: Option<String>,
+}
+
 impl TaskStateStore {
     pub fn new() -> SharedTaskStateStore {
         Arc::new(Self::default())
@@ -174,6 +181,57 @@ impl TaskStateStore {
             .collect();
         tasks.sort_by_key(|task| Reverse(task_sort_key(task)));
         Ok(tasks)
+    }
+
+    pub async fn observer_candidates(&self, connection_id: &str) -> Result<Vec<StudioTask>> {
+        let connection_id = validated_segment("connection id", connection_id)?;
+        let state = self.state.read().await;
+        let mut tasks: Vec<_> = state
+            .tasks
+            .values()
+            .filter(|task| task.connection_id == connection_id)
+            .filter(|task| task.status != TaskStatus::Archived)
+            .filter(|task| task.session_id.is_some() || task.cron_job_id.is_some())
+            .cloned()
+            .collect();
+        tasks.sort_by_key(|task| Reverse(task_sort_key(task)));
+        Ok(tasks)
+    }
+
+    pub async fn apply_status_projections(
+        &self,
+        connection_id: &str,
+        projections: Vec<TaskStatusProjection>,
+    ) -> Result<Vec<StudioTask>> {
+        let connection_id = validated_segment("connection id", connection_id)?.to_string();
+        let mut changed = Vec::new();
+        let mut state = self.state.write().await;
+
+        for projection in projections {
+            let task_id = validated_segment("task id", &projection.task_id)?.to_string();
+            let Some(task) = state.tasks.get_mut(&task_id) else {
+                continue;
+            };
+            if task.connection_id != connection_id || task.status == TaskStatus::Archived {
+                continue;
+            }
+
+            let next_activity = projection
+                .last_activity_at
+                .clone()
+                .or_else(|| task.last_activity_at.clone());
+            if task.status == projection.status && task.last_activity_at == next_activity {
+                continue;
+            }
+
+            task.status = projection.status;
+            task.last_activity_at = next_activity;
+            task.updated_at = now_iso();
+            changed.push(task.clone());
+        }
+
+        changed.sort_by_key(|task| Reverse(task_sort_key(task)));
+        Ok(changed)
     }
 
     pub async fn upsert(&self, mut task: StudioTask) -> Result<StudioTask> {
@@ -217,14 +275,28 @@ impl TaskStateStore {
     }
 
     pub async fn link_session(&self, id: &str, session_id: String) -> Result<StudioTask> {
-        self.patch(
-            id,
-            TaskPatch {
-                session_id: Some(Some(session_id)),
-                ..TaskPatch::default()
-            },
-        )
-        .await
+        let id = validated_segment("task id", id)?.to_string();
+        let session_id = validated_segment("session id", &session_id)?.to_string();
+        let mut state = self.state.write().await;
+        let now = now_iso();
+        let connection_id = {
+            let task = state
+                .tasks
+                .get_mut(&id)
+                .ok_or_else(|| anyhow::anyhow!("task not found"))?;
+            task.session_id = Some(session_id.clone());
+            task.status = TaskStatus::Running;
+            task.last_activity_at = Some(now.clone());
+            task.updated_at = now;
+            validate_task(task)?;
+            task.connection_id.clone()
+        };
+        detach_duplicate_session_tasks(&mut state.tasks, &connection_id, &id, &session_id);
+        state
+            .tasks
+            .get(&id)
+            .cloned()
+            .ok_or_else(|| anyhow::anyhow!("task not found"))
     }
 
     pub async fn backfill_sessions(
@@ -245,8 +317,9 @@ impl TaskStateStore {
                 || task
                     .session_id
                     .as_ref()
-                    .map_or(true, |session_id| current_session_ids.contains(session_id))
+                    .is_none_or(|session_id| current_session_ids.contains(session_id))
         });
+        dedupe_session_tasks(&mut state.tasks, &connection_id);
         let existing_sessions: HashSet<String> = state
             .tasks
             .values()
@@ -380,7 +453,99 @@ fn normalized_tags(tags: Vec<String>) -> Vec<String> {
 }
 
 fn backfill_session_visible(session: &TaskBackfillSession) -> bool {
-    session.message_count.map_or(true, |count| count > 0)
+    session.message_count.is_none_or(|count| count > 0)
+}
+
+fn dedupe_session_tasks(tasks: &mut HashMap<String, StudioTask>, connection_id: &str) {
+    let mut by_session: HashMap<String, Vec<String>> = HashMap::new();
+    for task in tasks.values() {
+        if task.connection_id != connection_id || task.status == TaskStatus::Archived {
+            continue;
+        }
+        if let Some(session_id) = task.session_id.as_ref() {
+            by_session
+                .entry(session_id.clone())
+                .or_default()
+                .push(task.id.clone());
+        }
+    }
+
+    for (session_id, mut task_ids) in by_session {
+        if task_ids.len() < 2 {
+            continue;
+        }
+        task_ids.sort_by(|a, b| {
+            let a_task = tasks.get(a).expect("task id collected from map");
+            let b_task = tasks.get(b).expect("task id collected from map");
+            session_owner_key(b_task, &session_id).cmp(&session_owner_key(a_task, &session_id))
+        });
+        if let Some(owner_id) = task_ids.first() {
+            detach_duplicate_session_tasks(tasks, connection_id, owner_id, &session_id);
+        }
+    }
+}
+
+fn detach_duplicate_session_tasks(
+    tasks: &mut HashMap<String, StudioTask>,
+    connection_id: &str,
+    owner_id: &str,
+    session_id: &str,
+) {
+    let duplicate_ids = tasks
+        .values()
+        .filter(|task| task.id != owner_id)
+        .filter(|task| task.connection_id == connection_id)
+        .filter(|task| task.status != TaskStatus::Archived)
+        .filter(|task| task.session_id.as_deref() == Some(session_id))
+        .map(|task| task.id.clone())
+        .collect::<Vec<_>>();
+    if duplicate_ids.is_empty() {
+        return;
+    }
+
+    let now = now_iso();
+    for duplicate_id in duplicate_ids {
+        if let Some(task) = tasks.get(&duplicate_id)
+            && disposable_session_duplicate(task, session_id)
+        {
+            tasks.remove(&duplicate_id);
+            continue;
+        }
+
+        if let Some(task) = tasks.get_mut(&duplicate_id) {
+            task.session_id = None;
+            if task.cron_job_id.is_none() {
+                task.status = TaskStatus::Draft;
+                task.last_activity_at = None;
+            }
+            task.updated_at = now.clone();
+        }
+    }
+}
+
+fn session_owner_key(task: &StudioTask, session_id: &str) -> (u8, u8, String) {
+    (
+        u8::from(task.id != backfilled_session_task_id(session_id)),
+        u8::from(!default_task_title(&task.title)),
+        task_sort_key(task),
+    )
+}
+
+fn disposable_session_duplicate(task: &StudioTask, session_id: &str) -> bool {
+    task.id == backfilled_session_task_id(session_id)
+        || (default_task_title(&task.title)
+            && task.goal.is_none()
+            && task.cron_job_id.is_none()
+            && task.tags.is_empty()
+            && task.pinned_result.is_none())
+}
+
+fn default_task_title(title: &str) -> bool {
+    matches!(title.trim(), "New chat" | "New task" | "Untitled task")
+}
+
+fn backfilled_session_task_id(session_id: &str) -> String {
+    format!("session-{session_id}")
 }
 
 fn non_empty(value: String) -> Option<String> {
@@ -506,6 +671,74 @@ mod tests {
         assert_eq!(tasks.len(), 1);
         assert_eq!(tasks[0].title, "Research");
         assert_eq!(tasks[0].workspace_root.as_deref(), Some("/repo"));
+    }
+
+    #[tokio::test]
+    async fn link_session_removes_backfilled_duplicate() {
+        let store = TaskStateStore::new();
+        store.upsert(task("manual", "conn-a")).await.unwrap();
+        store
+            .backfill_sessions(
+                "conn-a",
+                vec![TaskBackfillSession {
+                    session_id: "s1".into(),
+                    name: "New chat".into(),
+                    agent_alias: None,
+                    created_at: None,
+                    updated_at: None,
+                    last_message_at: None,
+                    message_count: Some(1),
+                }],
+                Vec::new(),
+            )
+            .await
+            .unwrap();
+
+        let linked = store.link_session("manual", "s1".into()).await.unwrap();
+        assert_eq!(linked.session_id.as_deref(), Some("s1"));
+
+        let tasks = store.list("conn-a").await.unwrap();
+        assert_eq!(tasks.len(), 1);
+        assert_eq!(tasks[0].id, "manual");
+    }
+
+    #[tokio::test]
+    async fn backfill_detaches_user_duplicate_session_task() {
+        let store = TaskStateStore::new();
+        let mut owner = task("owner", "conn-a");
+        owner.title = "Important chat".into();
+        owner.session_id = Some("s1".into());
+        owner.last_activity_at = Some("2026-01-02T00:00:00Z".into());
+        store.upsert(owner).await.unwrap();
+
+        let mut duplicate = task("duplicate", "conn-a");
+        duplicate.title = "Follow-up notes".into();
+        duplicate.goal = Some("Keep these notes".into());
+        duplicate.session_id = Some("s1".into());
+        store.upsert(duplicate).await.unwrap();
+
+        let tasks = store
+            .backfill_sessions(
+                "conn-a",
+                vec![TaskBackfillSession {
+                    session_id: "s1".into(),
+                    name: "Runtime session".into(),
+                    agent_alias: None,
+                    created_at: None,
+                    updated_at: None,
+                    last_message_at: None,
+                    message_count: Some(1),
+                }],
+                Vec::new(),
+            )
+            .await
+            .unwrap();
+        let owner = tasks.iter().find(|task| task.id == "owner").unwrap();
+        let duplicate = tasks.iter().find(|task| task.id == "duplicate").unwrap();
+
+        assert_eq!(owner.session_id.as_deref(), Some("s1"));
+        assert_eq!(duplicate.session_id, None);
+        assert_eq!(duplicate.goal.as_deref(), Some("Keep these notes"));
     }
 
     #[tokio::test]

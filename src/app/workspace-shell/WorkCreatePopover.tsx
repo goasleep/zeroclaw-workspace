@@ -3,7 +3,6 @@ import { Bot, CalendarClock, ChevronLeft, Loader2, Sparkles, X } from "lucide-re
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { Select } from "@/ui/select";
-import { SegmentedControl } from "@/ui/segmented-control";
 
 type CreateKind = "task" | "automation";
 type TaskMode = "chat" | "acp";
@@ -57,10 +56,9 @@ export function WorkCreatePopover({
   const { t } = useLingui();
   const [open, setOpen] = useState(false);
   const [kind, setKind] = useState<CreateKind | null>(defaultKind ?? null);
-  const [taskTitle, setTaskTitle] = useState(t`New task`);
+  const [taskTitle, setTaskTitle] = useState(t`New code task`);
   const [automationName, setAutomationName] = useState(t`New automation`);
   const [requirement, setRequirement] = useState("");
-  const [taskMode, setTaskMode] = useState<TaskMode>("chat");
   const [agentAlias, setAgentAlias] = useState(activeAgent ?? agents[0] ?? "");
   const [workspaceRoot, setWorkspaceRoot] = useState<string | null>(root);
   const [time, setTime] = useState(defaultTime());
@@ -70,12 +68,11 @@ export function WorkCreatePopover({
   useEffect(() => {
     if (!open) return;
     setKind(defaultKind ?? null);
-    setTaskTitle(t`New task`);
+    setTaskTitle(t`New code task`);
     setAutomationName(t`New automation`);
     setRequirement("");
-    setTaskMode("chat");
     setAgentAlias(activeAgent ?? agents[0] ?? "");
-    setWorkspaceRoot(null);
+    setWorkspaceRoot(root);
     setTime(defaultTime());
     setBusy(false);
     setError(null);
@@ -104,7 +101,7 @@ export function WorkCreatePopover({
   const workspaceOptions = useMemo(() => {
     const paths = Array.from(new Set([root, ...recentRoots].filter(Boolean) as string[]));
     return [
-      { value: GENERAL_WORKSPACE, label: t`General chat` },
+      { value: GENERAL_WORKSPACE, label: t`No project` },
       ...paths.map((path) => ({ value: path, label: workspaceLabel(path, root) })),
     ];
   }, [recentRoots, root, t]);
@@ -129,13 +126,6 @@ export function WorkCreatePopover({
     }
   }
 
-  function changeTaskMode(nextMode: TaskMode) {
-    setTaskMode(nextMode);
-    if (nextMode === "acp" && !workspaceRoot && root) {
-      setWorkspaceRoot(root);
-    }
-  }
-
   function changeTimePart(part: "hour" | "minute", value: string) {
     const [hour, minute] = validTime(time) ? time.split(":") : defaultTime().split(":");
     setTime(part === "hour" ? `${value}:${minute}` : `${hour}:${value}`);
@@ -150,7 +140,7 @@ export function WorkCreatePopover({
       await onCreateTask({
         title,
         goal: requirement.trim() || null,
-        mode: taskMode,
+        mode: "acp",
         agentAlias,
         workspaceRoot,
       });
@@ -215,15 +205,15 @@ export function WorkCreatePopover({
                 {kind === "automation"
                   ? t`New automation`
                   : kind === "task"
-                    ? t`New task`
-                    : t`Create work`}
+                    ? t`New code task`
+                    : t`Create`}
               </h2>
               <p className="mt-0.5 text-[11px] text-neutral-500">
                 {kind === "automation"
-                  ? t`Schedule repeat work on this runtime.`
+                  ? t`Schedule repeated agent work.`
                   : kind === "task"
-                    ? t`Start one piece of agent work.`
-                    : t`Choose what kind of work to create.`}
+                    ? t`Start code work with a project context.`
+                    : t`Choose a secondary work type.`}
               </p>
             </div>
             <Popover.Close asChild>
@@ -265,16 +255,6 @@ export function WorkCreatePopover({
                       className="w-full resize-none rounded-md border border-white/10 bg-[#020818]/90 px-2 py-1.5 text-xs text-neutral-100 outline-none placeholder:text-neutral-600 focus:border-cyan-400"
                     />
                   </Field>
-                  <Field label={t`Type`} required>
-                    <SegmentedControl
-                      value={taskMode}
-                      options={[
-                        { key: "chat", label: t`Chat` },
-                        { key: "acp", label: t`Code` },
-                      ]}
-                      onChange={changeTaskMode}
-                    />
-                  </Field>
                   <Field label={t`Agent`} required>
                     <Select
                       value={agentAlias}
@@ -283,7 +263,7 @@ export function WorkCreatePopover({
                       className="w-full"
                     />
                   </Field>
-                  <Field label={t`Context`}>
+                  <Field label={t`Project`}>
                     <div className="flex gap-2">
                       <Select
                         value={workspaceRoot ?? GENERAL_WORKSPACE}
@@ -301,9 +281,9 @@ export function WorkCreatePopover({
                         {t`Choose...`}
                       </button>
                     </div>
-                    {taskMode === "acp" && !workspaceRoot && (
+                    {!workspaceRoot && (
                       <p className="mt-1 text-[11px] text-amber-200">
-                        {t`Code tasks work best with a project workspace.`}
+                        {t`Code tasks work best with a project.`}
                       </p>
                     )}
                   </Field>
@@ -311,7 +291,7 @@ export function WorkCreatePopover({
                     busy={busy}
                     disabled={taskDisabled}
                     error={error}
-                    label={t`Create task`}
+                    label={t`Create code task`}
                     onCancel={close}
                     onSubmit={() => void submitTask()}
                   />
@@ -386,14 +366,14 @@ function KindPicker({ onKind }: { onKind: (kind: CreateKind) => void }) {
     <div className="grid gap-2">
       <KindButton
         icon={<Sparkles size={15} />}
-        title={t`Task`}
-        body={t`Manual agent work you start now.`}
+        title={t`Code Task`}
+        body={t`Project-scoped code work you start now.`}
         onClick={() => onKind("task")}
       />
       <KindButton
         icon={<CalendarClock size={15} />}
         title={t`Automation`}
-        body={t`Scheduled work that repeats daily.`}
+        body={t`Scheduled agent work that repeats daily.`}
         onClick={() => onKind("automation")}
       />
     </div>
@@ -443,7 +423,7 @@ function NoAgentState({
       </div>
       <h3 className="text-sm font-semibold text-neutral-100">{t`No agent configured`}</h3>
       <p className="mt-1 text-xs leading-relaxed text-neutral-500">
-        {t`Set up an agent before creating task work.`}
+        {t`Set up an agent before creating code tasks or automations.`}
       </p>
       <div className="mt-4 flex justify-center gap-2">
         <button

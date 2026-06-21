@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { useLingui } from "@lingui/react/macro";
-import { MessageSquare, Plus, Sparkles } from "lucide-react";
+import { MessageSquare, Plus } from "lucide-react";
 import { useWorkspace } from "@/app/workspace-context";
 import { useConnections } from "@/app/connection-context";
 import { apiCron, apiCronCreate, type CronJobCreate } from "@/api/tools";
@@ -27,7 +27,6 @@ import { useWorkspaceCommands } from "./workspace-shell/use-workspace-commands";
 import type { RuntimeTab, SettingsSection, WorkspacePage } from "./workspace-shell/types";
 import {
   createDraftTask,
-  nowIso,
   type StudioTask,
   type TaskPatch,
 } from "@/features/tasks/task-model";
@@ -126,10 +125,16 @@ export function WorkspaceShell() {
   }, [active, root]);
 
   const openSettings = useCallback((section: string) => {
-    setSettingsSection(isSettingsSection(section) ? section : "app");
+    const nextSection = isSettingsSection(section) ? section : "app";
+    setSettingsSection(nextSection);
     setConfigFocusSection(null);
     setAgentWorkspaceFocusAlias(null);
-    setPage("settings");
+    if (nextSection === "app") {
+      setPage("settings");
+    } else {
+      setRuntimeTab("config");
+      setPage("runtime");
+    }
   }, []);
 
   const openConfigTarget = useCallback((target: string) => {
@@ -138,7 +143,8 @@ export function WorkspaceShell() {
     setConfigFocusSection(clean);
     setAgentWorkspaceFocusAlias(null);
     setSettingsSection(settingsSectionForConfigTarget(clean));
-    setPage("settings");
+    setRuntimeTab("config");
+    setPage("runtime");
   }, []);
 
   const openRuntimeTab = useCallback((tab: RuntimeTab) => {
@@ -152,7 +158,8 @@ export function WorkspaceShell() {
     setAgentWorkspaceFocusAlias(clean || null);
     if (clean) setActiveAgent(clean);
     setSettingsSection("agent-workspace");
-    setPage("settings");
+    setRuntimeTab("config");
+    setPage("runtime");
   }, []);
 
   const selectAgent = useCallback(
@@ -271,12 +278,8 @@ export function WorkspaceShell() {
       });
       const saved = await tasks.upsert(task);
       await tasks.linkSession(saved.id, sessionId);
-      const patched = await tasks.patch(saved.id, {
-        status: "running",
-        last_activity_at: nowIso(),
-      });
       void taskSessions.refresh();
-      setActiveTaskId(patched.id);
+      setActiveTaskId(saved.id);
       setPage("task");
     },
     [activeAgent, agents, connectionId, taskSessions, tasks],
@@ -297,10 +300,6 @@ export function WorkspaceShell() {
   const linkTaskSession = useCallback(
     async (id: string, sessionId: string) => {
       const saved = await tasks.linkSession(id, sessionId);
-      await tasks.patch(id, {
-        status: "running",
-        last_activity_at: nowIso(),
-      });
       void taskSessions.refresh();
       return saved;
     },
@@ -391,7 +390,7 @@ export function WorkspaceShell() {
 
   async function deleteTask(task: StudioTask) {
     const confirmed = window.confirm(
-      task.session_id ? t`Delete session "${task.title}"?` : t`Delete ${task.title}?`,
+      task.session_id ? t`Delete chat "${task.title}"?` : t`Delete ${task.title}?`,
     );
     if (!confirmed) return;
 
@@ -480,6 +479,35 @@ export function WorkspaceShell() {
         <MessageSquare size={13} />
         {t`New Chat`}
       </button>
+    );
+  }
+
+  function renderSidebarCreateControl() {
+    return (
+      <div className="flex gap-1.5">
+        <button
+          type="button"
+          disabled={!active}
+          onClick={() => void openComposer(root)}
+          className="flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md bg-sky-400 px-3 py-2 text-xs font-medium text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <MessageSquare size={13} />
+          {t`New Chat`}
+        </button>
+        {renderCreatePopover(
+          <button
+            type="button"
+            disabled={!active}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 text-neutral-300 hover:border-cyan-400 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label={t`More create options`}
+          >
+            <Plus size={14} />
+          </button>,
+          undefined,
+          undefined,
+          "bottom",
+        )}
+      </div>
     );
   }
 
@@ -603,7 +631,13 @@ export function WorkspaceShell() {
           <RuntimeDetail
             tab={runtimeTab}
             onTab={setRuntimeTab}
-            onSettings={() => openSettings("gateway-overview")}
+            onAutomations={() => setPage("automations")}
+            settingsSection={settingsSection}
+            configFocusSection={configFocusSection}
+            onSettingsSection={setSettingsSection}
+            onConfigFocusSection={setConfigFocusSection}
+            onBackToApp={() => setPage("dashboard")}
+            agentWorkspaceFocusAlias={agentWorkspaceFocusAlias}
           />
         );
       case "settings":
@@ -623,7 +657,7 @@ export function WorkspaceShell() {
 
   return (
     <div className="h-full min-h-0 overflow-hidden text-slate-100">
-      {page === "settings" ? (
+      {page === "settings" || page === "runtime" ? (
         renderPage()
       ) : (
         <div className="grid h-full min-h-0 grid-cols-[300px_minmax(420px,1fr)] overflow-hidden">
@@ -637,16 +671,7 @@ export function WorkspaceShell() {
             onTask={(task) => void openTask(task)}
             onRenameTask={renameTask}
             onDeleteTask={(task) => void deleteTask(task)}
-            createControl={renderCreatePopover(
-              <button
-                type="button"
-                className="flex w-full items-center justify-center gap-1.5 rounded-md bg-sky-400 px-3 py-2 text-xs font-medium text-slate-950 hover:bg-cyan-300"
-              >
-                <Sparkles size={13} />
-                {t`Create`}
-              </button>,
-              undefined,
-            )}
+            createControl={renderSidebarCreateControl()}
             onProject={(path) => void openProjectRoot(path)}
             onPickRoot={() => void pickProject()}
           />
