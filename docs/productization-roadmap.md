@@ -48,6 +48,68 @@ state across multiple ZeroClaw runtimes.
 This track should aggregate indexes, summaries, references, health, and pending
 work. It should not copy full runtime databases into Studio.
 
+## Multi-Runtime Sync Evolution
+
+Studio follows an IM-style sync model:
+
+- all configured reachable runtimes receive lightweight background sync
+- the active runtime receives higher-frequency deep reconciliation
+- the current task/chat loads full messages and live chat frames
+- React displays read models maintained by Tauri instead of owning background
+  discovery, approval lifecycle, or task status reconciliation
+
+### v1: Observe-Only
+
+Observe every configured runtime that already has a reachable URL/token.
+Inactive runtimes are synced lightly; the active runtime is reconciled more
+frequently. Empty URLs, inactive tunnels, missing pairing, and unreachable
+gateways only update the runtime summary as unavailable.
+
+v1 must not:
+
+- auto-start inactive local runtimes
+- auto-pair inactive remote runtimes
+- silently open SSH, Tailscale, VPN, or other network tunnels
+- copy complete messages, tool results, cron run records, memory, or logs into
+  Studio state
+
+The first productized multi-runtime UI surfaces are runtime badges and an
+all-runtimes approvals inbox.
+
+### v1.5: Managed Local Warm-Up
+
+Allow Studio-managed inner/bundled runtimes to start in the background when the
+user opts in. This should be limited to Studio-owned managed runtimes and should
+not apply to local-attached or remote runtimes.
+
+### v2: Background Policy
+
+Add per-runtime background behavior:
+
+- Always observe
+- Observe when app open
+- Only when active
+- Never background sync
+
+Pairing, credential refresh, and tunnel setup remain explicit UI flows. The
+background observer may report that attention is needed, but it must not create
+trust or network relationships by itself.
+
+### v3: Full Multi-Runtime Operations
+
+Productize global operations after summaries and approvals prove the model:
+
+- global approvals
+- global running tasks
+- failed automations
+- runtime health and doctor summaries
+- credential refresh and reconnect strategy
+
+UI should evolve in this order: runtime badges, all-runtimes approvals inbox,
+optional all-runtimes task list, then a full global dashboard. The current
+Dashboard remains active-runtime-first until that information architecture is
+designed deliberately.
+
 ## Responsibility Matrix
 
 | Area | ZeroClaw owns | Studio owns |
@@ -465,4 +527,3 @@ The guiding distinction is:
 
 > The upstream desktop helps one ZeroClaw run. Studio helps users organize work
 > across ZeroClaw runtimes.
-

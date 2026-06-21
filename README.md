@@ -13,6 +13,7 @@ attached, or remote ZeroClaw gateway over HTTP, WebSocket, and SSE.
 
 [Download the latest release](https://github.com/goasleep/zeroclaw-studio/releases)
 · [Quick start](#quick-start)
+· [Why ZeroClaw](#why-zeroclaw)
 · [Runtime modes](#runtime-modes)
 · [Security notes](#security-notes)
 · [Development](#development)
@@ -44,6 +45,27 @@ operate, observe, and intervene.
 
 The Studio UI is cross-platform. The bundled inner runtime keeps its own
 app-data config directory and never modifies your user-level `~/.zeroclaw/`.
+
+## Why ZeroClaw
+
+ZeroClaw Studio did not start as another chat window or as a desktop shell
+around a generic agent library. The project exists because real agent work
+often needs to reach files, local tools, private networks, remote machines,
+memory, scheduled jobs, and long-running state. That kind of work needs a
+native place to connect, observe, intervene, and keep trust boundaries clear.
+
+Studio chooses ZeroClaw as the underlying runtime and gateway because its model
+matches that goal: it is lightweight to deploy, can run on a laptop, homelab,
+NAS, Pi, cloud VM, or trusted internal host, and exposes sessions, tools,
+memory, cron, logs, pairing, and event streams through a gateway-first shape.
+Studio can then focus on the product surface: desktop integration, workspace
+flow, runtime visibility, and multi-runtime operations.
+
+OpenClaw and other agent frameworks can be good fits for different
+orchestration, development, or experimentation needs. ZeroClaw is the right
+fit for this project because the core bet is that agent capability should live
+close to where work already happens, while the desktop app becomes the control
+plane across those places.
 
 ## Built-in ZeroClaw
 

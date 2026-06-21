@@ -11,6 +11,7 @@ ZeroClaw Studio 内置一个固定版本、应用私有的 `zeroclaw` runtime。
 
 [下载最新 release](https://github.com/goasleep/zeroclaw-studio/releases)
 · [快速开始](#快速开始)
+· [为什么是 ZeroClaw](#为什么是-zeroclaw)
 · [运行模式](#运行模式)
 · [安全说明](#安全说明)
 · [开发](#开发)
@@ -32,6 +33,15 @@ ZeroClaw Studio 内置一个固定版本、应用私有的 `zeroclaw` runtime。
 ZeroClaw 的低部署成本是这个项目的核心：AI 能力可以运行在工作所在的位置，而桌面应用提供一个统一入口，用来连接、操作、观察和介入。
 
 Studio UI 是跨平台的。内置运行时使用自己的应用数据配置目录，不会修改你的用户级 `~/.zeroclaw/`。
+
+## 为什么是 ZeroClaw
+
+ZeroClaw Studio 的初衷不是再做一个聊天窗口，也不是把某个通用 agent
+library 包一层桌面壳。这个项目想解决的是：当 agent 工作需要访问真实文件、本地工具、私有网络、远程机器、记忆、定时任务和长时间运行状态时，用户应该有一个可以连接、观察、介入并管理信任边界的原生工作区。
+
+因此 Studio 选择 ZeroClaw 作为底层 runtime 和 gateway：它的部署成本低，可以运行在本机、homelab、NAS、Pi、云 VM 或可信内网主机上；它把 sessions、tools、memory、cron、logs、pairing 和事件流暴露成 gateway-first 的模型；Studio 则专注于产品界面、桌面能力、工作区体验、runtime 可见性和多 runtime 操作。
+
+OpenClaw 或其他 agent 框架可以适合不同的编排、开发或实验场景。Studio 当前选择 ZeroClaw，是因为这个项目的核心判断是：agent 能力应该靠近工作实际发生的位置，而桌面应用应该成为这些运行位置之上的控制面。
 
 ## 内置 ZeroClaw
 

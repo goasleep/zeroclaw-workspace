@@ -190,17 +190,45 @@ Workspace API security rules:
 
 ## Event streams
 
-Studio's task observer uses the session, cron, and event endpoints below to keep
-local task metadata in sync with ZeroClaw execution state. The UI consumes the
-resulting Studio projection instead of deriving task status from mounted React
+Studio's runtime observer uses the session, cron, and event endpoints below to
+keep local task metadata, runtime summaries, and pending approvals in sync with
+ZeroClaw execution state. The UI consumes the resulting Studio projections
+instead of deriving task status or approval inbox state from mounted React
 pages.
 
 ### SSE: `GET /api/events` and `GET /api/events/history`
 
 Bearer-protected. Event JSON: `{ "type": <kind>, ... }`. Observed kinds:
 `llm_request`, `tool_call`, `tool_call_start`, `tool_result`, `agent_start`,
-`agent_end`, `cron_result`, `error`. History endpoint returns a ring buffer
-snapshot.
+`agent_end`, `approval_request`, `approval_response`, `cron_result`, `error`.
+History endpoint returns a ring buffer snapshot.
+
+The observer treats events as triggers for fast reconciliation. Durable
+projection state still comes from sessions, session state, cron jobs, and cron
+run endpoints so Studio can recover after it was closed or after an SSE
+disconnect.
+
+### Runtime observer endpoint usage
+
+For each reachable configured connection:
+
+- `GET /api/health` checks whether the runtime can be observed.
+- `GET /api/events` keeps a lightweight SSE subscription open.
+- `GET /api/sessions` discovers/backfills Studio task shells linked to runtime
+  sessions.
+- `GET /api/sessions/running` identifies active sessions when the endpoint is
+  available.
+- `GET /api/sessions/{id}/state` projects session task status and pending
+  approvals when the endpoint exposes recognizable state.
+- `GET /api/sessions/{id}/messages` is a fallback for determining persisted
+  completed chat sessions when state is unavailable.
+- `GET /api/cron` and `GET /api/cron/{id}/runs?limit=1` project automation task
+  status and summary counts.
+
+Observer v1 is observe-only. Connections with empty URLs, inactive tunnels,
+missing pairing, or unreachable gateways are summarized as unavailable; Studio
+does not auto-start inactive runtimes, pair gateways, or open tunnels from this
+background path.
 
 ### WS: `GET /ws/chat?session_id=...&agent=...&name=...&token=...`
 
@@ -217,6 +245,11 @@ Client → server: `message` (`{content}`), `approval_response`
 (`{request_id, decision: approve|deny|always}`), voice events
 (`speech_start`, `speech_end`, `barge_in`) when `gateway-voice-duplex` is
 on.
+
+Studio sends `approval_response` through the Tauri approval command for pending
+approval projections. The command targets the connection/session/request from
+the approval inbox and uses the existing chat websocket manager; React does not
+own the approval lifecycle.
 
 Server → client: `session_start`, `chunk`, `thinking`, `tool_call`,
 `tool_call_start`, `tool_result`, `approval_request` (`{request_id, tool,

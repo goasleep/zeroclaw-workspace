@@ -76,6 +76,40 @@ by the Tauri task observer/reconciler from gateway sessions, session state,
 runtime events, cron jobs, and cron run history. React views display and
 subscribe to this projection; they do not own the task lifecycle state machine.
 
+### Multi-Runtime Read Models
+
+Studio may maintain lightweight read models across multiple configured
+runtimes, using the same pattern that IM clients use for account summaries:
+observe broad state in the background, load full conversation history only for
+the active chat/task, and keep UI pages as subscribers.
+
+Studio-owned multi-runtime projections include:
+
+- runtime summaries: health, last seen time, running count, approval count,
+  failed count, automation count, and sync errors
+- pending approval inbox entries keyed by connection, session, and request id
+- task metadata updates derived from ZeroClaw session and cron state
+
+These read models are indexes and summaries, not a replacement runtime
+database. Studio must not copy full message streams, tool results, cron run
+records, memory entries, or logs into Studio-owned state unless there is a
+separate export or support workflow with explicit user intent.
+
+Observer v1 is observe-only:
+
+- observe reachable configured connections that already have a URL/token
+- mark empty, unpaired, tunnel-inactive, or unreachable connections as
+  unavailable in the summary
+- do not auto-start inactive local runtimes
+- do not auto-pair remote runtimes
+- do not open SSH/Tailscale/VPN tunnels from the background
+
+Pairing, tunnel creation, remote permission prompts, credential refresh, and
+managed runtime background start are product operations. They must be initiated
+by explicit UI actions or a later user-configured background policy. The
+background observer may surface `needs pairing`, `needs tunnel`, or `sync
+error`, but it should not silently cross those boundaries.
+
 ## ZeroClaw Data
 
 ZeroClaw data is runtime state owned by the selected gateway. Studio accesses
